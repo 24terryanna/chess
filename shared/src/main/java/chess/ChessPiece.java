@@ -16,6 +16,7 @@ public class ChessPiece {
     /**
      * The various different chess piece options
      */
+
     public enum PieceType {
         KING,
         QUEEN,
@@ -28,6 +29,7 @@ public class ChessPiece {
     /**
      * @return Which team this chess piece belongs to
      */
+
     public ChessGame.TeamColor getTeamColor() {
         throw new RuntimeException("Not implemented");
     }
@@ -48,5 +50,6 @@ public class ChessPiece {
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
         throw new RuntimeException("Not implemented");
+//    switch method, check piece type and use PieceMoveCalculator
     }
 }
