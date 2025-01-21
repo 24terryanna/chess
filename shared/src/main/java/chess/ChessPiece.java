@@ -49,7 +49,7 @@ public class ChessPiece {
      * @return Collection of valid moves
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
-        throw new RuntimeException("Not implemented");
-//    switch method, check piece type and use PieceMoveCalculator
+        return new ArrayList<>();
+        //    switch method, check piece type and use PieceMoveCalculator
     }
 }
