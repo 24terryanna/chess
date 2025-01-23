@@ -53,16 +53,23 @@ public class ChessBoard {
                     new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.PAWN));
 
         }
+        //rooks (2 per team), white & black
+        addPiece(new ChessPosition(0, 0),
+                new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.ROOK));
+        addPiece(new ChessPosition(0, 7),
+                new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.ROOK));
+        addPiece(new ChessPosition(7, 0),
+                new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.ROOK));
+        addPiece(new ChessPosition(7, 7),
+                new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.ROOK));
 
-        //rooks, white & black
+        //knights (2 per team), white & black
 
-        //knights , white & black
+        //bishops (2 per team), white & black
 
-        //bishops, white & black
+        //queens (1), white & black
 
-        //queens, white & black
-
-        //kings, white & black
+        //kings (1), white & black
 
     }
 
