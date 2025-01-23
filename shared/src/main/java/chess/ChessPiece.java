@@ -48,14 +48,14 @@ public class ChessPiece {
      *
      * @return Collection of valid moves
      */
-    public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
+    public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition position){
         PieceMovesCalculator moves = switch(getPieceType()) {
-            case QUEEN -> new QueenMoveCalculator();
-            case KING -> new KingMoveCalculator();
-            case BISHOP -> new BishopMoveCalculator();
-            case KNIGHT -> new KnightMoveCalculator();
-            case ROOK -> new RookMoveCalculator();
-            case PAWN -> new PawnMoveCalculator();
+            case QUEEN -> new QueenMoveCalc();
+            case KING -> new KingMoveCalc();
+            case BISHOP -> new BishopMoveCalc();
+            case KNIGHT -> new KnightMoveCalc();
+            case ROOK -> new RookMoveCalc();
+            case PAWN -> new PawnMoveCalc();
         };
         return moves.pieceMoves(board, position);
         //    switch method, check piece type and use PieceMoveCalculator
