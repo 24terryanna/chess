@@ -7,10 +7,12 @@ package chess;
  * signature of the existing methods.
  */
 public class ChessBoard {
+    //2D array=board
     private ChessPiece[][] squares = new ChessPiece[8][8];
 
     public ChessBoard() {
         /** 2 dimensional array, know starting point for all pieces */
+        setDefaultBoard();
     }
 
     /**
@@ -39,21 +41,27 @@ public class ChessBoard {
      * (How the game of chess normally starts)
      */
     public void resetBoard() {
-        //reset squares to null
+        //reset all squares to null
         for (int row = 0; row < 8; row++) {
             for (int column = 0; column < 8; column++) {
                 squares[row][column] = null;
             }
         }
-        //pawns, white & black
+        //set pieces back to default positions
+        setDefaultBoard();
+
+    }
+
+    private void setDefaultBoard() {
+
+        //pawns (8, 2nd & 7th row), white & black
         for (int column = 0; column < 8; column++) {
             addPiece(new ChessPosition(1, column),
                     new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.PAWN));
             addPiece(new ChessPosition(6, column),
                     new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.PAWN));
-
         }
-        //rooks (2 per team), white & black
+        //rooks (2/team), white & black
         addPiece(new ChessPosition(0, 0),
                 new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.ROOK));
         addPiece(new ChessPosition(0, 7),
@@ -63,7 +71,7 @@ public class ChessBoard {
         addPiece(new ChessPosition(7, 7),
                 new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.ROOK));
 
-        //knights (2 per team), white & black
+        //knights (2/team), white & black
         addPiece(new ChessPosition(0, 1),
                 new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.KNIGHT));
         addPiece(new ChessPosition(0, 6),
@@ -73,7 +81,7 @@ public class ChessBoard {
         addPiece(new ChessPosition(7, 6),
                 new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.KNIGHT));
 
-        //bishops (2 per team), white & black
+        //bishops (2/team), white & black
         addPiece(new ChessPosition(0, 2),
                 new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.BISHOP));
         addPiece(new ChessPosition(0, 5),
@@ -83,20 +91,17 @@ public class ChessBoard {
         addPiece(new ChessPosition(7, 5),
                 new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.BISHOP));
 
-        //queens (1), white & black
+        //queens (1/team), white & black
         addPiece(new ChessPosition(0,3),
                 new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.QUEEN));
         addPiece(new ChessPosition(7,3),
                 new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.QUEEN));
 
-        //kings (1), white & black
+        //kings (1/team), white & black
         addPiece(new ChessPosition(0,4),
                 new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.QUEEN));
         addPiece(new ChessPosition(7,4),
                 new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.QUEEN));
 
     }
-
-    //1. clear board
-    //2. place pieces
 }
