@@ -24,6 +24,7 @@ public class BishopMoveCalc implements PieceMovesCalculator{
                 currentRow += rowDirection;
                 currentCol += colDirection;
                 //check bounds & occupied -> conditionals
+
             }
         }
 
