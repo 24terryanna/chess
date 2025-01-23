@@ -8,6 +8,7 @@ package chess;
  */
 public class ChessBoard {
     private ChessPiece[][] squares = new ChessPiece[8][8];
+
     public ChessBoard() {
         /** 2 dimensional array, know starting point for all pieces */
     }
@@ -38,6 +39,15 @@ public class ChessBoard {
      * (How the game of chess normally starts)
      */
     public void resetBoard() {
-        throw new RuntimeException("Not implemented");
+        //reset squares to null
+        for (int row = 0; row < 8; row++) {
+            for (int column = 0; column < 8; column++) {
+                squares[row][column] = null;
+            }
+        }
+
     }
+
+    //1. clear board
+    //2. place pieces
 }
