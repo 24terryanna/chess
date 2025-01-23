@@ -45,6 +45,24 @@ public class ChessBoard {
                 squares[row][column] = null;
             }
         }
+        //pawns, white & black
+        for (int column = 0; column < 8; column++) {
+            addPiece(new ChessPosition(1, column),
+                    new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.PAWN));
+            addPiece(new ChessPosition(6, column),
+                    new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.PAWN));
+
+        }
+
+        //rooks, white & black
+
+        //knights , white & black
+
+        //bishops, white & black
+
+        //queens, white & black
+
+        //kings, white & black
 
     }
 
