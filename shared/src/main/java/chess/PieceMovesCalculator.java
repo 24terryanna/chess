@@ -8,11 +8,18 @@ public interface PieceMovesCalculator {
     //nested if statements to check if empty or off board, check team color (if same, no move; if opposite, valid move)
 
     default boolean withinBounds(ChessPosition position) {
-        return (position.getRow() >= 0 && position.getRow() < 8
-                && position.getColumn() >= 0 && position.getColumn() < 8);
+        return (position.getRow() >= 1 && position.getRow() < 9
+                && position.getColumn() >= 1 && position.getColumn() < 9);
     }
 
-    default boolean emptySpace(ChessBoard board, ChessPosition position) {
+    default boolean checkOpponentTeam(ChessBoard board, ChessPosition position, ChessPosition newPosition) {
+        ChessPiece currentPiece = board.getPiece(position);
+        ChessPiece unknownPiece = board.getPiece(newPosition);
 
+        return currentPiece.getTeamColor() != unknownPiece.getTeamColor();
     }
+//    default boolean emptySpace(ChessBoard board, ChessPosition position) {
+//
+//    }
+    //check team color for valid move (same=don't stop, different=move add to array)ChessGame.TeamColor getTeamColor()
 }

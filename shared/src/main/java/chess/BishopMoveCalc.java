@@ -1,5 +1,6 @@
 package chess;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 // Implement the Bishop moves: diagonal lines as far as open space
@@ -11,9 +12,21 @@ public class BishopMoveCalc implements PieceMovesCalculator{
         int bishopColumn = position.getColumn();
         int[][] bishopDirection = {{-1, -1}, {-1, 1}, {1, -1}, {1, 1}};
 
+        Collection<ChessMove> bishopMoves = new ArrayList<ChessMove>();
 
+        for (int[] dir : bishopDirection) {
+            int newRow = bishopRow + dir[0];
+            int newColumn = bishopColumn + dir[1];
 
-        throw new RuntimeException();
-        //return ; //PieceMovesCalculator...(board, position, bishopDirection, bishopRow, bishopColumn);
+            ChessPosition newPosition = new ChessPosition(newRow, newColumn);
+
+            if (withinBounds(newPosition)) {
+                //check if empty
+                if (board.getPiece(newPosition) == null || checkOpponentTeam(board, position, newPosition)) {
+                    bishopMoves.add(new ChessMove(position, newPosition, null));
+                }
+            }
+        }
+        return bishopMoves;
     }
 }

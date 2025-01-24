@@ -7,15 +7,25 @@ public class KingMoveCalc implements PieceMovesCalculator{
     @Override
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition position) {
         // Implement the King's moves: 1 square any direction (pawn + bishop limited)
-        //Data Structure to store chess moves
+
         Collection<ChessMove> kingMoves = new ArrayList<ChessMove>();
         int kingRow = position.getRow();
         int kingColumn = position.getColumn();
         int[][] kingDirection = {{-1, 1}, {0, 1}, {1, 1}, {1, 0}, {1, -1}, {0, -1}, {-1, -1}, {-1, 0}};
 
+        for (int[] dir : kingDirection) {
+            int newRow = kingRow + dir[0];
+            int newColumn = kingColumn + dir[1];
 
-        //NewRow NewPosition
-        new ChessMove(position, newPosition, )
-        return kingMoves; //PieceMovesCalculator...(board, p);
+            ChessPosition newPosition = new ChessPosition(newRow, newColumn);
+
+            if (withinBounds(newPosition)) {
+                //check if empty
+                if (board.getPiece(newPosition) == null || checkOpponentTeam(board, position, newPosition)) {
+                    kingMoves.add(new ChessMove(position, newPosition, null));
+                }
+            }
+        }
+        return kingMoves;
     }
 }

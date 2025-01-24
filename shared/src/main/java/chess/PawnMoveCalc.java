@@ -10,5 +10,7 @@ public class PawnMoveCalc implements PieceMovesCalculator{
         int pawnColumn = position.getColumn();
         int[][] pawnDirection = {{1,0}};
         return null;
-    }
+    } //check color, call helper function
+    //private helper function for white pawn moves
+    //private helped function for black pawn
 }
