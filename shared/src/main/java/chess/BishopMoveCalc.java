@@ -8,26 +8,12 @@ import java.util.Collection;
 public class BishopMoveCalc implements PieceMovesCalculator{
     @Override
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition position) {
-        Collection<ChessMove> possibleMoves = new ArrayList<ChessMove>();
+        int bishop_row = position.getRow();
+        int bishop_column = position.getColumn();
+        int[][] diagonals = {{-1, -1}, {-1, 1}, {1, -1}, {1, 1}};
 
-        //4 vectors for direction options {top left, top right, bottom left, bottom right}
-        int[][] diagonals = {{-1,-1}, {-1,1}, {1,-1}, {1,1}};
+        //not sure what to do next
 
-        for (int[] diagonal : diagonals) {
-            int rowDirection = diagonal[0];
-            int colDirection = diagonal[1];
-            int currentRow = position.getRow();
-            int currentCol = position.getColumn();
-
-            //move one in current direction until occupied or out of bounds --> loop
-            while (true) {
-                currentRow += rowDirection;
-                currentCol += colDirection;
-                //check bounds & occupied -> conditionals
-
-            }
-        }
-
-        return possibleMoves;
+        return PieceMovesCalculator(board, position, diagonals, bishop_row, bishop_column);
     }
 }

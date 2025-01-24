@@ -5,10 +5,10 @@ import java.util.Collection;
 public interface PieceMovesCalculator {
     Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition position);
 
-    //general out-of-bounds code?
-    default boolean withinBounds(ChessPosition position) {
-        return position.getRow() >= 0;
-    }
+    //nested if statements to check if empty or off board
 
-    // general occupied code?
+    default boolean withinBounds(ChessPosition position) {
+        return (position.getRow() >= 0 && position.getRow() < 8
+                && position.getColumn() >= 0 && position.getColumn() < 8);
+    }
 }
