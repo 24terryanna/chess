@@ -8,12 +8,12 @@ import java.util.Collection;
 public class BishopMoveCalc implements PieceMovesCalculator{
     @Override
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition position) {
-        int bishop_row = position.getRow();
-        int bishop_column = position.getColumn();
-        int[][] diagonals = {{-1, -1}, {-1, 1}, {1, -1}, {1, 1}};
+        int bishopRow = position.getRow();
+        int bishopColumn = position.getColumn();
+        int[][] bishopDirection = {{-1, -1}, {-1, 1}, {1, -1}, {1, 1}};
 
         //not sure what to do next
 
-        return PieceMovesCalculator(board, position, diagonals, bishop_row, bishop_column);
+        return null; //PieceMovesCalculator...(board, position, bishopDirection, bishopRow, bishopColumn);
     }
 }
