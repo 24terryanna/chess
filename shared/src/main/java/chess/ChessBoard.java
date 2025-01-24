@@ -7,10 +7,11 @@ package chess;
  * signature of the existing methods.
  */
 public class ChessBoard {
-    private ChessPiece[][] squares = new ChessPiece[8][8];
+    private ChessPiece[][] squares;
 
     public ChessBoard() {
         /** 2 dimensional array, know starting point for all pieces */
+        squares = new ChessPiece[8][8];
     }
 
     /**
@@ -40,7 +41,7 @@ public class ChessBoard {
      */
     public void resetBoard() {
         //black & white pawns
-        for (int column = 0; column < 8; column++) {
+        for (int column = 1; column <= 8; column++) {
             addPiece(new ChessPosition(2, column), new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.PAWN));
             addPiece(new ChessPosition(7, column), new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.PAWN));
         }
