@@ -18,8 +18,4 @@ public interface PieceMovesCalculator {
 
         return currentPiece.getTeamColor() != unknownPiece.getTeamColor();
     }
-//    default boolean emptySpace(ChessBoard board, ChessPosition position) {
-//
-//    }
-    //check team color for valid move (same=don't stop, different=move add to array)ChessGame.TeamColor getTeamColor()
 }
