@@ -13,4 +13,5 @@ public class QueenMoveCalc implements PieceMovesCalculator {
 
         return null;
     }
+    //call rook and bishop; add both to queen collection and return
 }
