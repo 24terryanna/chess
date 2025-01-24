@@ -1,8 +1,5 @@
 package chess;
 
-import java.util.ArrayList;
-import java.util.Collection;
-
 /**
  * Represents moving a chess piece on a chessboard
  * <p>
@@ -14,8 +11,7 @@ public class ChessMove {
     private ChessPosition endPosition;
     private ChessPiece.PieceType promotionPiece;
 
-    public ChessMove(ChessPosition startPosition, ChessPosition endPosition,
-                     ChessPiece.PieceType promotionPiece) {
+    public ChessMove(ChessPosition startPosition, ChessPosition endPosition, ChessPiece.PieceType promotionPiece) {
         this.startPosition = startPosition;
         this.endPosition = endPosition;
         this.promotionPiece = promotionPiece;
@@ -24,7 +20,7 @@ public class ChessMove {
     /**
      * @return ChessPosition of starting location
      */
-    public ChessPosition getStartPosition(ChessBoard board, ChessGame.TeamColor teamColor, ChessPiece.PieceType type) {
+    public ChessPosition getStartPosition() {
         return startPosition;
     }
 
