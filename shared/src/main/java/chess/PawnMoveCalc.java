@@ -6,7 +6,7 @@ import java.util.Collection;
 public class PawnMoveCalc implements PieceMovesCalculator{
     @Override
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition position) {
-        Collection<ChessMove> pawnMoves = new ArrayList<ChessMove>();
+        Collection<ChessMove> pawnMoves = new ArrayList<>();
 
         ChessPiece currentPawn = board.getPiece(position);
         boolean isWhite = currentPawn.getTeamColor() == ChessGame.TeamColor.WHITE;
@@ -26,7 +26,7 @@ public class PawnMoveCalc implements PieceMovesCalculator{
 
          //white forward 1
          ChessPosition pawnForwardOne = new ChessPosition(pawnRow + 1, pawnColumn);
-         if (pawnRow > 1 && withinBounds(pawnForwardOne) && board.getPiece(pawnForwardOne) == null) {
+         if (withinBounds(pawnForwardOne) && board.getPiece(pawnForwardOne) == null) {
              if (pawnRow + 1 == 8) {
                  promotionPiece(pawnMoves, position, pawnForwardOne);
              } else {
@@ -66,7 +66,7 @@ public class PawnMoveCalc implements PieceMovesCalculator{
 
         //forward movement 1
         ChessPosition pawnForwardOne = new ChessPosition(pawnRow - 1, pawnColumn);
-        if (pawnRow > 1 && withinBounds(pawnForwardOne) && board.getPiece(pawnForwardOne) == null) {
+        if (withinBounds(pawnForwardOne) && board.getPiece(pawnForwardOne) == null) {
             if (pawnRow - 1 == 1) {
                 promotionPiece(pawnMoves, position, pawnForwardOne);
             } else {
