@@ -12,7 +12,7 @@ public class BishopMoveCalc implements PieceMovesCalculator {
         int bishopColumn = position.getColumn();
         int[][] bishopDirection = {{-1, -1}, {-1, 1}, {1, -1}, {1, 1}};
 
-        Collection<ChessMove> bishopMoves = new ArrayList<ChessMove>();
+        Collection<ChessMove> bishopMoves = new ArrayList<>();
 
         for (int[] dir : bishopDirection) {
             int newRow = bishopRow + dir[0];

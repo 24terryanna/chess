@@ -6,7 +6,7 @@ import java.util.Collection;
 public class QueenMoveCalc implements PieceMovesCalculator {
     @Override
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition position) {
-        Collection<ChessMove> queenMoves = new ArrayList<ChessMove>();
+        Collection<ChessMove> queenMoves = new ArrayList<>();
 
         BishopMoveCalc bishopMoves = new BishopMoveCalc();
         RookMoveCalc rookMoves = new RookMoveCalc();

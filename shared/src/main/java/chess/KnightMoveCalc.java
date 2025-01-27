@@ -8,7 +8,7 @@ public class KnightMoveCalc implements PieceMovesCalculator{
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition position) {
         // Implement the Knight's moves: 2 by 1, jump over pieces in between
 
-        Collection<ChessMove> knightMoves = new ArrayList<ChessMove>();
+        Collection<ChessMove> knightMoves = new ArrayList<>();
         int knightRow = position.getRow();
         int knightColumn = position.getColumn();
         int[][] knightDirection = {{-2, 1}, {-2, -1 }, {-1, 2}, {1, 2}, {2, 1}, {2, -1}, {1, -2}, {-1, -2}};

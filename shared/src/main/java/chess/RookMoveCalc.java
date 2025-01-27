@@ -11,7 +11,7 @@ public class RookMoveCalc implements PieceMovesCalculator{
         int rookColumn = position.getColumn();
         int[][] rookDirection = {{-1, 0}, {0, 1}, {1, 0}, {0, -1}};
 
-        Collection<ChessMove> rookMoves = new ArrayList<ChessMove>();
+        Collection<ChessMove> rookMoves = new ArrayList<>();
 
         for (int[] dir : rookDirection) {
             int newRow = rookRow + dir[0];
