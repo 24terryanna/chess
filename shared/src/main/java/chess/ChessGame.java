@@ -1,7 +1,7 @@
 package chess;
 
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Objects;
 
 /**
  * For a class that can manage a chess game, making moves on a board
@@ -55,13 +55,23 @@ public class ChessGame {
      * startPosition
      */
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
-        //check if valid move then check if it leaves king in check
+        //check if valid move then check if it leaves king in check (don't include)
         ChessPiece piece = board.getPiece(startPosition);
+
         if (piece == null){
             return null;
         }
 
+        Collection<ChessMove> moveOptions = board.getPiece(startPosition).pieceMoves(board, startPosition);
+        Collection<ChessMove> validMoves = new ArrayList<>();
+
+        for (ChessMove move : moveOptions) {
+            ChessBoard tempBoard = board.copy();
+            tempBoard.pieceMoves
+
+        }
     }
+
 
 
     /**
@@ -87,15 +97,35 @@ public class ChessGame {
         //no other piece can block check or attack opponent piece
 
         //get king position
+        ChessPosition kingPosition = null;
+        for (int row = 1; row <= 8; row++) {    //is this iterating right?
+            for (int col = 1; col <= 8; col++) {
+                ChessPiece pieceAtPos = board.getPiece(new ChessPosition(row, col));
+                if (pieceAtPos.getPieceType() == ChessPiece.PieceType.KING && pieceAtPos.getTeamColor() == teamColor) {
+                    kingPosition = new ChessPosition(row, col);
+                }
+            }
+        }
         //check other team's piece moves
-        //get possible moves for king (not attackable)
-            //if 1+ legal move, not in checkmate
-        //if attacked by Queen, Bishop, or Rook, see if another piece can move between. if so -> NOT CHECKMATE
-        //if any piece can capture attacking opponent -> NOT CHECKMATE
+        for (int row = 1; row <= 8; row++) {
+            for (int col = 1; col <= 8; col++) {
+                ChessPosition checkPos = new ChessPosition(row, col);
+                ChessPiece pieceAtPos = board.getPiece(checkPos);
 
-        //use ChessMoves for opposing team and input current King's position to see if any can end there
+                //check opponent moves
+                if (pieceAtPos != null && pieceAtPos.getTeamColor() != teamColor) {
+                    Collection<ChessMove> oppMoves = pieceAtPos.pieceMoves(board, checkPos);
+
+                    for (ChessMove move : oppMoves) {
+                        if (move.getEndPosition().equals(kingPosition)) {
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+        return false;
     }
-
 
     /**
      * Determines if the given team is in checkmate
@@ -127,7 +157,6 @@ public class ChessGame {
         //loop through each piece moves on the board
         for (int row = 1; row <= 8; row++) {
             for (int col = 1; col <= 8; col++){
-
                 ChessPosition checkPos = new ChessPosition(row, col);
                 ChessPiece pieceAtPos = board.getPiece(checkPos);
 
