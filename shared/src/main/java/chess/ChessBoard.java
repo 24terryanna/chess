@@ -17,6 +17,23 @@ public class ChessBoard {
         /** 2 dimensional array, know starting point for all pieces */
     }
 
+    public ChessBoard copy() {
+        ChessBoard boardCopy = new ChessBoard();
+
+        // Deep copy of the 2D array
+        for (int row = 0; row < 8; row++) {
+            for (int col = 0; col < 8; col++) {
+                if (this.squares[row][col] != null) {
+                    boardCopy.squares[row][col] = this.squares[row][col].copy(); // Clone piece
+                } else {
+                    boardCopy.squares[row][col] = null;
+                }
+            }
+        }
+
+        return boardCopy;
+    }
+
     /**
      * Adds a chess piece to the chessboard
      *

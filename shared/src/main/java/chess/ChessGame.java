@@ -66,8 +66,8 @@ public class ChessGame {
         Collection<ChessMove> validMoves = new ArrayList<>();
 
         for (ChessMove move : moveOptions) {
-            ChessBoard tempBoard = board.copy();
-            tempBoard.pieceMoves
+            ChessBoard tempBoard = board.clone();
+            tempBoard.pieceMoves(move);
 
         }
     }
