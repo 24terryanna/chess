@@ -66,13 +66,25 @@ public class ChessGame {
         Collection<ChessMove> validMoves = new ArrayList<>();
 
         for (ChessMove move : moveOptions) {
-            ChessBoard tempBoard = board.clone();
+            ChessBoard tempBoard = board.copy();
             tempBoard.pieceMoves(move);
 
         }
+        return validMoves;
     }
 
-
+    private ChessPosition findKing(ChessBoard tempBoard, TeamColor teamColor) {
+        ChessPosition kingPosition = null;
+        for (int row = 1; row <= 8; row++) {    //is this iterating right?
+            for (int col = 1; col <= 8; col++) {
+                ChessPiece pieceAtPos = board.getPiece(new ChessPosition(row, col));
+                if (pieceAtPos.getPieceType() == ChessPiece.PieceType.KING && pieceAtPos.getTeamColor() == teamColor) {
+                    kingPosition = new ChessPosition(row, col);
+                }
+            }
+        }
+        return kingPosition;
+    }
 
     /**
      * Makes a move in a chess game
@@ -97,15 +109,7 @@ public class ChessGame {
         //no other piece can block check or attack opponent piece
 
         //get king position
-        ChessPosition kingPosition = null;
-        for (int row = 1; row <= 8; row++) {    //is this iterating right?
-            for (int col = 1; col <= 8; col++) {
-                ChessPiece pieceAtPos = board.getPiece(new ChessPosition(row, col));
-                if (pieceAtPos.getPieceType() == ChessPiece.PieceType.KING && pieceAtPos.getTeamColor() == teamColor) {
-                    kingPosition = new ChessPosition(row, col);
-                }
-            }
-        }
+
         //check other team's piece moves
         for (int row = 1; row <= 8; row++) {
             for (int col = 1; col <= 8; col++) {
