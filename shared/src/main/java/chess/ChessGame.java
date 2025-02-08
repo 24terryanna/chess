@@ -72,8 +72,8 @@ public class ChessGame {
         for (ChessMove move : moveOptions) {
             ChessBoard tempBoard = board.copy();
 
-            board.addPiece(startPosition, null);
-            board.addPiece(move.getEndPosition(), piece);
+            tempBoard.addPiece(startPosition, null);
+            tempBoard.addPiece(move.getEndPosition(), piece);
 
             if (!isInCheck(team, tempBoard)){     //not quite right?
                 validMoves.add(move);
@@ -175,7 +175,7 @@ public class ChessGame {
         for (int row = 1; row <= 8 && kingPosition == null; row++) {
             for (int col = 1; col <= 8 && kingPosition == null; col++) {
                 ChessPiece pieceAtPos = board.getPiece(new ChessPosition(row, col));
-                if (pieceAtPos.getPieceType() == ChessPiece.PieceType.KING ) {   //&& pieceAtPos.getTeamColor() == teamColor) {
+                if (pieceAtPos != null && pieceAtPos.getPieceType() == ChessPiece.PieceType.KING ) {   //&& pieceAtPos.getTeamColor() == teamColor) {
                     kingPosition = new ChessPosition(row, col);
                 }
             }
@@ -192,7 +192,10 @@ public class ChessGame {
         //in Check; no move valid moves to get out
         //loop: clone board, get all piece moves (call getMoves method), apply moves one at a time,
         //then call isInCheck, iterate to next move
-        return isInCheck(teamColor) && isInStalemate(teamColor);
+        if (!isInCheck(teamColor)) {
+            return false;
+        }
+        return !hasValidMoves(board, teamColor);
     }
 
 
@@ -207,9 +210,14 @@ public class ChessGame {
         //if NOT in check and NO moves for any pieces -> true
         if (isInCheck(teamColor)) {
             return false;
+        } else {
+            return !hasValidMoves(board, teamColor);
         }
+    }
 
-        //loop through each piece moves on the board
+
+    //loop through each piece moves on the board
+    private boolean hasValidMoves(ChessBoard board, TeamColor teamColor) {
         for (int row = 1; row <= 8; row++) {
             for (int col = 1; col <= 8; col++){
                 ChessPosition checkPos = new ChessPosition(row, col);
@@ -219,14 +227,15 @@ public class ChessGame {
                     Collection<ChessMove> moves = validMoves(checkPos);
 
                     //check if moves is empty
-                    if (moves != null){
-                        return false;
+                    if (moves != null && !moves.isEmpty()){
+                        return true;
                     }
                 }
             }
         }
-        return true;
+        return false;
     }
+
 
 
     /**
