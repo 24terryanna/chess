@@ -82,6 +82,39 @@ public class ChessGame {
         return validMoves;
     }
 
+    /** Count number of attackers to see if King is in double check.
+     *
+     * @param teamColor
+     * @param chessBoard
+     * @return number of attackers (attacker count)
+     */
+    private int countAttackers(TeamColor teamColor, ChessBoard chessBoard) {
+        int attackerCount = 0;
+        ChessPosition kingPosition = findKing(chessBoard, teamColor);
+        if (kingPosition == null) {
+            return 0;
+        }
+
+        for (int row = 1; row <= 8; row++) {
+            for (int col = 1; col <= 8; col++) {
+                ChessPosition checkPos = new ChessPosition(row, col);
+                ChessPiece pieceAtPos = chessBoard.getPiece(checkPos);
+
+                if (pieceAtPos != null && pieceAtPos.getTeamColor() != teamColor) {
+                    Collection<ChessMove> oppMoves = pieceAtPos.pieceMoves(chessBoard, checkPos);
+
+                    for (ChessMove move : oppMoves) {
+                        if (move.getEndPosition().equals(kingPosition)) {
+                            attackerCount++;
+                        }
+                    }
+                }
+            }
+        }
+        return attackerCount;
+    }
+
+
     /**
      * Makes a move in a chess game
      *
@@ -189,12 +222,15 @@ public class ChessGame {
      * @return True if the specified team is in checkmate
      */
     public boolean isInCheckmate(TeamColor teamColor) {
-        //in Check; no move valid moves to get out
-        //loop: clone board, get all piece moves (call getMoves method), apply moves one at a time,
-        //then call isInCheck, iterate to next move
         if (!isInCheck(teamColor)) {
             return false;
         }
+
+        //check if king is in double check
+        if (countAttackers(teamColor, board) > 1) {
+            return validMoves(findKing(board, teamColor)).isEmpty();
+        }
+
         return !hasValidMoves(board, teamColor);
     }
 
