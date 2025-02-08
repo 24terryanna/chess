@@ -17,6 +17,7 @@ public class ChessBoard {
         /** 2 dimensional array, know starting point for all pieces */
     }
 
+    //deep copy of chess board
     public ChessBoard copy() {
         ChessBoard boardCopy = new ChessBoard();
 
@@ -30,7 +31,6 @@ public class ChessBoard {
                 }
             }
         }
-
         return boardCopy;
     }
 
