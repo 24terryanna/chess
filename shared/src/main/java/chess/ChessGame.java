@@ -16,6 +16,7 @@ public class ChessGame {
 
     public ChessGame() {
         this.board = new ChessBoard();
+        board.resetBoard();
         this.currentTeam = TeamColor.WHITE;
     }
 
@@ -66,7 +67,6 @@ public class ChessGame {
         Collection<ChessMove> validMoves = new ArrayList<>();
 
         TeamColor team = piece.getTeamColor();
-        //ChessPosition kingPosition = findKing(board, team);
 
         //check move outcome on temporary board; only add to valid move if not in check
         for (ChessMove move : moveOptions) {
@@ -75,43 +75,11 @@ public class ChessGame {
             tempBoard.addPiece(startPosition, null);
             tempBoard.addPiece(move.getEndPosition(), piece);
 
-            if (!isInCheck(team, tempBoard)){     //not quite right?
+            if (!isInCheck(team, tempBoard)) {     //not quite right?
                 validMoves.add(move);
             }
         }
         return validMoves;
-    }
-
-    /** Count number of attackers to see if King is in double check.
-     *
-     * @param teamColor
-     * @param chessBoard
-     * @return number of attackers (attacker count)
-     */
-    private int countAttackers(TeamColor teamColor, ChessBoard chessBoard) {
-        int attackerCount = 0;
-        ChessPosition kingPosition = findKing(chessBoard, teamColor);
-        if (kingPosition == null) {
-            return 0;
-        }
-
-        for (int row = 1; row <= 8; row++) {
-            for (int col = 1; col <= 8; col++) {
-                ChessPosition checkPos = new ChessPosition(row, col);
-                ChessPiece pieceAtPos = chessBoard.getPiece(checkPos);
-
-                if (pieceAtPos != null && pieceAtPos.getTeamColor() != teamColor) {
-                    Collection<ChessMove> oppMoves = pieceAtPos.pieceMoves(chessBoard, checkPos);
-
-                    for (ChessMove move : oppMoves) {
-                        if (move.getEndPosition().equals(kingPosition)) {
-                            attackerCount++;
-                        }
-                    }
-                }
-            }
-        }
-        return attackerCount;
     }
 
 
@@ -208,7 +176,8 @@ public class ChessGame {
         for (int row = 1; row <= 8 && kingPosition == null; row++) {
             for (int col = 1; col <= 8 && kingPosition == null; col++) {
                 ChessPiece pieceAtPos = board.getPiece(new ChessPosition(row, col));
-                if (pieceAtPos != null && pieceAtPos.getPieceType() == ChessPiece.PieceType.KING ) {   //&& pieceAtPos.getTeamColor() == teamColor) {
+                if (pieceAtPos != null && pieceAtPos.getPieceType() == ChessPiece.PieceType.KING
+                        && pieceAtPos.getTeamColor() == teamColor) {
                     kingPosition = new ChessPosition(row, col);
                 }
             }
@@ -224,11 +193,6 @@ public class ChessGame {
     public boolean isInCheckmate(TeamColor teamColor) {
         if (!isInCheck(teamColor)) {
             return false;
-        }
-
-        //check if king is in double check
-        if (countAttackers(teamColor, board) > 1) {
-            return validMoves(findKing(board, teamColor)).isEmpty();
         }
 
         return !hasValidMoves(board, teamColor);
