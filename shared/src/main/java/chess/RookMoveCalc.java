@@ -6,7 +6,6 @@ import java.util.Collection;
 public class RookMoveCalc implements PieceMovesCalculator{
     @Override
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition position) {
-        // Implement the Rook's moves: straight line as far as possible
         int rookRow = position.getRow();
         int rookColumn = position.getColumn();
         int[][] rookDirection = {{-1, 0}, {0, 1}, {1, 0}, {0, -1}};
@@ -18,9 +17,7 @@ public class RookMoveCalc implements PieceMovesCalculator{
             int newColumn = rookColumn + dir[1] ;
             ChessPosition newPosition = new ChessPosition(newRow, newColumn);
 
-            //keep moving diagonally until stopped
             while (withinBounds(newPosition)) {
-                //check if empty
                 if (board.getPiece(newPosition) == null) {
                     rookMoves.add(new ChessMove(position, newPosition, null));
                 } else {

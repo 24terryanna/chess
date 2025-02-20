@@ -6,7 +6,6 @@ import java.util.Collection;
 public class KnightMoveCalc implements PieceMovesCalculator{
     @Override
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition position) {
-        // Implement the Knight's moves: 2 by 1, jump over pieces in between
 
         Collection<ChessMove> knightMoves = new ArrayList<>();
         int knightRow = position.getRow();
@@ -20,7 +19,6 @@ public class KnightMoveCalc implements PieceMovesCalculator{
             ChessPosition newPosition = new ChessPosition(newRow, newColumn);
 
             if (withinBounds(newPosition)) {
-                //check if empty
                 if (board.getPiece(newPosition) == null || checkOpponentTeam(board, position, newPosition)) {
                     knightMoves.add(new ChessMove(position, newPosition, null));
                 }

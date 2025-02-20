@@ -67,7 +67,6 @@ public class ChessPiece {
             case PAWN -> new PawnMoveCalc();
         };
         return moves.pieceMoves(board, position);
-        //    switch method, check piece type and use PieceMoveCalculator
     }
 
     @Override

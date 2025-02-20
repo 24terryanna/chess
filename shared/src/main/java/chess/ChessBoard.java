@@ -17,11 +17,9 @@ public class ChessBoard {
         /** 2 dimensional array, know starting point for all pieces */
     }
 
-    //deep copy of chess board
     public ChessBoard copy() {
         ChessBoard boardCopy = new ChessBoard();
 
-        // Deep copy of the 2D array
         for (int row = 0; row < 8; row++) {
             for (int col = 0; col < 8; col++) {
                 if (this.squares[row][col] != null) {
@@ -61,7 +59,6 @@ public class ChessBoard {
      */
     public void resetBoard() {
         squares = new ChessPiece[8][8];
-        //black & white pawns
         for (int column = 1; column <= 8; column++) {
             addPiece(new ChessPosition(2, column), new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.PAWN));
             addPiece(new ChessPosition(7, column), new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.PAWN));

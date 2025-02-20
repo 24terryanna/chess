@@ -18,13 +18,11 @@ public class PawnMoveCalc implements PieceMovesCalculator{
         }
         return pawnMoves;
     }
-    //helper for white pawns
      private void whitePawnMoves(ChessBoard board, ChessPosition position, Collection<ChessMove> pawnMoves) {
 
          int pawnRow = position.getRow();
          int pawnColumn = position.getColumn();
 
-         //white forward 1
          ChessPosition pawnForwardOne = new ChessPosition(pawnRow + 1, pawnColumn);
          if (withinBounds(pawnForwardOne) && board.getPiece(pawnForwardOne) == null) {
              if (pawnRow + 1 == 8) {
@@ -33,7 +31,6 @@ public class PawnMoveCalc implements PieceMovesCalculator{
                  pawnMoves.add(new ChessMove(position, pawnForwardOne, null));
              }
          }
-        //capture diagonal left
          ChessPosition leftCapture = new ChessPosition(pawnRow + 1, pawnColumn - 1);
          if (withinBounds(leftCapture) && board.getPiece(leftCapture) != null && checkOpponentTeam(board, position, leftCapture)) {
              if (pawnRow + 1 == 8) {
@@ -42,7 +39,6 @@ public class PawnMoveCalc implements PieceMovesCalculator{
                  pawnMoves.add(new ChessMove(position, leftCapture, null));
              }
          }
-        //capture diagonal right
          ChessPosition rightCapture = new ChessPosition(pawnRow + 1, pawnColumn + 1);
          if (withinBounds(rightCapture) && board.getPiece(rightCapture) != null && checkOpponentTeam(board, position, rightCapture)) {
              if (pawnRow + 1 == 8) {
@@ -58,13 +54,10 @@ public class PawnMoveCalc implements PieceMovesCalculator{
 
      }
 
-    //helper for black pawns
     private void blackPawnMoves(ChessBoard board, ChessPosition position, Collection<ChessMove> pawnMoves) {
-        //get current position
         int pawnRow = position.getRow();
         int pawnColumn = position.getColumn();
 
-        //forward movement 1
         ChessPosition pawnForwardOne = new ChessPosition(pawnRow - 1, pawnColumn);
         if (withinBounds(pawnForwardOne) && board.getPiece(pawnForwardOne) == null) {
             if (pawnRow - 1 == 1) {
@@ -74,7 +67,6 @@ public class PawnMoveCalc implements PieceMovesCalculator{
             }
         }
 
-        //capture diagonal left
         ChessPosition leftCapture = new ChessPosition(pawnRow - 1, pawnColumn - 1);
         if (withinBounds(leftCapture) && board.getPiece(leftCapture) != null && checkOpponentTeam(board, position, leftCapture)) {
             if (pawnRow -1 == 1) {
@@ -84,7 +76,6 @@ public class PawnMoveCalc implements PieceMovesCalculator{
             }
         }
 
-        //capture diagonal right
         ChessPosition rightCapture = new ChessPosition(pawnRow - 1, pawnColumn + 1);
         if (withinBounds(rightCapture) && board.getPiece(rightCapture) != null && checkOpponentTeam(board, position, rightCapture)) {
             if (pawnRow - 1 == 1) {
@@ -94,7 +85,6 @@ public class PawnMoveCalc implements PieceMovesCalculator{
             }
         }
 
-        //first move forward 2
         ChessPosition firstForwardTwo = new ChessPosition(pawnRow - 2, pawnColumn);
         if (pawnRow == 7 && board.getPiece(pawnForwardOne) == null && board.getPiece(firstForwardTwo) == null) {
             pawnMoves.add(new ChessMove(position, firstForwardTwo, null));

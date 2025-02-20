@@ -56,7 +56,6 @@ public class ChessGame {
      */
 
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
-        //check if valid move then check if it leaves king in check (don't include)
         ChessPiece piece = board.getPiece(startPosition);
 
         if (piece == null){
@@ -68,14 +67,13 @@ public class ChessGame {
 
         TeamColor team = piece.getTeamColor();
 
-        //check move outcome on temporary board; only add to valid move if not in check
         for (ChessMove move : moveOptions) {
             ChessBoard tempBoard = board.copy();
 
             tempBoard.addPiece(startPosition, null);
             tempBoard.addPiece(move.getEndPosition(), piece);
 
-            if (!isInCheck(team, tempBoard)) {     //not quite right?
+            if (!isInCheck(team, tempBoard)) {
                 validMoves.add(move);
             }
         }
@@ -90,31 +88,25 @@ public class ChessGame {
      * @throws InvalidMoveException if move is invalid
      */
     public void makeMove(ChessMove move) throws InvalidMoveException {
-        //check if valid moves is empty
         Collection<ChessMove> allValidMoves = validMoves(move.getStartPosition());
         if (allValidMoves == null){
             throw new InvalidMoveException("No valid moves to play");
         }
 
-        //check if move is valid
         boolean checkValidMoves = allValidMoves.contains(move);
 
-        //check team color
         TeamColor team = board.getPiece(move.getStartPosition()).getTeamColor();
         boolean checkTeam = getTeamTurn() == team;
 
         if (checkValidMoves && checkTeam){
             ChessPiece movingPiece = board.getPiece(move.getStartPosition());
-            //check pawn promotion
             if (move.getPromotionPiece() != null) {
                 movingPiece = new ChessPiece(movingPiece.getTeamColor(), move.getPromotionPiece());
             }
 
-            //move piece to end position
             board.addPiece(move.getStartPosition(), null);
             board.addPiece(move.getEndPosition(), movingPiece);
 
-            //change team turn
             if (getTeamTurn() == TeamColor.WHITE) {
                 setTeamTurn(TeamColor.BLACK);
             } else {
@@ -126,7 +118,6 @@ public class ChessGame {
         }
     }
 
-    //method overloading isInCheck
     public boolean isInCheck(TeamColor teamColor) {
         return isInCheck(teamColor, board);
     }
@@ -138,18 +129,15 @@ public class ChessGame {
      * @return True if the specified team is in check
      */
     public boolean isInCheck(TeamColor teamColor, ChessBoard chessBoard) {
-        //get king position
         ChessPosition kingPosition = findKing(chessBoard, teamColor);
         if (kingPosition == null) {
             return false;
         }
-        //check opposing team's moves
         for (int row = 1; row <= 8; row++) {
             for (int col = 1; col <= 8; col++) {
                 ChessPosition checkPos = new ChessPosition(row, col);
                 ChessPiece pieceAtPos = chessBoard.getPiece(checkPos);
 
-                //check opponent moves
                 if (pieceAtPos != null && pieceAtPos.getTeamColor() != teamColor) {
                     Collection<ChessMove> oppMoves = pieceAtPos.pieceMoves(chessBoard, checkPos);
 
@@ -207,7 +195,6 @@ public class ChessGame {
      * @return True if the specified team is in stalemate, otherwise false
      */
     public boolean isInStalemate(TeamColor teamColor) {
-        //if NOT in check and NO moves for any pieces -> true
         if (isInCheck(teamColor)) {
             return false;
         } else {
@@ -216,7 +203,6 @@ public class ChessGame {
     }
 
 
-    //loop through each piece moves on the board
     private boolean hasValidMoves(ChessBoard board, TeamColor teamColor) {
         for (int row = 1; row <= 8; row++) {
             for (int col = 1; col <= 8; col++){
@@ -226,7 +212,6 @@ public class ChessGame {
                 if (pieceAtPos != null && pieceAtPos.getTeamColor() == teamColor){
                     Collection<ChessMove> moves = validMoves(checkPos);
 
-                    //check if moves is empty
                     if (moves != null && !moves.isEmpty()){
                         return true;
                     }
