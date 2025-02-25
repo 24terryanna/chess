@@ -128,6 +128,7 @@ public class ChessGame {
      * @param teamColor which team to check for check
      * @return True if the specified team is in check
      */
+    //NESTING DEPTH = 5; max is 4 --- clean
     public boolean isInCheck(TeamColor teamColor, ChessBoard chessBoard) {
         ChessPosition kingPosition = findKing(chessBoard, teamColor);
         if (kingPosition == null) {
@@ -136,12 +137,13 @@ public class ChessGame {
         for (int row = 1; row <= 8; row++) {
             for (int col = 1; col <= 8; col++) {
                 ChessPosition checkPos = new ChessPosition(row, col);
-                ChessPiece pieceAtPos = chessBoard.getPiece(checkPos);
+                ChessPiece pieceAtPosition = chessBoard.getPiece(checkPos);
 
-                if (pieceAtPos != null && pieceAtPos.getTeamColor() != teamColor) {
-                    Collection<ChessMove> oppMoves = pieceAtPos.pieceMoves(chessBoard, checkPos);
+                //make this a new method? isKingInTarget
+                if (pieceAtPosition != null && pieceAtPosition.getTeamColor() != teamColor) {
+                    Collection<ChessMove> opponentMoves = pieceAtPosition.pieceMoves(chessBoard, checkPos);
 
-                    for (ChessMove move : oppMoves) {
+                    for (ChessMove move : opponentMoves) {
                         if (move.getEndPosition().equals(kingPosition)) {
                             return true;
                         }
