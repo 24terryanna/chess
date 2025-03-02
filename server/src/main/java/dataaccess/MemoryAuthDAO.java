@@ -29,6 +29,7 @@ public class MemoryAuthDAO implements AuthDAO{
 
     @Override
     public void clear() {
+        db = HashSet.newHashSet(16);
 
     }
 }

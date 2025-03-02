@@ -28,6 +28,7 @@ public class MemoryUserDAO implements UserDAO{
 
     @Override
     public void clear() {
+        db = HashSet.newHashSet(16);
 
     }
 }
