@@ -13,7 +13,7 @@ public class MemoryAuthDAO implements AuthDAO{
     }
 
     @Override
-    public void addAuth(AuthData authData) {
+    public void createAuth(AuthData authData) {
 
     }
 
