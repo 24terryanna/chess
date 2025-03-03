@@ -6,11 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class MemoryUserDAO implements UserDAO{
-    private Map<String, UserData> db;
-
-    public MemoryUserDAO(){
-        db = new HashMap<>();
-    }
+    private final Map<String, UserData> db = new HashMap<>();
 
     @Override
     public UserData getUser(String username) throws DataAccessException {
@@ -22,11 +18,11 @@ public class MemoryUserDAO implements UserDAO{
         db.put(userData.username(), userData);
     }
 
-    @Override
-    public boolean authUser(String username, String password) throws DataAccessException {
-        UserData user = db.get(username);
-        return user != null && user.password().equals(password);
-    }
+//    @Override
+//    public boolean authUser(String username, String password) throws DataAccessException {
+//        UserData user = db.get(username);
+//        return user != null && user.password().equals(password);
+//    }
 
     @Override
     public void clear() {

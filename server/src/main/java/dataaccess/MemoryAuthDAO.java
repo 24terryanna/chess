@@ -3,33 +3,28 @@ package dataaccess;
 import model.AuthData;
 import model.UserData;
 
-import java.util.HashSet;
+import java.util.HashMap;
+import java.util.Map;
 
 public class MemoryAuthDAO implements AuthDAO{
-    private HashSet<UserData> db;
-
-    public MemoryAuthDAO(){
-        db = HashSet.newHashSet(16);
-    }
+    private final Map<String, AuthData> db = new HashMap<>();
 
     @Override
     public void createAuth(AuthData authData) {
-
+        db.put(authData.authToken(), authData);
     }
 
     @Override
     public void deleteAuth(String authToken) {
-
     }
 
     @Override
     public AuthData getAuth(String authToken) throws DataAccessException {
-        return null;
+        return db.get(authToken);
     }
 
     @Override
     public void clear() {
-        db = HashSet.newHashSet(16);
-
+        db.clear();
     }
 }

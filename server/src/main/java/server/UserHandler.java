@@ -3,39 +3,45 @@ package server;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.google.gson.Gson;
-import model.AuthData;
-import org.eclipse.jetty.server.Authentication;
-import org.eclipse.jetty.server.Request;
-import org.eclipse.jetty.server.Response;
+import request.RegisterRequest;
+import request.RegisterResult;
 import service.UserService;
-import model.UserData;
-//import spark.Request;
-//import spark.Response;
 
-public class UserHandler {
-    UserService userService;
+import java.io.IOError;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 
-    public UserHandler() {
+
+public class UserHandler implements HttpHandler{
+    private final UserService userService;
+    private final Gson gson = new Gson();
+
+    public UserHandler(UserService userService) {
         this.userService = userService;
     }
 
-    public Object register(Request request, Response response) throws BadRequestException{
-        UserData userData = new Gson().fromJson(request.body(), UserData.class);
-
-        if (userData.username() == null || userData.password() == null) {
-            throw new BadRequestException("No username or password given");
+    @Override
+    public void handle(HttpExchange exchange) throws IOException {
+        if (!"POST".equalsIgnoreCase(exchange.getRequestMethod())) {
+            exchange.sendResponseHeaders(405, 0);
+            return;
         }
 
-        try {
-            AuthData authData = userService.createUser(userData);
-            response.status(200);
-            return new Gson().toJson(authData);
-        } catch (BadRequestException ) {
-            response.status(403);
-            return "{ \"message\": \"Error: already taken\" }";
-        }
+        //read request body
+        InputStreamReader inputStreamReader = new InputStreamReader(exchange.getRequestBody(), StandardCharsets.UTF_8);
+        RegisterRequest request = gson.fromJson((inputStreamReader, RegisterRequest.class));
+
+        //call service
+        RegisterResult result = userService.register(request);
+
+        //send response
+        String response = gson.toJson(result);
+        exchange.sendResponseHeaders(result.statusCode(), response.length());
+        OutputStream outputStream = exchange.getResponseBody();
+        outputStream.write(response.getBytes(StandardCharsets.UTF_8));
+        outputStream.close();
+
     }
-
-
-
 }
