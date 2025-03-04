@@ -5,24 +5,24 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class MemoryUserDAO implements UserDAO{
-    private final Map<String, UserData> db = new HashMap<>();
+    private final Map<String, UserData> userDB = new HashMap<>();
 
     @Override
     public UserData getUser(String username) throws DataAccessException {
-        return db.get(username);
+        return userDB.get(username);
     }
 
     @Override
     public void createUser(UserData userData) {
-        if (db.containsKey(userData.username())) {
+        if (userDB.containsKey(userData.username())) {
             throw new RuntimeException("User already exists!");
         }
-        db.put(userData.username(), userData);
+        userDB.put(userData.username(), userData);
     }
 
     @Override
     public void clear() {
-        db.clear();
+        userDB.clear();
 
     }
 }

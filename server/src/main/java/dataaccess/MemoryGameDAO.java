@@ -1,20 +1,23 @@
 package dataaccess;
 
 import model.GameData;
-import model.UserData;
+import dataaccess.DataAccessException;
 
-import java.util.HashSet;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 public class MemoryGameDAO implements GameDAO{
-    private HashSet<UserData> db;
+    private final Map<Integer, GameData> gamesDB;
 
     public MemoryGameDAO(){
-        db = HashSet.newHashSet(16);
+        gamesDB = new HashMap<>();
     }
 
     @Override
-    public HashSet<GameData> listGames() {
-        return null;
+    public Collection<GameData> listGames() throws DataAccessException {
+        return Collections.unmodifiableCollection(gamesDB.values());
     }
 
     @Override
@@ -24,21 +27,24 @@ public class MemoryGameDAO implements GameDAO{
 
     @Override
     public GameData getGame(int gameID) throws DataAccessException {
-        return null;
-    }
-
-    @Override
-    public boolean gameExists(int gameID) {
-        return false;
+        return gamesDB.get(gameID);
     }
 
     @Override
     public void updateGame(GameData game) throws DataAccessException {
+        if (!gamesDB.containsKey(game.gameID())) {
+            throw new DataAccessException("Game is nonexistent");
+        }
 
+        if (game.game() == null) {
+            throw new DataAccessException("Game cannot be null");
+        }
+        gamesDB.remove(game.gameID());
+        gamesDB.put(game.gameID(), game);
     }
 
     @Override
-    public void clear() {
-        db = HashSet.newHashSet(16);
+    public void clear() throws DataAccessException {
+        gamesDB.clear();
     }
 }
