@@ -41,7 +41,7 @@ public class UserService {
             //create the new user
             UserData newUser = new UserData(request.username(), request.password(), request.email());
             userDAO.createUser(newUser);
-            return new RegisterResult(request.username(), authData.authToken(), 200, "Successful registration");
+            return new RegisterResult(request.username(), authData.authToken(), 200, "Successful registration!");
 
         } catch (Exception e) {
             return new RegisterResult("Error: internal server error", 500);
@@ -63,7 +63,7 @@ public class UserService {
 
             String authToken = UUID.randomUUID().toString();
             authDAO.createAuth(new AuthData(request.username(), authToken));
-            return new LoginResult(request.username(), authToken, 200);
+            return new LoginResult(request.username(), authToken, 200, "Successful login!");
 
         } catch (Exception e) {
             return new LoginResult("Error: internal server error", 500);

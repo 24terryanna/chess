@@ -1,7 +1,7 @@
 package model;
 
-public record LoginResult(String username, String authToken, int statusCode) {
+public record LoginResult(String username, String authToken, int statusCode, String message) {
     public LoginResult(String message, int statusCode) {
-        this(null, null, statusCode);
+        this(null, null, statusCode, message);
     }
 }
