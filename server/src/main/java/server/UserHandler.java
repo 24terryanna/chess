@@ -2,8 +2,8 @@ package server;
 
 import com.google.gson.Gson;
 import dataaccess.DataAccessException;
-import request.RegisterRequest;
-import response.RegisterResult;
+import model.UserData;
+import model.RegisterResult;
 import service.UserService;
 import spark.Request;
 import spark.Response;
@@ -20,7 +20,7 @@ public class UserHandler {
 
     public Route registerUser = (Request req, Response res) -> {
         try {
-            RegisterRequest request = gson.fromJson(req.body(), RegisterRequest.class);
+            UserData.RegisterRequest request = gson.fromJson(req.body(), UserData.RegisterRequest.class);
 
             if (request.getUsername() == null || request.getPassword() == null || request.getEmail() == null) {
                 res.status(400);
