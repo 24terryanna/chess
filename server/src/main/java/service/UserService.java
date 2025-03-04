@@ -3,12 +3,7 @@ package service;
 import dataaccess.AuthDAO;
 import dataaccess.DataAccessException;
 import dataaccess.UserDAO;
-import model.AuthData;
-import model.UserData;
-import model.RegisterResult;
-import model.RegisterRequest;
-import model.LoginResult;
-import model.LoginRequest;
+import model.*;
 
 import java.util.UUID;
 
@@ -67,6 +62,24 @@ public class UserService {
 
         } catch (Exception e) {
             return new LoginResult("Error: internal server error", 500);
+        }
+    }
+
+    public LogoutResult logout(String authToken) throws DataAccessException {
+        try {
+            if (authToken == null || authToken.isEmpty()) {
+                return new LogoutResult("Error: unauthorized", 401);
+            }
+
+            AuthData authData = authDAO.getAuth(authToken);
+            if (authData == null) {
+                return new LogoutResult("Error: unauthorized", 401);
+            }
+
+            authDAO.deleteAuth(authToken);
+            return new LogoutResult("Successful logout", 200);
+        } catch (Exception e) {
+            return new LogoutResult("Error: internal server error", 500);
         }
     }
 

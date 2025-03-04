@@ -35,7 +35,8 @@ public class Server {
 
     private void registerEndpoints(UserHandler userHandler, DatabaseHandler databaseHandler) {
         Spark.post("/user", userHandler.registerUser);
-        Spark.post("/session", userHandler.login);
+        Spark.post("/session", userHandler.loginUser);
+        Spark.delete("/session", userHandler.logoutUser);
         Spark.delete("/db", databaseHandler.clearDatabase);
     }
 

@@ -2,11 +2,7 @@ package server;
 
 import com.google.gson.Gson;
 import dataaccess.DataAccessException;
-import model.UserData;
-import model.RegisterResult;
-import model.RegisterRequest;
-import model.LoginResult;
-import model.LoginRequest;
+import model.*;
 import service.UserService;
 import spark.Request;
 import spark.Response;
@@ -40,7 +36,7 @@ public class UserHandler {
         }
     };
 
-    public Route login = (Request req, Response res) -> {
+    public Route loginUser = (Request req, Response res) -> {
         try {
             LoginRequest request = gson.fromJson(req.body(), LoginRequest.class);
 
@@ -55,7 +51,25 @@ public class UserHandler {
 
         } catch(DataAccessException e) {
             res.status(500);
-            return gson.toJson(new LoginResult("ErrorL " + e.getMessage(), 500));
+            return gson.toJson(new LoginResult("Error: " + e.getMessage(), 500));
+        }
+    };
+
+    public Route logoutUser = (Request req, Response res) -> {
+        try {
+            String authToken = req.headers("authorization");
+
+            if (authToken == null || authToken.isEmpty()) {
+                res.status(401);
+                return gson.toJson(new LogoutResult("Error: unauthorized", 401));
+            }
+
+            LogoutResult result = userService.logout(authToken);
+            res.status(result.statusCode());
+            return gson.toJson(result);
+        } catch (DataAccessException e) {
+            res.status(500);
+            return gson.toJson(new LogoutResult("Error: " + e.getMessage(), 500));
         }
     };
 }
