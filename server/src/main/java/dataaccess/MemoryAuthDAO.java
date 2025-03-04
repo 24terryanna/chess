@@ -1,13 +1,15 @@
 package dataaccess;
 
 import model.AuthData;
-import model.UserData;
-
 import java.util.HashMap;
 import java.util.Map;
 
 public class MemoryAuthDAO implements AuthDAO{
-    private final Map<String, AuthData> db = new HashMap<>();
+    private Map<String, AuthData> db;
+
+    public MemoryAuthDAO() {
+        db = new HashMap<>();
+    }
 
     @Override
     public void createAuth(AuthData authData) {
@@ -16,6 +18,7 @@ public class MemoryAuthDAO implements AuthDAO{
 
     @Override
     public void deleteAuth(String authToken) {
+        db.remove(authToken);
     }
 
     @Override
