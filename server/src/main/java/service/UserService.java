@@ -10,7 +10,6 @@ import model.RegisterRequest;
 import model.LoginResult;
 import model.LoginRequest;
 
-import javax.xml.crypto.Data;
 import java.util.UUID;
 
 public class UserService {
@@ -34,15 +33,18 @@ public class UserService {
             if (existingUser != null) {
                 return new RegisterResult("Error: already taken", 403);
             }
+            //create authToken for new user
+            String authToken = UUID.randomUUID().toString();
+            AuthData authData = new AuthData(request.username(), authToken);
+            authDAO.createAuth(authData);
 
             //create the new user
             UserData newUser = new UserData(request.username(), request.password(), request.email());
             userDAO.createUser(newUser);
+            return new RegisterResult(request.username(), authData.authToken(), 200, "Successful registration");
 
-            //create authToken for new user
-            return createAuthResponse(request.username());
         } catch (Exception e) {
-            return new RegisterResult("Error: iternal server error", 500);
+            return new RegisterResult("Error: internal server error", 500);
         }
 
     }
@@ -59,17 +61,13 @@ public class UserService {
                 return new LoginResult("Error: unauthorized", 401);
             }
 
-            return createAuthResponse(request.username());
+            String authToken = UUID.randomUUID().toString();
+            authDAO.createAuth(new AuthData(request.username(), authToken));
+            return new LoginResult(request.username(), authToken, 200);
+
         } catch (Exception e) {
             return new LoginResult("Error: internal server error", 500);
         }
-    }
-    private <T> T createAuthResponse(String username) throws DataAccessException {
-        String authToken = UUID.randomUUID().toString();
-        authDAO.createAuth(new AuthData(username, authToken));
-
-        return (T) (authToken.length() > 0 ? new RegisterResult(username, authToken, 200)
-                : new LoginResult(username, authToken, 200));
     }
 
 }
