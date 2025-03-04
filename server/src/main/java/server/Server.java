@@ -29,7 +29,7 @@ public class Server {
 
         //register endpoints
         Spark.post("/user", userHandler.registerUser);
-        //Spark.delete("/db", databaseHandler.clearDatabase);
+        Spark.delete("/db", databaseHandler.clearDatabase);
 
         //This line initializes the server and can be removed once you have a functioning endpoint 
         Spark.init();
