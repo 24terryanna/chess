@@ -26,25 +26,16 @@ public class UserService {
                 return new RegisterResult("Error: bad request", 400);
             }
 
-
             //check existing user
             UserData existingUser = userDAO.getUser(request.getUsername());
             if (existingUser != null) {
-                System.out.println("User already exists: " + request.getUsername());
+//                System.out.println("User already exists: " + request.getUsername());
                 return new RegisterResult("Error: already taken", 403);
             }
 
             //create the new user
             UserData newUser = new UserData(request.getUsername(), request.getPassword(), request.getEmail());
             userDAO.createUser(newUser);
-
-            // Verify user was correctly added
-            UserData checkUser = userDAO.getUser(request.getUsername());
-            if (checkUser == null) {
-                System.out.println("ERROR: User was not properly added to DAO!");
-            } else {
-                System.out.println("SUCCESS: User was correctly stored in DAO.");
-            }
 
             //create authToken for new user
             String authToken = UUID.randomUUID().toString();
@@ -57,6 +48,28 @@ public class UserService {
             return new RegisterResult("Error: iternal server error", 500);
         }
 
+    }
+
+    public LoginResult login(LoginRequest request) throws DataAccessException {
+        try {
+            if (request == null || request.getUsername() == null || request.getPassword() == null || request.getEmail() == null) {
+                return new LoginResult("Error: bad request", 400);
+            }
+
+            UserData userData = userDAO.getUser(request.username());
+
+            if (userData == null || !userData.getPassword().equals(request.password())) {
+                return new LoginResult("Error: unauthorized", 401);
+            }
+
+            String authToken = UUID.randomUUID().toString();
+            AuthData authData = new AuthData(request.username(), authToken);
+            authDAO.createAuth(authData);
+
+            return new LoginResult(request.username(), authToken, 200);
+        } catch (Exception e) {
+            return new LoginResult("Error: internal server error", 500);
+        }
     }
 }
 
