@@ -1,17 +1,14 @@
 package server;
 
 import dataaccess.*;
-import server.UserHandler;
-import model.UserData;
-import org.eclipse.jetty.server.Authentication;
 import service.UserService;
 import spark.*;
+
 
 public class Server {
 
     public int run(int desiredPort) {
         Spark.port(desiredPort);
-
         Spark.staticFiles.location("web");
 
         // Register your endpoints and handle exceptions here.
@@ -28,14 +25,18 @@ public class Server {
         DatabaseHandler databaseHandler = new DatabaseHandler(userDAO, authDAO, gameDAO);
 
         //register endpoints
-        Spark.post("/user", userHandler.registerUser);
-        Spark.delete("/db", databaseHandler.clearDatabase);
+        registerEndpoints(userHandler, databaseHandler);
 
         //This line initializes the server and can be removed once you have a functioning endpoint 
         Spark.init();
-
         Spark.awaitInitialization();
         return Spark.port();
+    }
+
+    private void registerEndpoints(UserHandler userHandler, DatabaseHandler databaseHandler) {
+        Spark.post("/user", userHandler.registerUser);
+        Spark.post("/session", userHandler.login);
+        Spark.delete("/db", databaseHandler.clearDatabase);
     }
 
     public void stop() {
