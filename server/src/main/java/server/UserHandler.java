@@ -33,7 +33,7 @@ public class UserHandler {
             RegisterResult result = userService.register(request);
 
             // If successful, return 200 with username and authToken
-            res.status(200);
+            res.status(result.statusCode());
             return gson.toJson(result);
 
         } catch (DataAccessException e) {

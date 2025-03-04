@@ -14,51 +14,51 @@ public class UserService {
     private final UserDAO userDAO;
     private final AuthDAO authDAO;
 
-    public UserService(UserDAO userDAO, AuthDAO authDAO){
+    public UserService(UserDAO userDAO, AuthDAO authDAO) {
         this.userDAO = userDAO;
         this.authDAO = authDAO;
     }
 
     public RegisterResult register(RegisterRequest request) throws DataAccessException {
-        //check if request exists
-        if (request != null || request.getUsername() == null || request.getPassword() == null || request.getEmail() == null) {
-            return new RegisterResult("Error: bad request", 400);
+        try {
+            //check if request exists, if not bad request error
+            if (request == null || request.getUsername() == null || request.getPassword() == null || request.getEmail() == null) {
+                return new RegisterResult("Error: bad request", 400);
+            }
+
+
+            //check existing user
+            UserData existingUser = userDAO.getUser(request.getUsername());
+            if (existingUser != null) {
+                System.out.println("User already exists: " + request.getUsername());
+                return new RegisterResult("Error: already taken", 403);
+            }
+
+            //create the new user
+            UserData newUser = new UserData(request.getUsername(), request.getPassword(), request.getEmail());
+            userDAO.createUser(newUser);
+
+            // Verify user was correctly added
+            UserData checkUser = userDAO.getUser(request.getUsername());
+            if (checkUser == null) {
+                System.out.println("ERROR: User was not properly added to DAO!");
+            } else {
+                System.out.println("SUCCESS: User was correctly stored in DAO.");
+            }
+
+            //create authToken for new user
+            String authToken = UUID.randomUUID().toString();
+            AuthData authData = new AuthData(request.getUsername(), authToken);
+            authDAO.createAuth(authData);
+
+            //success response
+            return new RegisterResult(request.getUsername(), authToken);
+        } catch (Exception e) {
+            return new RegisterResult("Error: iternal server error", 500);
         }
 
-        //check if user exists
-        if (request.getUsername() != null && userDAO.getUser(request.getUsername()) != null) {
-            return new RegisterResult("Error: already taken", 403);
-        }
-
-        //create the new user
-        UserData newUser = new UserData(request.getUsername(), request.getPassword(), request.getEmail());
-        userDAO.createUser(newUser);
-
-        //create authToken for new user
-        String authToken = UUID.randomUUID().toString();
-        AuthData authData = new AuthData(request.getUsername(), authToken);
-        authDAO.createAuth(authData);
-
-        return new RegisterResult(request.getUsername(), authToken, 200);
     }
-//    public LoginResult login(LoginRequest loginRequest) {}
-//    public void logout(LogoutRequest logoutRequest) {}
 }
-
-
-
-//    public AuthData createUser(UserData userData) throws BadRequestException { //need to create BadRequest
-//        try {
-//            userDAO.createUser((userData));
-//        } catch (DataAccessException e) {
-//            throw new BadRequestException(e.getMessage());
-//        }
-//        String authToken = UUID.randomUUID().toString();
-//        AuthData authData = new AuthData(userData.username(), authToken);
-//        authDAO.createAuth(authData);
-//
-//        return authData;
-//    }
 
 
 
