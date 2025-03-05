@@ -3,9 +3,7 @@ package dataaccess;
 import model.GameData;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 import dataaccess.DataAccessException;
 
 public class MemoryGameDAO implements GameDAO{
@@ -15,14 +13,19 @@ public class MemoryGameDAO implements GameDAO{
     @Override
     public List<GameData> listGames(String username) throws DataAccessException {
         return new ArrayList<>(gamesDB);
-//        return gamesDB.stream()
-//                .filter(game -> username.equals(game.whiteUsername()) || username.equals(game.blackUsername()))
-//                .collect(Collectors.toList());
+
     }
 
     @Override
-    public void createGame(GameData game) throws DataAccessException {
+    public GameData createGame(GameData game) throws DataAccessException {
+        if (game == null || game.game() == null) {
+            throw new DataAccessException("Game cannot be null");
+        }
 
+        int gameID = gamesDB.size() + 1;
+        game = new GameData(gameID, game.whiteUsername(), game.blackUsername(), game.gameName(), game.game());
+        gamesDB.add(game);
+        return game;
     }
 
     @Override

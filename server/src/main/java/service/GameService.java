@@ -1,11 +1,10 @@
 package service;
 
+import chess.ChessGame;
 import dataaccess.AuthDAO;
 import dataaccess.DataAccessException;
 import dataaccess.GameDAO;
-import model.AuthData;
-import model.GameData;
-import model.GamesList;
+import model.*;
 
 import java.util.List;
 
@@ -28,4 +27,15 @@ public class GameService {
         List<GameData> games = gameDAO.listGames(username);
         return new GamesList(games, 200);
     }
+
+    public int createGame(String authToken, String gameName) throws DataAccessException {
+        AuthData authData = authDAO.getAuth(authToken);
+        if (authData == null) {
+            throw new DataAccessException("Error: unauthorized");
+        }
+
+        GameData game = new GameData(0, authData.username(), null, gameName, new ChessGame());
+        return gameDAO.createGame(game).gameID();
+    }
+
 }

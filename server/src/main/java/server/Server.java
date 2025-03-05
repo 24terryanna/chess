@@ -44,8 +44,7 @@ public class Server {
         Spark.get("/game", gameHandler.listGames);
         Spark.post("/game", gameHandler.listGames);
         Spark.put("/game", gameHandler.listGames);
-
-
+        Spark.post("/game", gameHandler.createGame);
 
     }
 
