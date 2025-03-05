@@ -22,10 +22,16 @@ public class MemoryGameDAO implements GameDAO{
             throw new DataAccessException("Game cannot be null");
         }
 
-        int gameID = gamesDB.size() + 1;
-        game = new GameData(gameID, game.whiteUsername(), game.blackUsername(), game.gameName(), game.game());
-        gamesDB.add(game);
-        return game;
+        int gameID = 1;
+        for (GameData existingGame : gamesDB) {
+            if (existingGame.gameID() >= gameID) {
+                gameID = existingGame.gameID() + 1;
+            }
+        }
+
+        GameData newGame = new GameData(gameID, game.whiteUsername(), game.blackUsername(), game.gameName(), game.game());
+        gamesDB.add(newGame);
+        return newGame;
     }
 
     @Override

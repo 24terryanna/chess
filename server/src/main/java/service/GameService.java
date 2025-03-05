@@ -34,8 +34,8 @@ public class GameService {
             throw new DataAccessException("Error: unauthorized");
         }
 
-        GameData game = new GameData(0, authData.username(), null, gameName, new ChessGame());
-        return gameDAO.createGame(game).gameID();
+        GameData newGame = new GameData(0, authData.username(), null, gameName, new ChessGame());
+        return newGame.gameID();
     }
 
 }

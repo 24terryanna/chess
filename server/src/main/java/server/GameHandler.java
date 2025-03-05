@@ -53,6 +53,9 @@ public class GameHandler {
             }
 
             int gameID = gameService.createGame(authToken, gameRequest.gameName());
+            if (gameID == 0) {
+                throw new DataAccessException("Failed to create game");
+            }
 
             res.status(200);
             return gson.toJson(new CreateGameResult(gameID));
