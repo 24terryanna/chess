@@ -18,8 +18,8 @@ public class GameHandler {
 
     public Route listGames = (Request req, Response res) -> {
         //debugging
-        System.out.println("Request received: " + req.pathInfo());
-        System.out.println("Authorization header: " + req.headers("authorization"));
+//        System.out.println("Request received: " + req.pathInfo());
+//        System.out.println("Authorization header: " + req.headers("authorization"));
         res.type("application/json");
         try {
             String authToken = req.headers("authorization");
