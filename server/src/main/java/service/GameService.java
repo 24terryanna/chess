@@ -35,7 +35,27 @@ public class GameService {
         }
 
         GameData newGame = new GameData(0, authData.username(), null, gameName, new ChessGame());
+        GameData createdGame = gameDAO.createGame(newGame);
         return newGame.gameID();
+    }
+
+    public void updateGame(String authToken, int gameID, GameData updatedGame) throws DataAccessException {
+        AuthData authData = authDAO.getAuth(authToken);
+        if (authData == null) {
+            throw new DataAccessException("Error: unauthorized");
+        }
+
+        GameData existingGame = gameDAO.getGame(gameID);
+        if (existingGame == null) {
+            throw new DataAccessException("Error: game not found");
+        }
+
+        if (!authData.username().equals(existingGame.whiteUsername()) &&
+        !authData.username().equals(existingGame.blackUsername())) {
+            throw new DataAccessException("Error: not allowed to update this game");
+        }
+
+        gameDAO.updateGame(updatedGame);
     }
 
 }

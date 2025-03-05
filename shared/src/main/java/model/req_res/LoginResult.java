@@ -1,4 +1,4 @@
-package model;
+package model.req_res;
 
 public record LoginResult(String username, String authToken, int statusCode, String message) {
     public LoginResult(String message, int statusCode) {

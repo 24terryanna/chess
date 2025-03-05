@@ -1,4 +1,4 @@
-package model;
+package model.req_res;
 
 public record LogoutResult(String message, int statusCode) {
     public LogoutResult(int statusCode) {

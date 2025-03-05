@@ -1,9 +1,10 @@
 package server;
 
 import com.google.gson.Gson;
-import model.CreateGameError;
-import model.CreateGameRequest;
-import model.CreateGameResult;
+import model.GameData;
+import model.req_res.CreateGameError;
+import model.req_res.CreateGameRequest;
+import model.req_res.CreateGameResult;
 import model.GamesList;
 import service.GameService;
 import dataaccess.DataAccessException;
@@ -53,12 +54,50 @@ public class GameHandler {
             }
 
             int gameID = gameService.createGame(authToken, gameRequest.gameName());
+            //debug
+            System.out.println("Returned gameID: " + gameID);
+
             if (gameID == 0) {
                 throw new DataAccessException("Failed to create game");
             }
 
             res.status(200);
+            //debug
+            System.out.println("Sending response: " + gson.toJson(new CreateGameResult(gameID)));
+
             return gson.toJson(new CreateGameResult(gameID));
+        } catch (DataAccessException e) {
+            res.status(500);
+            return gson.toJson(new CreateGameError("Error: " + e.getMessage(), 500));
+        }
+    };
+
+    public Route updateGame = (Request req, Response res) -> {
+        res.type("application/json");
+        try {
+            String authToken = req.headers("authorization");
+            if (authToken == null || authToken.isBlank()) {
+                res.status(401);
+                return gson.toJson(new CreateGameError("Error: unauthorized", 401));
+            }
+
+            int gameID;
+            try {
+                gameID = Integer.parseInt(req.params(":gameID"));
+            } catch (NumberFormatException e) {
+                res.status(400);
+                return gson.toJson(new CreateGameError("Error: invalid game ID", 400));
+            }
+
+            GameData updatedGame = gson.fromJson(req.body(), GameData.class);
+            if (updatedGame == null) {
+                res.status(400);
+                return gson.toJson(new CreateGameError("Error: bad request", 400));
+            }
+            gameService.updateGame(authToken, gameID, updatedGame);
+            res.status(200);
+            return gson.toJson(new CreateGameResult(gameID));
+
         } catch (DataAccessException e) {
             res.status(500);
             return gson.toJson(new CreateGameError("Error: " + e.getMessage(), 500));

@@ -31,17 +31,36 @@ public class MemoryGameDAO implements GameDAO{
 
         GameData newGame = new GameData(gameID, game.whiteUsername(), game.blackUsername(), game.gameName(), game.game());
         gamesDB.add(newGame);
+        //debug
+        System.out.println("Generated gameID: " + gameID);
+        System.out.println("Added game: " + newGame);
+
         return newGame;
     }
 
     @Override
     public GameData getGame(int gameID) throws DataAccessException {
-        return gamesDB.get(gameID);
+        for (GameData game : gamesDB) {
+            if (game.gameID() == gameID) {
+                return game;
+            }
+        }
+        throw new DataAccessException("Game not found with ID: " + gameID);
+        //return gamesDB.get(gameID);
     }
 
     @Override
-    public void updateGame(GameData game) throws DataAccessException {
+    public void updateGame(GameData updatedGame) throws DataAccessException {
+        if (updatedGame == null) {
+            throw new DataAccessException("Game data can't be null");
+        }
 
+        for (int i =0; i <gamesDB.size(); i++) {
+            if (gamesDB.get(i).gameID() == updatedGame.gameID()) {
+                gamesDB.set(i, updatedGame);
+            }
+        }
+        throw new DataAccessException("Game with given ID " + updatedGame.gameID() + " not found");
     }
 
     @Override
