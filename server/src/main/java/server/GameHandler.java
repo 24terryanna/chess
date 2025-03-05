@@ -54,20 +54,20 @@ public class GameHandler {
             }
 
             int gameID = gameService.createGame(authToken, gameRequest.gameName());
-            //debug
-            System.out.println("Returned gameID: " + gameID);
 
             if (gameID == 0) {
                 throw new DataAccessException("Failed to create game");
             }
 
             res.status(200);
-            //debug
-            System.out.println("Sending response: " + gson.toJson(new CreateGameResult(gameID)));
 
             return gson.toJson(new CreateGameResult(gameID));
         } catch (DataAccessException e) {
-            res.status(500);
+            if (e.getMessage().contains("unauthorized")) {
+                res.status(401);
+            } else {
+                res.status(500);
+            }
             return gson.toJson(new CreateGameError("Error: " + e.getMessage(), 500));
         }
     };

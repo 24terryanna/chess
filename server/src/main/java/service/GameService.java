@@ -36,7 +36,7 @@ public class GameService {
 
         GameData newGame = new GameData(0, authData.username(), null, gameName, new ChessGame());
         GameData createdGame = gameDAO.createGame(newGame);
-        return newGame.gameID();
+        return createdGame.gameID();
     }
 
     public void updateGame(String authToken, int gameID, GameData updatedGame) throws DataAccessException {

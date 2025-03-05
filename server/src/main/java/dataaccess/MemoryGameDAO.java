@@ -8,6 +8,7 @@ import dataaccess.DataAccessException;
 
 public class MemoryGameDAO implements GameDAO{
     private final List<GameData> gamesDB = new ArrayList<>();
+    private int nextID = 1;
 
 
     @Override
@@ -22,18 +23,11 @@ public class MemoryGameDAO implements GameDAO{
             throw new DataAccessException("Game cannot be null");
         }
 
-        int gameID = 1;
-        for (GameData existingGame : gamesDB) {
-            if (existingGame.gameID() >= gameID) {
-                gameID = existingGame.gameID() + 1;
-            }
-        }
-
-        GameData newGame = new GameData(gameID, game.whiteUsername(), game.blackUsername(), game.gameName(), game.game());
+        GameData newGame = new GameData(nextID++, game.whiteUsername(), game.blackUsername(), game.gameName(), game.game());
         gamesDB.add(newGame);
         //debug
-        System.out.println("Generated gameID: " + gameID);
-        System.out.println("Added game: " + newGame);
+//        System.out.println("Generated gameID: " + gameID);
+//        System.out.println("Added game: " + newGame);
 
         return newGame;
     }
