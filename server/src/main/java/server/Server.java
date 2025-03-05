@@ -28,8 +28,7 @@ public class Server {
         GameHandler gameHandler = new GameHandler(gameService);
 
         //user method endpoints
-        userEndpoints(userHandler, databaseHandler);
-        gameEndpoints(gameHandler);
+        userEndpoints(userHandler, databaseHandler, gameHandler);
 
         //This line initializes the server and can be removed once you have a functioning endpoint 
         Spark.init();
@@ -37,15 +36,13 @@ public class Server {
         return Spark.port();
     }
 
-    private void userEndpoints(UserHandler userHandler, DatabaseHandler databaseHandler) {
+    private void userEndpoints(UserHandler userHandler, DatabaseHandler databaseHandler, GameHandler gameHandler) {
         Spark.post("/user", userHandler.registerUser);
         Spark.post("/session", userHandler.loginUser);
         Spark.delete("/session", userHandler.logoutUser);
         Spark.delete("/db", databaseHandler.clearDatabase);
-    }
-
-    private void gameEndpoints(GameHandler gameHandler) {
         Spark.get("/game", gameHandler.listGames);
+
     }
 
     public void stop() {

@@ -20,7 +20,7 @@ public class GameService {
 
     public GamesList listGames(String authToken) throws DataAccessException {
         AuthData authData = authDAO.getAuth(authToken);
-        if (authData == null) {
+        if (authData == null || authToken.isBlank() || authDAO.getAuth(authToken) == null) {
             return new GamesList("Error: unauthorized", 401);
         }
 

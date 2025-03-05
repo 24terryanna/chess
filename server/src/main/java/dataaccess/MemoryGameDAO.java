@@ -1,7 +1,6 @@
 package dataaccess;
 
 import model.GameData;
-import dataaccess.DataAccessException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,7 +11,7 @@ public class MemoryGameDAO implements GameDAO{
 
 
     @Override
-    public List<GameData> listGames(String username) throws DataAccessException {
+    public List<GameData> listGames(String username)  {
         return gamesDB.stream()
                 .filter(game -> username.equals(game.whiteUsername()) || username.equals(game.blackUsername()))
                 .collect(Collectors.toList());

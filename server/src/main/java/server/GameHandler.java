@@ -7,7 +7,6 @@ import dataaccess.DataAccessException;
 import spark.Request;
 import spark.Response;
 import spark.Route;
-import service.GameService;
 
 public class GameHandler {
     private GameService gameService;
@@ -18,9 +17,13 @@ public class GameHandler {
     }
 
     public Route listGames = (Request req, Response res) -> {
+        //debugging
+        System.out.println("Request received: " + req.pathInfo());
+        System.out.println("Authorization header: " + req.headers("authorization"));
+        res.type("application/json");
         try {
             String authToken = req.headers("authorization");
-            if (authToken == null) {
+            if (authToken == null || authToken.isBlank()) {
                 res.status(401);
                 return gson.toJson(new GamesList("Error: unauthorized", 401));
             }
@@ -28,6 +31,7 @@ public class GameHandler {
             GamesList result = gameService.listGames(authToken);
             res.status(result.statusCode());
             return gson.toJson(result);
+
         } catch (DataAccessException e) {
             res.status(500);
             return gson.toJson(new GamesList("Error: " + e.getMessage(), 500));
