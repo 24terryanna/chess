@@ -3,21 +3,19 @@ package dataaccess;
 import model.GameData;
 import dataaccess.DataAccessException;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class MemoryGameDAO implements GameDAO{
-    private final Map<Integer, GameData> gamesDB;
+    private final List<GameData> gamesDB = new ArrayList<>();
 
-    public MemoryGameDAO(){
-        gamesDB = new HashMap<>();
-    }
 
     @Override
-    public Collection<GameData> listGames() throws DataAccessException {
-        return Collections.unmodifiableCollection(gamesDB.values());
+    public List<GameData> listGames(String username) throws DataAccessException {
+        return gamesDB.stream()
+                .filter(game -> username.equals(game.whiteUsername()) || username.equals(game.blackUsername()))
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -32,15 +30,7 @@ public class MemoryGameDAO implements GameDAO{
 
     @Override
     public void updateGame(GameData game) throws DataAccessException {
-        if (!gamesDB.containsKey(game.gameID())) {
-            throw new DataAccessException("Game is nonexistent");
-        }
 
-        if (game.game() == null) {
-            throw new DataAccessException("Game cannot be null");
-        }
-        gamesDB.remove(game.gameID());
-        gamesDB.put(game.gameID(), game);
     }
 
     @Override
