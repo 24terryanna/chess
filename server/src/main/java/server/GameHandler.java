@@ -2,9 +2,7 @@ package server;
 
 import com.google.gson.Gson;
 import model.GameData;
-import model.req_res.CreateGameError;
-import model.req_res.CreateGameRequest;
-import model.req_res.CreateGameResult;
+import model.req_res.*;
 import model.GamesList;
 import service.GameService;
 import dataaccess.DataAccessException;
@@ -101,6 +99,36 @@ public class GameHandler {
         } catch (DataAccessException e) {
             res.status(500);
             return gson.toJson(new CreateGameError("Error: " + e.getMessage(), 500));
+        }
+    };
+
+    public Route joinGame = (Request req, Response res) -> {
+        res.type("application/json");
+        try {
+            String authToken = req.headers("authorization");
+            if (authToken == null || authToken.isBlank()) {
+                res.status(401);
+                return gson.toJson(new JoinGameResult("Error: unauthorized", 401));
+            }
+
+            JoinGameRequest joinRequest = gson.fromJson(req.body(), JoinGameRequest.class);
+            if (joinRequest == null) {
+                res.status(400);
+                return gson.toJson(new JoinGameResult("Error: bad request", 400));
+            }
+
+            gameService.joinGame(authToken, joinRequest.playerColor(), joinRequest.gameID());
+            res.status(200);
+            return gson.toJson(new JoinGameResult("Successfully joined game", 200));
+        } catch (DataAccessException e) {
+            if (e.getMessage().contains("unauthorized")) {
+                res.status(401);
+            } else if (e.getMessage().contains("already taken")){
+                res.status(403);
+            } else if (e.getMessage().contains("bad request")){
+                res.status(400);
+            }
+            return gson.toJson(new JoinGameResult("Error: " + e.getMessage(), 500));
         }
     };
 }

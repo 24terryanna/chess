@@ -43,6 +43,7 @@ public class Server {
         Spark.delete("/db", databaseHandler.clearDatabase);
         Spark.get("/game", gameHandler.listGames);
         Spark.post("/game", gameHandler.createGame);
+        Spark.put("/game", gameHandler.joinGame);
         Spark.put("/game/:gameID", gameHandler.updateGame);
 
     }

@@ -52,6 +52,7 @@ public class MemoryGameDAO implements GameDAO{
         for (int i =0; i <gamesDB.size(); i++) {
             if (gamesDB.get(i).gameID() == updatedGame.gameID()) {
                 gamesDB.set(i, updatedGame);
+                return;
             }
         }
         throw new DataAccessException("Game with given ID " + updatedGame.gameID() + " not found");

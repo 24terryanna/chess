@@ -5,6 +5,7 @@ import dataaccess.AuthDAO;
 import dataaccess.DataAccessException;
 import dataaccess.GameDAO;
 import model.*;
+import model.req_res.JoinGameRequest;
 
 import java.util.List;
 
@@ -56,6 +57,43 @@ public class GameService {
         }
 
         gameDAO.updateGame(updatedGame);
+    }
+
+    public void joinGame(String authToken, String playerColor, int gameID) throws DataAccessException {
+        if (authToken == null || authToken.isBlank()) {
+            throw new DataAccessException("Error: unauthorized");
+        }
+
+        if (playerColor == null || gameID == 0 ||
+                !playerColor.equalsIgnoreCase("WHITE") && !playerColor.equalsIgnoreCase("BLACK")) {
+            throw new DataAccessException("Error: bad request");
+        }
+
+        AuthData authData = authDAO.getAuth(authToken);
+        if (authData == null) {
+            throw new DataAccessException("error: unauthorized");
+        }
+        String username = authData.username();
+
+        GameData gameData = gameDAO.getGame(gameID);
+        if (gameData == null) {
+            throw new DataAccessException("Error: bad request");
+        }
+
+        if (playerColor.equalsIgnoreCase("WHITE")) {
+            if (gameData.whiteUsername() == null) {
+                throw new DataAccessException("Error: already taken");
+            }
+            gameData = new GameData(gameData.gameID(), username, gameData.blackUsername(), gameData.gameName(), gameData.game());
+
+        } else {
+            if (gameData.blackUsername() != null) {
+                throw new DataAccessException("Error: already taken");
+            }
+            gameData = new GameData(gameData.gameID(), gameData.whiteUsername(), username, gameData.gameName(), gameData.game());
+
+        }
+        gameDAO.updateGame(gameData);
     }
 
 }
