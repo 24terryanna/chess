@@ -73,7 +73,7 @@ public class GameService {
         if (authData == null) {
             throw new DataAccessException("error: unauthorized");
         }
-        String username = authData.username();
+        String username = authData.authToken(); //.username();
 
         GameData gameData = gameDAO.getGame(gameID);
         if (gameData == null) {
