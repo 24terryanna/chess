@@ -23,7 +23,7 @@ class UserServiceTest {
 
     // Register: Successful case
     @Test
-    void testRegister_Success() throws DataAccessException {
+    void testRegisterSuccess() throws DataAccessException {
         RegisterRequest request = new RegisterRequest("newUser", "password123", "user@example.com");
         RegisterResult result = userService.register(request);
 
@@ -35,7 +35,7 @@ class UserServiceTest {
 
     // Register: Username already taken
     @Test
-    void testRegister_UsernameTaken() throws DataAccessException {
+    void testRegisterUsernameTaken() throws DataAccessException {
         RegisterRequest request1 = new RegisterRequest("existingUser", "password123", "user@example.com");
         userService.register(request1); // First registration succeeds
 
@@ -48,7 +48,7 @@ class UserServiceTest {
 
     // Login: Successful case
     @Test
-    void testLogin_Success() throws DataAccessException {
+    void testLoginSuccess() throws DataAccessException {
         RegisterRequest registerRequest = new RegisterRequest("validUser", "password123", "user@example.com");
         userService.register(registerRequest); // Ensure user exists
 
@@ -63,7 +63,7 @@ class UserServiceTest {
 
     // Login: Wrong password
     @Test
-    void testLogin_WrongPassword() throws DataAccessException {
+    void testLoginWrongPassword() throws DataAccessException {
         RegisterRequest registerRequest = new RegisterRequest("validUser", "password123", "user@example.com");
         userService.register(registerRequest);
 
@@ -76,7 +76,7 @@ class UserServiceTest {
 
     // Logout: Successful case
     @Test
-    void testLogout_Success() throws DataAccessException {
+    void testLogoutSuccess() throws DataAccessException {
         RegisterRequest registerRequest = new RegisterRequest("validUser", "password123", "user@example.com");
         RegisterResult registerResult = userService.register(registerRequest);
 
@@ -90,7 +90,7 @@ class UserServiceTest {
 
     // Logout: Invalid token
     @Test
-    void testLogout_InvalidToken() throws DataAccessException {
+    void testLogoutInvalidToken() throws DataAccessException {
         LogoutResult result = userService.logout("invalidToken");
 
         assertEquals(401, result.statusCode());

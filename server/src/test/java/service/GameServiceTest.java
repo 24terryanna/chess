@@ -25,7 +25,7 @@ class GameServiceTest {
 
     // List Games: Successful case
     @Test
-    void testListGames_Success() throws DataAccessException {
+    void testListGamesSuccess() throws DataAccessException {
         AuthData authData = new AuthData("validToken", "validUser");
         authDAO.createAuth(authData);
 
@@ -37,7 +37,7 @@ class GameServiceTest {
 
     // List Games: Unauthorized
     @Test
-    void testListGames_Unauthorized() throws DataAccessException {
+    void testListGamesUnauthorized() throws DataAccessException {
         GamesList result = gameService.listGames("invalidToken");
 
         assertEquals(401, result.statusCode());
@@ -46,7 +46,7 @@ class GameServiceTest {
 
     // Create Game: Successful case
     @Test
-    void testCreateGame_Success() throws DataAccessException {
+    void testCreateGameSuccess() throws DataAccessException {
         authDAO.createAuth(new AuthData("validToken", "validUser"));
         int gameID = gameService.createGame("validToken", "New Game");
 
@@ -56,13 +56,13 @@ class GameServiceTest {
 
     // Create Game: Unauthorized
     @Test
-    void testCreateGame_Unauthorized() {
+    void testCreateGameUnauthorized() {
         assertThrows(DataAccessException.class, () -> gameService.createGame("invalidToken", "New Game"));
     }
 
     // Join Game: Successful case
     @Test
-    void testJoinGame_Success() throws DataAccessException {
+    void testJoinGameSuccess() throws DataAccessException {
         authDAO.createAuth(new AuthData("validToken", "player1"));
         int gameID = gameService.createGame("validToken", "Chess Match");
 
@@ -74,7 +74,7 @@ class GameServiceTest {
 
     // Join Game: Spot already taken
     @Test
-    void testJoinGame_SpotTaken() throws DataAccessException {
+    void testJoinGameSpotTaken() throws DataAccessException {
         authDAO.createAuth(new AuthData("player1Token", "player1"));
         authDAO.createAuth(new AuthData("player2Token", "player2"));
 
