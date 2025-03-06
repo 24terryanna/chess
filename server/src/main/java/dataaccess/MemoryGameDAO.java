@@ -25,9 +25,6 @@ public class MemoryGameDAO implements GameDAO{
 
         GameData newGame = new GameData(nextID++, game.whiteUsername(), game.blackUsername(), game.gameName(), game.game());
         gamesDB.add(newGame);
-        //debug
-//        System.out.println("Generated gameID: " + gameID);
-//        System.out.println("Added game: " + newGame);
 
         return newGame;
     }

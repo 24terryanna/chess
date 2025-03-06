@@ -3,6 +3,7 @@ package service;
 import dataaccess.DataAccessException;
 import dataaccess.MemoryAuthDAO;
 import dataaccess.MemoryUserDAO;
+import model.UserData;
 import model.response.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -95,5 +96,39 @@ class UserServiceTest {
 
         assertEquals(401, result.statusCode());
         assertEquals("Error: unauthorized", result.message());
+    }
+
+    // MemoryUserDAO Tests
+    @Test
+    void testGetUserPositive() throws DataAccessException {
+        UserData user = new UserData("testUser", "password", "email@test.com");
+        userDAO.createUser(user);
+        assertEquals(user, userDAO.getUser("testUser"));
+    }
+
+    @Test
+    void testGetUserNegative() throws DataAccessException {
+        assertNull(userDAO.getUser("nonExistentUser"));
+    }
+
+    @Test
+    void testCreateUserPositive() throws DataAccessException {
+        UserData user = new UserData("newUser", "password", "email@domain.com");
+        assertDoesNotThrow(() -> userDAO.createUser(user));
+        assertEquals(user, userDAO.getUser("newUser"));
+    }
+
+    @Test
+    void testCreateUserNegative() {
+        UserData user = new UserData("duplicateUser", "password", "email@domain.com");
+        userDAO.createUser(user);
+        assertThrows(RuntimeException.class, () -> userDAO.createUser(user));
+    }
+
+    @Test
+    void testClearUsers() throws DataAccessException {
+        userDAO.createUser(new UserData("testUser", "pass", "email"));
+        userDAO.clear();
+        assertNull(userDAO.getUser("testUser"));
     }
 }

@@ -1,5 +1,6 @@
 package service;
 
+import chess.ChessGame;
 import dataaccess.DataAccessException;
 import dataaccess.MemoryAuthDAO;
 import dataaccess.MemoryGameDAO;
@@ -8,6 +9,8 @@ import model.GameData;
 import model.GamesList;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -83,4 +86,60 @@ class GameServiceTest {
 
         assertThrows(DataAccessException.class, () -> gameService.joinGame("player2Token", "WHITE", gameID));
     }
+    // MemoryGameDAO Tests
+    @Test
+    void testListGamesPositive() throws DataAccessException {
+        gameDAO.createGame(new GameData(0, null, null, "Chess1", new ChessGame()));
+        List<GameData> games = gameDAO.listGames("anyUser");
+        assertFalse(games.isEmpty());
+    }
+
+    @Test
+    void testListGamesNegative() throws DataAccessException {
+        List<GameData> games = gameDAO.listGames("anyUser");
+        assertTrue(games.isEmpty());
+    }
+
+    @Test
+    void testCreateGamePositive() throws DataAccessException {
+        GameData game = new GameData(0, null, null, "Chess1", new ChessGame());
+        assertDoesNotThrow(() -> gameDAO.createGame(game));
+    }
+
+    @Test
+    void testCreateGameNegative() {
+        assertThrows(DataAccessException.class, () -> gameDAO.createGame(null));
+    }
+
+    @Test
+    void testGetGamePositive() throws DataAccessException {
+        GameData game = gameDAO.createGame(new GameData(0, null, null, "Chess1", new ChessGame()));
+        assertEquals(game, gameDAO.getGame(game.gameID()));
+    }
+
+    @Test
+    void testGetGameNegative() {
+        assertThrows(DataAccessException.class, () -> gameDAO.getGame(999));
+    }
+
+    @Test
+    void testUpdateGamePositive() throws DataAccessException {
+        GameData game = gameDAO.createGame(new GameData(0, null, null, "Chess1", new ChessGame()));
+        GameData updatedGame = new GameData(game.gameID(), "player1", null, "UpdatedChess", new ChessGame());
+        assertDoesNotThrow(() -> gameDAO.updateGame(updatedGame));
+    }
+
+    @Test
+    void testUpdateGameNegative() {
+        GameData game = new GameData(999, "player1", null, "NonexistentGame", new ChessGame());
+        assertThrows(DataAccessException.class, () -> gameDAO.updateGame(game));
+    }
+
+    @Test
+    void testClearGames() throws DataAccessException {
+        gameDAO.createGame(new GameData(0, null, null, "Chess1", new ChessGame()));
+        gameDAO.clear();
+        assertTrue(gameDAO.listGames("anyUser").isEmpty());
+    }
 }
+
