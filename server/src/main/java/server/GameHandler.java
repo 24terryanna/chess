@@ -2,7 +2,7 @@ package server;
 
 import com.google.gson.Gson;
 import model.GameData;
-import model.req_res.*;
+import model.response.*;
 import model.GamesList;
 import service.GameService;
 import dataaccess.DataAccessException;

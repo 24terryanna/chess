@@ -4,7 +4,7 @@ import dataaccess.AuthDAO;
 import dataaccess.DataAccessException;
 import dataaccess.UserDAO;
 import model.*;
-import model.req_res.*;
+import model.response.*;
 
 import java.util.UUID;
 
