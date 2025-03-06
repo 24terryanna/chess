@@ -128,27 +128,37 @@ public class ChessGame {
      * @param teamColor which team to check for check
      * @return True if the specified team is in check
      */
-    //NESTING DEPTH = 5; max is 4 --- clean
+
     public boolean isInCheck(TeamColor teamColor, ChessBoard chessBoard) {
         ChessPosition kingPosition = findKing(chessBoard, teamColor);
         if (kingPosition == null) {
             return false;
         }
+
+        return isKingInTarget(chessBoard, teamColor, kingPosition);
+    }
+
+    private boolean isKingInTarget(ChessBoard chessBoard, TeamColor teamColor, ChessPosition kingPosition) {
         for (int row = 1; row <= 8; row++) {
             for (int col = 1; col <= 8; col++) {
                 ChessPosition checkPos = new ChessPosition(row, col);
                 ChessPiece pieceAtPosition = chessBoard.getPiece(checkPos);
 
-                //make this a new method? isKingInTarget
                 if (pieceAtPosition != null && pieceAtPosition.getTeamColor() != teamColor) {
-                    Collection<ChessMove> opponentMoves = pieceAtPosition.pieceMoves(chessBoard, checkPos);
-
-                    for (ChessMove move : opponentMoves) {
-                        if (move.getEndPosition().equals(kingPosition)) {
-                            return true;
-                        }
+                    if (canPieceAttackKing(pieceAtPosition, chessBoard, checkPos, kingPosition)) {
+                        return true;
                     }
                 }
+            }
+        }
+        return false;
+    }
+
+    private boolean canPieceAttackKing(ChessPiece piece, ChessBoard chessBoard, ChessPosition piecePos, ChessPosition kingPosition){
+        Collection<ChessMove> opponentMoves = piece.pieceMoves(chessBoard, piecePos);
+        for (ChessMove move : opponentMoves) {
+            if (move.getEndPosition().equals(kingPosition)) {
+                return true;
             }
         }
         return false;
