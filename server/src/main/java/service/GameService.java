@@ -35,7 +35,7 @@ public class GameService {
             throw new DataAccessException("Error: unauthorized");
         }
 
-        GameData newGame = new GameData(0, authData.username(), null, gameName, new ChessGame());
+        GameData newGame = new GameData(0, null, null, gameName, new ChessGame());
         GameData createdGame = gameDAO.createGame(newGame);
         return createdGame.gameID();
     }
@@ -73,7 +73,8 @@ public class GameService {
         if (authData == null) {
             throw new DataAccessException("error: unauthorized");
         }
-        String username = authData.authToken(); //.username();
+        String username = authData.username();
+        System.out.println("AuthData username: " + authData.username());
 
         GameData gameData = gameDAO.getGame(gameID);
         if (gameData == null) {
@@ -81,7 +82,7 @@ public class GameService {
         }
 
         if (playerColor.equalsIgnoreCase("WHITE")) {
-            if (gameData.whiteUsername() == null) {
+            if (gameData.whiteUsername() != null) {
                 throw new DataAccessException("Error: already taken");
             }
             gameData = new GameData(gameData.gameID(), username, gameData.blackUsername(), gameData.gameName(), gameData.game());

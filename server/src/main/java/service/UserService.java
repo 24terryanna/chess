@@ -31,7 +31,7 @@ public class UserService {
             }
             //create authToken for new user
             String authToken = UUID.randomUUID().toString();
-            AuthData authData = new AuthData(request.username(), authToken);
+            AuthData authData = new AuthData(authToken, request.username());
             authDAO.createAuth(authData);
 
             //create the new user
@@ -58,7 +58,7 @@ public class UserService {
             }
 
             String authToken = UUID.randomUUID().toString();
-            authDAO.createAuth(new AuthData(request.username(), authToken));
+            authDAO.createAuth(new AuthData(authToken, request.username()));
             return new LoginResult(request.username(), authToken, 200, "Successful login!");
 
         } catch (Exception e) {
