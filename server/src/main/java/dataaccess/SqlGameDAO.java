@@ -65,7 +65,7 @@ public class SqlGameDAO implements GameDAO{
 
 
     @Override
-    public GameData getGame(int gameID) throws DataAccessException, SQLException {
+    public GameData getGame(int gameID) throws DataAccessException {
         var statement = "SELECT * FROM game WHERE game_id = ?";
         try (var conn = DatabaseManager.getConnection();
              var ps = conn.prepareStatement(statement)) {
@@ -84,6 +84,8 @@ public class SqlGameDAO implements GameDAO{
             } catch (SQLException e) {
                 throw new DataAccessException("Error retrieving game: " + e.getMessage());
             }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
         return null;
     }
@@ -116,8 +118,8 @@ public class SqlGameDAO implements GameDAO{
         try (var conn = DatabaseManager.getConnection();
              var ps = conn.prepareStatement(statement)) {
             ps.executeUpdate();
-        } catch (SQLException e) {
-            throw new DataAccessException("Error clearing game table: " + e.getMessage());
+        } catch (SQLException | DataAccessException e) {
+            //throw new DataAccessException("Error clearing game table: " + e.getMessage());
         }
     }
     private void configureDatabase() throws DataAccessException {

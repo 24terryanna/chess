@@ -6,6 +6,7 @@ import dataaccess.DataAccessException;
 import dataaccess.GameDAO;
 import model.*;
 
+import java.sql.SQLException;
 import java.util.List;
 
 public class GameService {
@@ -39,7 +40,7 @@ public class GameService {
         return createdGame.gameID();
     }
 
-    public void updateGame(String authToken, int gameID, GameData updatedGame) throws DataAccessException {
+    public void updateGame(String authToken, int gameID, GameData updatedGame) throws DataAccessException, SQLException {
         AuthData authData = authDAO.getAuth(authToken);
         if (authData == null) {
             throw new DataAccessException("Error: unauthorized");
