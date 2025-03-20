@@ -36,23 +36,18 @@ public class SqlUserDAO implements UserDAO {
     }
 
     @Override
-    public void createUser(UserData userData) {
+    public void createUser(UserData userData) throws DataAccessException {
         var statement = "INSERT INTO user (username, password_hash, email) VALUES (?, ?, ?)";
         try (var conn = DatabaseManager.getConnection();
              var ps = conn.prepareStatement(statement)) {
 
-            // Hash password before storing
-            String hashedPassword = BCrypt.hashpw(userData.getPasswordHash(), BCrypt.gensalt());
-
             ps.setString(1, userData.username());
-            ps.setString(2, hashedPassword);
+            ps.setString(2, hashPassword(userData.password()));
             ps.setString(3, userData.email());
             ps.executeUpdate();
 
         } catch (SQLException e) {
-            throw new RuntimeException("Error creating user: " + e.getMessage(), e);
-        } catch (DataAccessException e) {
-            throw new RuntimeException(e);
+            throw new DataAccessException("User already exists: " + userData.username());
         }
     }
 
@@ -67,23 +62,28 @@ public class SqlUserDAO implements UserDAO {
         }
     }
 
-    public boolean validateUser(String username, String password) throws DataAccessException {
-        String query = "SELECT password_hash FROM user WHERE username = ?";
-        try (var conn = DatabaseManager.getConnection();
-             var ps = conn.prepareStatement(query)) {
-
-            ps.setString(1, username);
-            try (var rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    String storedHash = rs.getString("password_hash");
-                    return BCrypt.checkpw(password, storedHash); // Compare password securely
-                }
-            }
-        } catch (SQLException e) {
-            throw new DataAccessException("Error validating user: " + e.getMessage());
-        }
-        return false;
-    }
+//    public boolean validateUser(String username, String password) throws DataAccessException {
+//        String query = "SELECT password_hash FROM user WHERE username = ?";
+//        try (var conn = DatabaseManager.getConnection();
+//             var ps = conn.prepareStatement(query)) {
+//
+//            ps.setString(1, username);
+//            try (var rs = ps.executeQuery()) {
+//                if (rs.next()) {
+//                    String storedHash = rs.getString("password_hash");
+//                    return BCrypt.checkpw(password, storedHash); // Compare password securely
+//                }
+//            }
+//        } catch (SQLException e) {
+//            throw new DataAccessException("Error validating user: " + e.getMessage());
+//        }
+//        return false;
+//    }
+//
+//    public boolean authenticateUser(String username, String password) throws DataAccessException {
+//        UserData user = getUser(username);
+//        return passwordMatches(password, user.password());
+//    }
 
     private void configureDatabase() throws DataAccessException {
         DatabaseManager.createDatabase();
@@ -102,5 +102,13 @@ public class SqlUserDAO implements UserDAO {
         } catch (SQLException | DataAccessException e) {
             throw new RuntimeException("Unable to configure database: " + e.getMessage(), e);
         }
+    }
+
+    private String hashPassword(String password) {
+        return BCrypt.hashpw(password, BCrypt.gensalt());
+    }
+
+    private boolean passwordMatches(String rawPassword, String hashedPassword) {
+        return BCrypt.checkpw(rawPassword, hashedPassword);
     }
 }
