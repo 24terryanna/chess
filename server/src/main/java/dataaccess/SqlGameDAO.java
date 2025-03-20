@@ -125,19 +125,28 @@ public class SqlGameDAO implements GameDAO{
     private void configureDatabase() throws DataAccessException {
         DatabaseManager.createDatabase();
         try (var conn = DatabaseManager.getConnection()) {
-            var createTable = """
-                CREATE TABLE IF NOT EXISTS game (
-                    game_id INT AUTO_INCREMENT PRIMARY KEY,
-                    white_username VARCHAR(255),
-                    black_username VARCHAR(255),
-                    game_name VARCHAR(255) NOT NULL,
-                    game_state TEXT NOT NULL,
-                    FOREIGN KEY (white_username) REFERENCES user(username) ON DELETE SET NULL,
-                    FOREIGN KEY (black_username) REFERENCES user(username) ON DELETE SET NULL
-                ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
-            """;
-            try (var ps = conn.prepareStatement(createTable)) {
-                ps.executeUpdate();
+            var createUserTable = """
+                CREATE TABLE IF NOT EXISTS user (
+                username VARCHAR(255) PRIMARY KEY,
+                password VARCHAR(255) NOT NULL
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+        """;
+
+            var createGameTable = """
+            CREATE TABLE IF NOT EXISTS game (
+                game_id INT AUTO_INCREMENT PRIMARY KEY,
+                white_username VARCHAR(255),
+                black_username VARCHAR(255),
+                game_name VARCHAR(255) NOT NULL,
+                game_state TEXT NOT NULL,
+                FOREIGN KEY (white_username) REFERENCES user(username) ON DELETE SET NULL,
+                FOREIGN KEY (black_username) REFERENCES user(username) ON DELETE SET NULL
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+        """;
+            try (var ps1 = conn.prepareStatement(createUserTable);
+                 var ps2 = conn.prepareStatement(createGameTable)) {
+                ps1.executeUpdate();
+                ps2.executeUpdate();
             }
         } catch (SQLException e) {
             throw new RuntimeException("Unable to configure database: " + e.getMessage(), e);

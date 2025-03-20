@@ -96,6 +96,7 @@ public class SqlUserDAO implements UserDAO {
                     PRIMARY KEY (username)
                 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
             """;
+
             try (var ps = conn.prepareStatement(createTable)) {
                 ps.executeUpdate();
             }
