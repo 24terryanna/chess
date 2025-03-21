@@ -41,22 +41,16 @@ public class SqlGameDAO implements GameDAO{
 
     @Override
     public GameData createGame(GameData game) throws DataAccessException {
-        var statement = "INSERT INTO game (white_username, black_username, game_name, game_state) VALUES (?, ?, ?, ?)";
-        try (var conn = DatabaseManager.getConnection();
-             var ps = conn.prepareStatement(statement, Statement.RETURN_GENERATED_KEYS)) {
+        try (var conn = DatabaseManager.getConnection()) {
+            try (var statement = conn.prepareStatement("INSERT INTO game (gameID, whiteUsername, blackUsername, gameName, chessGame) VALUES(?, ?, ?, ?, ?)")) {
+                statement.setInt(1, game.gameID());
+                statement.setString(2, game.whiteUsername());
+                statement.setString(3, game.blackUsername());
+                statement.setString(4, game.gameName());
+                statement.setString(5, serializeChessGame(game.game()));
+                statement.executeUpdate();
 
-            ps.setString(1, game.whiteUsername());
-            ps.setString(2, game.blackUsername());
-            ps.setString(3, game.gameName());
-            ps.setString(4, serializeChessGame(game.game()));
-            ps.executeUpdate();
-
-            try (var rs = ps.getGeneratedKeys()) {
-                if (rs.next()) {
-                    return new GameData(rs.getInt(1), game.whiteUsername(), game.blackUsername(), game.gameName(), game.game());
-                }
             }
-
         } catch (SQLException e) {
             throw new DataAccessException("Error creating game: " + e.getMessage());
         }
