@@ -60,60 +60,52 @@ public class SqlGameDAO implements GameDAO{
 
     @Override
     public GameData getGame(int gameID) throws DataAccessException {
-        var statement = "SELECT * FROM game WHERE game_id = ?";
-        try (var conn = DatabaseManager.getConnection();
-             var ps = conn.prepareStatement(statement)) {
-
-            ps.setInt(1, gameID);
-            try (var rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    return new GameData(
-                            rs.getInt("game_id"),
-                            rs.getString("white_username"),
-                            rs.getString("black_username"),
-                            rs.getString("game_name"),
-                            deserializeChessGame(rs.getString("game_state"))
-                    );
+        try (var conn = DatabaseManager.getConnection()) {
+            try (var statement = conn.prepareStatement("SELECT whiteUsername, blackUsername, gameName, chessGame FROM game WHERE gameID=?")){
+                statement.setInt(1, gameID);
+                try (var result = statement.executeQuery()) {
+                    result.next();
+                    var whiteUsername = result.getString("white_username");
+                    var blackUsername = result.getString("black_username");
+                    var gameName = result.getString("game_name");
+                    var chessGame = deserializeChessGame(result.getString("chess_game"));
+                    return new GameData(gameID, whiteUsername, blackUsername, gameName, chessGame);
                 }
-            } catch (SQLException e) {
-                throw new DataAccessException("Error retrieving game: " + e.getMessage());
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DataAccessException("Game not found with id: " + gameID);
         }
-        return null;
     }
 
     @Override
     public void updateGame(GameData updatedGame) throws DataAccessException {
-        var statement = "UPDATE game SET white_username=?, black_username=?, game_name=?, game_state=? WHERE game_id=?";
-        try (var conn = DatabaseManager.getConnection();
-             var ps = conn.prepareStatement(statement)) {
+        try (var conn = DatabaseManager.getConnection()) {
+            try (var statement = conn.prepareStatement("UPDATE game SET white_username=?, black_username=?, game_name=?, game_state=? WHERE game_id=?")) {
+                statement.setString(1, updatedGame.whiteUsername());
+                statement.setString(2, updatedGame.blackUsername());
+                statement.setString(3, updatedGame.gameName());
+                statement.setString(4, serializeChessGame(updatedGame.game()));
+                statement.setInt(5, updatedGame.gameID());
+                int rowsAffected = statement.executeUpdate();
 
-            ps.setString(1, updatedGame.whiteUsername());
-            ps.setString(2, updatedGame.blackUsername());
-            ps.setString(3, updatedGame.gameName());
-            ps.setString(4, serializeChessGame(updatedGame.game()));
-            ps.setInt(5, updatedGame.gameID());
-            int rowsAffected = ps.executeUpdate();
-
-            if (rowsAffected == 0) {
-                throw new DataAccessException("No game found with ID: " + updatedGame.gameID());
+                if (rowsAffected == 0) {
+                    throw new DataAccessException("No game found with ID: " + updatedGame.gameID());
+                }
             }
-
         } catch (SQLException e) {
-            throw new DataAccessException("Error updating game: " + e.getMessage());
+            throw new DataAccessException(e.getMessage());
         }
     }
 
     @Override
     public void clear() throws DataAccessException {
-        var statement = "TRUNCATE TABLE game";
-        try (var conn = DatabaseManager.getConnection();
-             var ps = conn.prepareStatement(statement)) {
-            ps.executeUpdate();
+        try (var conn = DatabaseManager.getConnection()) {
+            try (var statement = conn.prepareStatement("TRUNCATE game")) {
+                statement.executeUpdate();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
         } catch (SQLException | DataAccessException e) {
-            //throw new DataAccessException("Error clearing game table: " + e.getMessage());
         }
     }
     private void configureDatabase() throws DataAccessException {
