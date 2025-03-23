@@ -1,7 +1,6 @@
 package dataaccess;
 
 import model.AuthData;
-import model.UserData;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 
@@ -20,7 +19,6 @@ public class SqlAuthDAOTests {
                 statement.executeUpdate();
             }
         }
-
         defaultAuth = new AuthData("token", "username");
     }
 

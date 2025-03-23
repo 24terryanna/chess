@@ -8,19 +8,17 @@ import java.sql.*;
 public class SqlUserDAO implements UserDAO {
 
     public SqlUserDAO() throws DataAccessException {
-        try {
-            DatabaseManager.createDatabase();
-        } catch (DataAccessException ex) {
+        try {DatabaseManager.createDatabase(); } catch (DataAccessException ex) {
             throw new RuntimeException(ex);
         }
         try (var conn = DatabaseManager.getConnection()) {
             var createTestTable = """            
                     CREATE TABLE if NOT EXISTS user (
-                                    username VARCHAR(255) NOT NULL,
-                                    password_hash VARCHAR(255) NOT NULL,
-                                    email VARCHAR(255),
-                                    PRIMARY KEY (username)
-                                    )""";
+                        username VARCHAR(255) NOT NULL,
+                        password_hash VARCHAR(255) NOT NULL,
+                        email VARCHAR(255),
+                        PRIMARY KEY (username)
+                        )""";
             try (var createTableStatement = conn.prepareStatement(createTestTable)) {
                 createTableStatement.executeUpdate();
             }
