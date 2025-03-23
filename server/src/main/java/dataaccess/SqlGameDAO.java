@@ -37,22 +37,21 @@ public class SqlGameDAO implements GameDAO{
     @Override
     public List<GameData> listGames(String username) throws DataAccessException {
         List<GameData> games = new ArrayList<>();
-        var statement = "SELECT * FROM game";
-        try (var conn = DatabaseManager.getConnection();
-             var ps = conn.prepareStatement(statement);
-             var rs = ps.executeQuery()) {
-
-            while (rs.next()) {
-                games.add(new GameData(
-                        rs.getInt("game_id"),
-                        rs.getString("white_username"),
-                        rs.getString("black_username"),
-                        rs.getString("game_name"),
-                        deserializeChessGame(rs.getString("game_state"))
-                ));
+        try (var conn = DatabaseManager.getConnection()) {
+            try (var statement = conn.prepareStatement("SELECT gameID, whiteUsername, blackUsername, gameName, chessGame FROM game")){
+                try (var results = statement.executeQuery()) {
+                    while (results.next()) {
+                        var gameID = results.getInt("game_id");
+                        var whiteUsername = results.getString("white_username");
+                        var blackUsername = results.getString("black_username");
+                        var gameName = results.getString("game_name");
+                        var chessGame = deserializeChessGame(results.getString("chessGame"));
+                        games.add(new GameData(gameID, whiteUsername, blackUsername, gameName, chessGame));
+                    }
+                }
             }
-        } catch (SQLException e) {
-            throw new DataAccessException("Error listing games: " + e.getMessage());
+        } catch (DataAccessException | SQLException e) {
+            return null;
         }
         return games;
     }
