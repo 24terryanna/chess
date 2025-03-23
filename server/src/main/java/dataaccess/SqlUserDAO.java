@@ -37,6 +37,8 @@ public class SqlUserDAO implements UserDAO {
 
     @Override
     public void createUser(UserData userData) throws DataAccessException {
+        System.out.println("Creating user: " + userData.username());
+
         var statement = "INSERT INTO user (username, password_hash, email) VALUES (?, ?, ?)";
         try (var conn = DatabaseManager.getConnection();
              var ps = conn.prepareStatement(statement)) {
@@ -47,16 +49,38 @@ public class SqlUserDAO implements UserDAO {
             ps.executeUpdate();
 
         } catch (SQLException e) {
-            throw new DataAccessException("User already exists: " + userData.username());
+            if (e.getSQLState().equals("23000")) {  // 23000 = MySQL Integrity Constraint Violation
+                throw new DataAccessException("User already exists: " + userData.username());
+            } else {
+                throw new DataAccessException("Error inserting user: " + e.getMessage());
+            }
         }
     }
 
     @Override
     public void clear() {
-        var statement = "TRUNCATE TABLE user";
-        try (var conn = DatabaseManager.getConnection();
-             var ps = conn.prepareStatement(statement)) {
-            ps.executeUpdate();
+        try (var conn = DatabaseManager.getConnection()) {
+            try (var psDisableFK = conn.prepareStatement("SET FOREIGN_KEY_CHECKS = 0")) {
+                psDisableFK.executeUpdate();
+            }
+
+            try (var psAuth = conn.prepareStatement("DELETE FROM auth")) {
+                psAuth.executeUpdate();
+            }
+            try (var psGame = conn.prepareStatement("DELETE FROM game")) {
+                psGame.executeUpdate();
+            }
+            try (var psUser = conn.prepareStatement("DELETE FROM user")) {
+                psUser.executeUpdate();
+            }
+
+            try (var psEnableFK = conn.prepareStatement("SET FOREIGN_KEY_CHECKS = 1")) {
+                psEnableFK.executeUpdate();
+            }
+//        var statement = "DELETE FROM user";
+//        try (var conn = DatabaseManager.getConnection();
+//             var ps = conn.prepareStatement(statement)) {
+//            ps.executeUpdate();
         } catch (SQLException | DataAccessException e) {
             throw new RuntimeException("Error clearing user table: " + e.getMessage(), e);
         }
@@ -88,6 +112,10 @@ public class SqlUserDAO implements UserDAO {
     private void configureDatabase() throws DataAccessException {
         DatabaseManager.createDatabase();
         try (var conn = DatabaseManager.getConnection()) {
+            var dropTable = "DROP TABLE IF EXISTS user";
+            try (var psDrop = conn.prepareStatement(dropTable)) {
+                psDrop.executeUpdate();
+            }
             var createTable = """
                 CREATE TABLE IF NOT EXISTS user (
                     username VARCHAR(255) NOT NULL,
@@ -97,8 +125,8 @@ public class SqlUserDAO implements UserDAO {
                 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
             """;
 
-            try (var ps = conn.prepareStatement(createTable)) {
-                ps.executeUpdate();
+            try (var psCreate = conn.prepareStatement(createTable)) {
+                psCreate.executeUpdate();
             }
         } catch (SQLException | DataAccessException e) {
             throw new RuntimeException("Unable to configure database: " + e.getMessage(), e);
