@@ -10,27 +10,53 @@ public class SqlUserDAOTests {
     UserDAO userDAO;
     UserData defaultUser;
 
+//
     @BeforeEach
     void setUp() throws DataAccessException, SQLException {
         DatabaseManager.createDatabase();
         userDAO = new SqlUserDAO();
         try (var conn = DatabaseManager.getConnection()) {
-            try (var statement = conn.prepareStatement("TRUNCATE user")) {
-                statement.executeUpdate();
+            try (var psDisableFK = conn.prepareStatement("SET FOREIGN_KEY_CHECKS = 0")) {
+                psDisableFK.executeUpdate();
+            }
+            try (var psDeleteAuth = conn.prepareStatement("DELETE FROM auth")) {
+                psDeleteAuth.executeUpdate();
+            }
+            try (var psDeleteGame = conn.prepareStatement("DELETE FROM game")) {
+                psDeleteGame.executeUpdate();
+            }
+            try (var psDeleteUser = conn.prepareStatement("DELETE FROM user")) {
+                psDeleteUser.executeUpdate();
+            }
+            try (var psEnableFK = conn.prepareStatement("SET FOREIGN_KEY_CHECKS = 1")) {
+                psEnableFK.executeUpdate();
             }
         }
-
         defaultUser = new UserData("username", "password", "email");
     }
+
 
     @AfterEach
     void tearDown() throws SQLException, DataAccessException {
         try (var conn = DatabaseManager.getConnection()) {
-            try (var statement = conn.prepareStatement("TRUNCATE user")) {
-                statement.executeUpdate();
+            try (var psDisableFK = conn.prepareStatement("SET FOREIGN_KEY_CHECKS = 0")) {
+                psDisableFK.executeUpdate();
+            }
+            try (var psDeleteAuth = conn.prepareStatement("DELETE FROM auth")) {
+                psDeleteAuth.executeUpdate();
+            }
+            try (var psDeleteGame = conn.prepareStatement("DELETE FROM game")) {
+                psDeleteGame.executeUpdate();
+            }
+            try (var psDeleteUser = conn.prepareStatement("DELETE FROM user")) {
+                psDeleteUser.executeUpdate();
+            }
+            try (var psEnableFK = conn.prepareStatement("SET FOREIGN_KEY_CHECKS = 1")) {
+                psEnableFK.executeUpdate();
             }
         }
     }
+
 
     @Test
     void testCreateUser_Success() throws DataAccessException {

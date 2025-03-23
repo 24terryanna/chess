@@ -8,7 +8,25 @@ import java.sql.*;
 public class SqlUserDAO implements UserDAO {
 
     public SqlUserDAO() throws DataAccessException {
-        configureDatabase();
+        try {
+            DatabaseManager.createDatabase();
+        } catch (DataAccessException ex) {
+            throw new RuntimeException(ex);
+        }
+        try (var conn = DatabaseManager.getConnection()) {
+            var createTestTable = """            
+                    CREATE TABLE if NOT EXISTS user (
+                                    username VARCHAR(255) NOT NULL,
+                                    password_hash VARCHAR(255) NOT NULL,
+                                    email VARCHAR(255),
+                                    PRIMARY KEY (username)
+                                    )""";
+            try (var createTableStatement = conn.prepareStatement(createTestTable)) {
+                createTableStatement.executeUpdate();
+            }
+        } catch (SQLException | DataAccessException e) {
+            throw new RuntimeException();
+        }
     }
 
     @Override
@@ -84,29 +102,29 @@ public class SqlUserDAO implements UserDAO {
         }
     }
 
-    private void configureDatabase() throws DataAccessException {
-        DatabaseManager.createDatabase();
-        try (var conn = DatabaseManager.getConnection()) {
-            var dropTable = "DROP TABLE IF EXISTS user";
-            try (var psDrop = conn.prepareStatement(dropTable)) {
-                psDrop.executeUpdate();
-            }
-            var createTable = """
-                CREATE TABLE IF NOT EXISTS user (
-                    username VARCHAR(255) NOT NULL,
-                    password_hash VARCHAR(255) NOT NULL,
-                    email VARCHAR(255),
-                    PRIMARY KEY (username)
-                ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
-            """;
-
-            try (var psCreate = conn.prepareStatement(createTable)) {
-                psCreate.executeUpdate();
-            }
-        } catch (SQLException | DataAccessException e) {
-            throw new RuntimeException("Unable to configure database: " + e.getMessage(), e);
-        }
-    }
+//    private void configureDatabase() throws DataAccessException {
+//        DatabaseManager.createDatabase();
+//        try (var conn = DatabaseManager.getConnection()) {
+//            var dropTable = "DROP TABLE IF EXISTS user";
+//            try (var psDrop = conn.prepareStatement(dropTable)) {
+//                psDrop.executeUpdate();
+//            }
+//            var createTable = """
+//                CREATE TABLE IF NOT EXISTS user (
+//                    username VARCHAR(255) NOT NULL,
+//                    password_hash VARCHAR(255) NOT NULL,
+//                    email VARCHAR(255),
+//                    PRIMARY KEY (username)
+//                ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+//            """;
+//
+//            try (var psCreate = conn.prepareStatement(createTable)) {
+//                psCreate.executeUpdate();
+//            }
+//        } catch (SQLException | DataAccessException e) {
+//            throw new RuntimeException("Unable to configure database: " + e.getMessage(), e);
+//        }
+//    }
 
     private String hashPassword(String password) {
         return BCrypt.hashpw(password, BCrypt.gensalt());
