@@ -70,7 +70,8 @@ public class SqlGameDAO implements GameDAO{
         } catch (SQLException e) {
             throw new DataAccessException("Error creating game: " + e.getMessage());
         }
-        throw new DataAccessException("Failed to create game");
+        //throw new DataAccessException("Failed to create game");
+        return game;
     }
 
 
@@ -96,7 +97,7 @@ public class SqlGameDAO implements GameDAO{
     @Override
     public void updateGame(GameData updatedGame) throws DataAccessException {
         try (var conn = DatabaseManager.getConnection()) {
-            try (var statement = conn.prepareStatement("UPDATE game SET white_username=?, black_username=?, game_name=?, game_state=? WHERE game_id=?")) {
+            try (var statement = conn.prepareStatement("UPDATE game SET white_username=?, black_username=?, game_name=?, chess_game=? WHERE game_id=?")) {
                 statement.setString(1, updatedGame.whiteUsername());
                 statement.setString(2, updatedGame.blackUsername());
                 statement.setString(3, updatedGame.gameName());

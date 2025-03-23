@@ -2,7 +2,6 @@ package dataaccess;
 
 import model.GameData;
 
-import java.sql.SQLException;
 import java.util.List;
 
 public interface GameDAO {

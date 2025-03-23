@@ -4,7 +4,6 @@ import model.GameData;
 
 import java.util.ArrayList;
 import java.util.List;
-import dataaccess.DataAccessException;
 
 public class MemoryGameDAO implements GameDAO{
     private final List<GameData> gamesDB = new ArrayList<>();
