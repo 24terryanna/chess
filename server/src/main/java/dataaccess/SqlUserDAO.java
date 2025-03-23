@@ -4,8 +4,6 @@ import model.UserData;
 import org.mindrot.jbcrypt.BCrypt;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.Collection;
 
 public class SqlUserDAO implements UserDAO {
 
@@ -86,29 +84,6 @@ public class SqlUserDAO implements UserDAO {
         }
     }
 
-//    public boolean validateUser(String username, String password) throws DataAccessException {
-//        String query = "SELECT password_hash FROM user WHERE username = ?";
-//        try (var conn = DatabaseManager.getConnection();
-//             var ps = conn.prepareStatement(query)) {
-//
-//            ps.setString(1, username);
-//            try (var rs = ps.executeQuery()) {
-//                if (rs.next()) {
-//                    String storedHash = rs.getString("password_hash");
-//                    return BCrypt.checkpw(password, storedHash); // Compare password securely
-//                }
-//            }
-//        } catch (SQLException e) {
-//            throw new DataAccessException("Error validating user: " + e.getMessage());
-//        }
-//        return false;
-//    }
-//
-//    public boolean authenticateUser(String username, String password) throws DataAccessException {
-//        UserData user = getUser(username);
-//        return passwordMatches(password, user.password());
-//    }
-
     private void configureDatabase() throws DataAccessException {
         DatabaseManager.createDatabase();
         try (var conn = DatabaseManager.getConnection()) {
@@ -137,7 +112,4 @@ public class SqlUserDAO implements UserDAO {
         return BCrypt.hashpw(password, BCrypt.gensalt());
     }
 
-    private boolean passwordMatches(String rawPassword, String hashedPassword) {
-        return BCrypt.checkpw(rawPassword, hashedPassword);
-    }
 }
