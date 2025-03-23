@@ -19,13 +19,13 @@ public class SqlGameDAO implements GameDAO{
         try (var conn = DatabaseManager.getConnection()) {
             var createTestTable = """            
                     CREATE TABLE if NOT EXISTS game (
-                                    gameID INT NOT NULL,
-                                    whiteUsername VARCHAR(255),
-                                    blackUsername VARCHAR(255),
-                                    gameName VARCHAR(255),
-                                    chessGame TEXT,
-                                    PRIMARY KEY (gameID)
-                                    )""";
+                        game_id INT NOT NULL,
+                        white_username VARCHAR(255),
+                        black_username VARCHAR(255),
+                        game_name VARCHAR(255),
+                        chess_game TEXT,
+                        PRIMARY KEY (game_id)
+                        )""";
             try (var createTableStatement = conn.prepareStatement(createTestTable)) {
                 createTableStatement.executeUpdate();
             }
@@ -38,14 +38,14 @@ public class SqlGameDAO implements GameDAO{
     public List<GameData> listGames(String username) throws DataAccessException {
         List<GameData> games = new ArrayList<>();
         try (var conn = DatabaseManager.getConnection()) {
-            try (var statement = conn.prepareStatement("SELECT gameID, whiteUsername, blackUsername, gameName, chessGame FROM game")){
+            try (var statement = conn.prepareStatement("SELECT game_id, white_username, black_username, game_name, chess_game FROM game")){
                 try (var results = statement.executeQuery()) {
                     while (results.next()) {
                         var gameID = results.getInt("game_id");
                         var whiteUsername = results.getString("white_username");
                         var blackUsername = results.getString("black_username");
                         var gameName = results.getString("game_name");
-                        var chessGame = deserializeChessGame(results.getString("chessGame"));
+                        var chessGame = deserializeChessGame(results.getString("chess_game"));
                         games.add(new GameData(gameID, whiteUsername, blackUsername, gameName, chessGame));
                     }
                 }
@@ -59,7 +59,7 @@ public class SqlGameDAO implements GameDAO{
     @Override
     public GameData createGame(GameData game) throws DataAccessException {
         try (var conn = DatabaseManager.getConnection()) {
-            try (var statement = conn.prepareStatement("INSERT INTO game (gameID, whiteUsername, blackUsername, gameName, chessGame) VALUES(?, ?, ?, ?, ?)")) {
+            try (var statement = conn.prepareStatement("INSERT INTO game (game_id, white_username, black_username, game_name, chess_game) VALUES(?, ?, ?, ?, ?)")) {
                 statement.setInt(1, game.gameID());
                 statement.setString(2, game.whiteUsername());
                 statement.setString(3, game.blackUsername());
@@ -77,14 +77,14 @@ public class SqlGameDAO implements GameDAO{
     @Override
     public GameData getGame(int gameID) throws DataAccessException {
         try (var conn = DatabaseManager.getConnection()) {
-            try (var statement = conn.prepareStatement("SELECT whiteUsername, blackUsername, gameName, chessGame FROM game WHERE gameID=?")){
+            try (var statement = conn.prepareStatement("SELECT white_username, black_username, game_name, chess_game FROM game WHERE game_id=?")){
                 statement.setInt(1, gameID);
                 try (var result = statement.executeQuery()) {
                     result.next();
-                    var whiteUsername = result.getString("whiteUsername");
-                    var blackUsername = result.getString("blackUsername");
-                    var gameName = result.getString("gameName");
-                    var chessGame = deserializeChessGame(result.getString("chessGame"));
+                    var whiteUsername = result.getString("white_username");
+                    var blackUsername = result.getString("black_username");
+                    var gameName = result.getString("game_name");
+                    var chessGame = deserializeChessGame(result.getString("chess_game"));
                     return new GameData(gameID, whiteUsername, blackUsername, gameName, chessGame);
                 }
             }
