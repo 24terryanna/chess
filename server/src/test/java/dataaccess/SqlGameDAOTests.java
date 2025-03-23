@@ -57,6 +57,12 @@ public class SqlGameDAOTests {
     }
 
     @Test
+    void testCreateGame_DuplicateGameID() throws DataAccessException {
+        gameDAO.createGame(defaultGameData);
+        assertThrows(DataAccessException.class, () -> gameDAO.createGame(defaultGameData)); // Attempt to create a game with the same ID
+    }
+
+    @Test
     void testGetGame_NotFound() {
         assertThrows(DataAccessException.class, () -> gameDAO.getGame(9999)); // Random non-existent ID
     }
@@ -74,12 +80,24 @@ public class SqlGameDAOTests {
     }
 
     @Test
+    void testUpdateGameNonExistentGame() {
+        GameData nonExistentGame = new GameData(9999, "newWhite", "newBlack", "newGameName", defaultGameData.game());
+        assertThrows(DataAccessException.class, () -> gameDAO.updateGame(nonExistentGame)); // Attempt to update a non-existent game
+    }
+
+    @Test
     void testListGames() throws DataAccessException {
         gameDAO.createGame(defaultGameData);
         List<GameData> games = gameDAO.listGames("white");
 
         assertEquals(1, games.size());
         assertEquals(defaultGameData.gameID(), games.get(0).gameID());
+    }
+
+    @Test
+    void testListGamesNoGames() throws DataAccessException {
+        List<GameData> games = gameDAO.listGames("nonExistentUser");
+        assertTrue(games.isEmpty(), "Expected no games for non-existent user");
     }
 
     @Test
@@ -90,5 +108,19 @@ public class SqlGameDAOTests {
         assertThrows(DataAccessException.class, () -> gameDAO.getGame(defaultGameData.gameID()));
     }
 
+    @Test
+    void testClearAndCreate() throws DataAccessException {
+        gameDAO.createGame(defaultGameData);
+        gameDAO.clear();
+
+        // Verify the table is empty
+        List<GameData> games = gameDAO.listGames("white");
+        assertTrue(games.isEmpty(), "Expected no games after clear");
+
+        // Verify a new game can be created after clearing
+        gameDAO.createGame(defaultGameData);
+        GameData retrievedGame = gameDAO.getGame(defaultGameData.gameID());
+        assertNotNull(retrievedGame);
+    }
 
 }

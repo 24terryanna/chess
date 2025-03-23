@@ -66,7 +66,6 @@ public class SqlGameDAO implements GameDAO{
                 statement.setString(4, game.gameName());
                 statement.setString(5, serializeChessGame(game.game()));
                 statement.executeUpdate();
-
             }
         } catch (SQLException e) {
             throw new DataAccessException("Error creating game: " + e.getMessage());
@@ -82,10 +81,10 @@ public class SqlGameDAO implements GameDAO{
                 statement.setInt(1, gameID);
                 try (var result = statement.executeQuery()) {
                     result.next();
-                    var whiteUsername = result.getString("white_username");
-                    var blackUsername = result.getString("black_username");
-                    var gameName = result.getString("game_name");
-                    var chessGame = deserializeChessGame(result.getString("chess_game"));
+                    var whiteUsername = result.getString("whiteUsername");
+                    var blackUsername = result.getString("blackUsername");
+                    var gameName = result.getString("gameName");
+                    var chessGame = deserializeChessGame(result.getString("chessGame"));
                     return new GameData(gameID, whiteUsername, blackUsername, gameName, chessGame);
                 }
             }
