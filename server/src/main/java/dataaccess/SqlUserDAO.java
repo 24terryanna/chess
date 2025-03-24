@@ -53,76 +53,44 @@ public class SqlUserDAO implements UserDAO {
     public void createUser(UserData userData) throws DataAccessException {
         System.out.println("Creating user: " + userData.username());
 
-        var statement = "INSERT INTO user (username, password_hash, email) VALUES (?, ?, ?)";
-        try (var conn = DatabaseManager.getConnection();
-             var ps = conn.prepareStatement(statement)) {
+        var checkUserStatement = "SELECT COUNT(*) FROM user WHERE username=?";
+        var insertStatement = "INSERT INTO user (username, password_hash, email) VALUES (?, ?, ?)";
 
-            ps.setString(1, userData.username());
-            ps.setString(2, hashPassword(userData.password()));
-            ps.setString(3, userData.email());
-            ps.executeUpdate();
+
+        try (var conn = DatabaseManager.getConnection();
+             var checkStmt = conn.prepareStatement(checkUserStatement);
+             var insertStmt = conn.prepareStatement(insertStatement)) {
+
+            // Check if the username already exists
+            checkStmt.setString(1, userData.username());
+            try (var result = checkStmt.executeQuery()) {
+                if (result.next() && result.getInt(1) > 0) {
+                    throw new DataAccessException("User already exists: " + userData.username());
+                }
+            }
+
+            // Insert the new user
+            insertStmt.setString(1, userData.username());
+            insertStmt.setString(2, hashPassword(userData.password()));
+            insertStmt.setString(3, userData.email());
+            insertStmt.executeUpdate();
 
         } catch (SQLException e) {
-            if (e.getSQLState().equals("23000")) {  // 23000 = MySQL Integrity Constraint Violation
-                throw new DataAccessException("User already exists: " + userData.username());
-            } else {
-                throw new DataAccessException("Error inserting user: " + e.getMessage());
-            }
+            e.printStackTrace();
+            throw new DataAccessException("Error inserting user: " + e.getMessage());
         }
     }
 
     @Override
     public void clear() {
-        try (var conn = DatabaseManager.getConnection()) {
-            try (var psDisableFK = conn.prepareStatement("SET FOREIGN_KEY_CHECKS = 0")) {
-                psDisableFK.executeUpdate();
-            }
-
-            try (var psAuth = conn.prepareStatement("DELETE FROM auth")) {
-                psAuth.executeUpdate();
-            }
-            try (var psGame = conn.prepareStatement("DELETE FROM game")) {
-                psGame.executeUpdate();
-            }
-            try (var psUser = conn.prepareStatement("DELETE FROM user")) {
-                psUser.executeUpdate();
-            }
-
-            try (var psEnableFK = conn.prepareStatement("SET FOREIGN_KEY_CHECKS = 1")) {
-                psEnableFK.executeUpdate();
-            }
-//        var statement = "DELETE FROM user";
-//        try (var conn = DatabaseManager.getConnection();
-//             var ps = conn.prepareStatement(statement)) {
-//            ps.executeUpdate();
+        var statement = "DELETE FROM user";
+        try (var conn = DatabaseManager.getConnection();
+             var ps = conn.prepareStatement(statement)) {
+            ps.executeUpdate();
         } catch (SQLException | DataAccessException e) {
             throw new RuntimeException("Error clearing user table: " + e.getMessage(), e);
         }
     }
-
-//    private void configureDatabase() throws DataAccessException {
-//        DatabaseManager.createDatabase();
-//        try (var conn = DatabaseManager.getConnection()) {
-//            var dropTable = "DROP TABLE IF EXISTS user";
-//            try (var psDrop = conn.prepareStatement(dropTable)) {
-//                psDrop.executeUpdate();
-//            }
-//            var createTable = """
-//                CREATE TABLE IF NOT EXISTS user (
-//                    username VARCHAR(255) NOT NULL,
-//                    password_hash VARCHAR(255) NOT NULL,
-//                    email VARCHAR(255),
-//                    PRIMARY KEY (username)
-//                ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
-//            """;
-//
-//            try (var psCreate = conn.prepareStatement(createTable)) {
-//                psCreate.executeUpdate();
-//            }
-//        } catch (SQLException | DataAccessException e) {
-//            throw new RuntimeException("Unable to configure database: " + e.getMessage(), e);
-//        }
-//    }
 
     private String hashPassword(String password) {
         return BCrypt.hashpw(password, BCrypt.gensalt());
