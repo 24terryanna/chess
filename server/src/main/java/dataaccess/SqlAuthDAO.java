@@ -27,13 +27,13 @@ public class SqlAuthDAO implements AuthDAO {
 
     @Override
     public void createAuth(AuthData authData) throws DataAccessException {
-        var checkUserStatement = "SELECT COUNT(*) FROM auth WHERE username=?";
-        var statement = "INSERT INTO auth (auth_token, username) VALUES (?, ?)";
+//        var checkUserStatement = "SELECT COUNT(*) FROM auth WHERE username=?";
+        var statement = "INSERT INTO auth (username, auth_token) VALUES (?, ?)";
         try (var conn = DatabaseManager.getConnection();
              var ps = conn.prepareStatement(statement)) {
 
-            ps.setString(1, authData.authToken());
-            ps.setString(2, authData.username());
+            ps.setString(1, authData.username());
+            ps.setString(2, authData.authToken());
             ps.executeUpdate();
 
         } catch (SQLException | DataAccessException e) {

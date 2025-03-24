@@ -33,12 +33,12 @@ public class SqlUserDAO implements UserDAO {
             var statement = "SELECT username, password_hash, email FROM user WHERE username=?";
             try (var ps = conn.prepareStatement(statement)) {
                 ps.setString(1, username);
-                try (var rs = ps.executeQuery()) {
-                    if (rs.next()) {
+                try (var result = ps.executeQuery()) {
+                    if (result.next()) {
                         return new UserData(
-                                rs.getString("username"),
-                                rs.getString("password_hash"),
-                                rs.getString("email")
+                                result.getString("username"),
+                                result.getString("password_hash"),
+                                result.getString("email")
                         );
                     }
                 }
