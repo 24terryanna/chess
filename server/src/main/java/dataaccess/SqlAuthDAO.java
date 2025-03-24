@@ -12,10 +12,10 @@ public class SqlAuthDAO implements AuthDAO {
         }
         try (var conn = DatabaseManager.getConnection()) {
             var createTestTable = """
-                    CREATE TABLE if NOT EXISTS user (
+                    CREATE TABLE if NOT EXISTS auth (
                         username VARCHAR(255) NOT NULL,
-                        authToken VARCHAR(255) NOT NULL,
-                        PRIMARY KEY (authToken)
+                        auth_token VARCHAR(255) NOT NULL,
+                        PRIMARY KEY (auth_token)
                         )
                     """;
             try (var createTableStatement = conn.prepareStatement(createTestTable)) {
@@ -28,12 +28,12 @@ public class SqlAuthDAO implements AuthDAO {
 
     @Override
     public void createAuth(AuthData authData) throws DataAccessException {
-        var statement = "INSERT INTO auth (auth_token, username) VALUES (?, ?)";
+        var statement = "INSERT INTO auth (username, auth_token) VALUES (?, ?)";
         try (var conn = DatabaseManager.getConnection();
              var ps = conn.prepareStatement(statement)) {
 
-            ps.setString(1, authData.authToken());
-            ps.setString(2, authData.username());
+            ps.setString(1, authData.username());
+            ps.setString(2, authData.authToken());
             ps.executeUpdate();
 
         } catch (SQLException | DataAccessException e) {

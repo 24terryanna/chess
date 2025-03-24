@@ -17,22 +17,22 @@ public class SqlAuthDAOTests {
     void setUp() throws DataAccessException, SQLException {
         DatabaseManager.createDatabase();
         authDAO = new SqlAuthDAO();
-//        try (var conn = DatabaseManager.getConnection()) {
-//            try (var statement = conn.prepareStatement("TRUNCATE auth")) {
-//                statement.executeUpdate();
-//            }
-//        }
+        try (var conn = DatabaseManager.getConnection()) {
+            try (var statement = conn.prepareStatement("TRUNCATE auth")) {
+                statement.executeUpdate();
+            }
+        }
         authDAO.clear();
         defaultAuth = new AuthData("token", "username");
     }
 
     @AfterEach
     void tearDown() throws SQLException, DataAccessException {
-//        try (var conn = DatabaseManager.getConnection()) {
-//            try (var statement = conn.prepareStatement("TRUNCATE auth")) {
-//                statement.executeUpdate();
-//            }
-//        }
+        try (var conn = DatabaseManager.getConnection()) {
+            try (var statement = conn.prepareStatement("TRUNCATE auth")) {
+                statement.executeUpdate();
+            }
+        }
         authDAO.clear();
     }
     @Test
