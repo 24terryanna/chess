@@ -27,19 +27,19 @@ public class SqlAuthDAO implements AuthDAO {
 
     @Override
     public void createAuth(AuthData authData) throws DataAccessException {
-        var checkUserStatement = "SELECT COUNT(*) FROM auth WHERE username=?";
+//        var checkUserStatement = "SELECT COUNT(*) FROM user WHERE username=?";
         var statement = "INSERT INTO auth (username, auth_token) VALUES (?, ?)";
         try (var conn = DatabaseManager.getConnection();
-             var checkStmt = conn.prepareStatement(checkUserStatement);
+//             var checkStmt = conn.prepareStatement(checkUserStatement);
              var ps = conn.prepareStatement(statement)) {
 
             // Validate if the username exists
-            checkStmt.setString(1, authData.username());
-            try (var result = checkStmt.executeQuery()) {
-                if (!result.next() || result.getInt(1) == 0) {
-                    throw new DataAccessException("User not found: " + authData.username());
-                }
-            }
+//            checkStmt.setString(1, authData.username());
+//            try (var result = checkStmt.executeQuery()) {
+//                if (!result.next() || result.getInt(1) == 0) {
+//                    throw new DataAccessException("User not found: " + authData.username());
+//                }
+//            }
             ps.setString(1, authData.username());
             ps.setString(2, authData.authToken());
             ps.executeUpdate();
@@ -63,14 +63,15 @@ public class SqlAuthDAO implements AuthDAO {
                             result.getString("auth_token"),
                             result.getString("username")
                     );
-                } else {
-                    throw new DataAccessException("Auth token not found: " + auth_token);
+//                } else {
+//                    throw new DataAccessException("Auth token not found: " + auth_token);
                 }
 
             }
         } catch (SQLException e) {
             throw new DataAccessException("Error retrieving auth_token: " + e.getMessage());
         }
+        return null;
     }
 
     @Override
