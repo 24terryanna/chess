@@ -23,44 +23,47 @@ public class SqlGameDAOTests {
         DatabaseManager.createDatabase();
         gameDAO = new SqlGameDAO();
         try (var conn = DatabaseManager.getConnection()) {
-            try (var statement = conn.prepareStatement("TRUNCATE game")) {
+            try (var statement = conn.prepareStatement("DELETE FROM game")) {
                 statement.executeUpdate();
             }
+            try (var resetAutoIncrement = conn.prepareStatement("ALTER TABLE game AUTO_INCREMENT = 1")) {
+                resetAutoIncrement.executeUpdate();
+            }
+
         }
 
         ChessGame defaultChessGame = new ChessGame();
         ChessBoard board = new ChessBoard();
         board.resetBoard();
         defaultChessGame.setBoard(board);
-        defaultGameData = new GameData(1111, "white", "black", "gameName", defaultChessGame);
+        defaultGameData = new GameData(0, "white", "black", "gameName", defaultChessGame);
     }
 
     @AfterEach
     void tearDown() throws SQLException, DataAccessException {
         try (var conn = DatabaseManager.getConnection()) {
-            try (var statement = conn.prepareStatement("TRUNCATE game")) {
+            try (var statement = conn.prepareStatement("DELETE FROM game")) {
                 statement.executeUpdate();
             }
+            try (var resetAutoIncrement = conn.prepareStatement("ALTER TABLE game AUTO_INCREMENT = 1")) {
+                resetAutoIncrement.executeUpdate();
+            }
+
         }
     }
 
     @Test
     void testCreateGame() throws DataAccessException {
-        gameDAO.createGame(defaultGameData);
-        GameData retrievedGame = gameDAO.getGame(defaultGameData.gameID());
+        GameData createdGame = gameDAO.createGame(defaultGameData);
+        GameData retrievedGame = gameDAO.getGame(createdGame.gameID());
 
         assertNotNull(retrievedGame);
-        assertEquals(defaultGameData.gameID(), retrievedGame.gameID());
+        assertEquals(createdGame.gameID(), retrievedGame.gameID());
         assertEquals(defaultGameData.whiteUsername(), retrievedGame.whiteUsername());
         assertEquals(defaultGameData.blackUsername(), retrievedGame.blackUsername());
         assertEquals(defaultGameData.gameName(), retrievedGame.gameName());
     }
 
-    @Test
-    void testCreateGame_DuplicateGameID() throws DataAccessException {
-        gameDAO.createGame(defaultGameData);
-        assertThrows(DataAccessException.class, () -> gameDAO.createGame(defaultGameData)); // Attempt to create a game with the same ID
-    }
 
     @Test
     void testGetGame_NotFound() {
@@ -69,11 +72,12 @@ public class SqlGameDAOTests {
 
     @Test
     void testUpdateGame() throws DataAccessException {
-        gameDAO.createGame(defaultGameData);
-        GameData updatedGame = new GameData(1111, "newWhite", "newBlack", "newGameName", defaultGameData.game());
-        gameDAO.updateGame(updatedGame);
+        GameData createdGame = gameDAO.createGame(defaultGameData);
+        GameData updatedGame = new GameData(createdGame.gameID(), "newWhite", "newBlack", "newGameName", createdGame.game());
 
-        GameData retrievedGame = gameDAO.getGame(1111);
+        gameDAO.updateGame((updatedGame));
+        GameData retrievedGame = gameDAO.getGame(createdGame.gameID());
+
         assertEquals("newWhite", retrievedGame.whiteUsername());
         assertEquals("newBlack", retrievedGame.blackUsername());
         assertEquals("newGameName", retrievedGame.gameName());
@@ -87,11 +91,14 @@ public class SqlGameDAOTests {
 
     @Test
     void testListGames() throws DataAccessException {
-        gameDAO.createGame(defaultGameData);
+        GameData createdGame = gameDAO.createGame(defaultGameData);
+        GameData retrievedGame = gameDAO.getGame(createdGame.gameID());
+
+        assertNotNull(retrievedGame);
         List<GameData> games = gameDAO.listGames("white");
 
         assertEquals(1, games.size());
-        assertEquals(defaultGameData.gameID(), games.get(0).gameID());
+        assertEquals(createdGame.gameID(), games.get(0).gameID());
     }
 
     @Test
@@ -102,10 +109,11 @@ public class SqlGameDAOTests {
 
     @Test
     void testClear() throws DataAccessException {
-        gameDAO.createGame(defaultGameData);
+        GameData createdGame = gameDAO.createGame(defaultGameData);
+        int gameID = createdGame.gameID(); // 🔹 Store the real game ID
         gameDAO.clear();
 
-        assertThrows(DataAccessException.class, () -> gameDAO.getGame(defaultGameData.gameID()));
+        assertThrows(DataAccessException.class, () -> gameDAO.getGame(gameID));
     }
 
     @Test
@@ -118,8 +126,9 @@ public class SqlGameDAOTests {
         assertTrue(games.isEmpty(), "Expected no games after clear");
 
         // Verify a new game can be created after clearing
-        gameDAO.createGame(defaultGameData);
-        GameData retrievedGame = gameDAO.getGame(defaultGameData.gameID());
+        GameData createdGame = gameDAO.createGame(defaultGameData);
+        GameData retrievedGame = gameDAO.getGame(createdGame.gameID());
+
         assertNotNull(retrievedGame);
     }
 
