@@ -36,7 +36,7 @@ public class SqlGameDAOTests {
         ChessBoard board = new ChessBoard();
         board.resetBoard();
         defaultChessGame.setBoard(board);
-        defaultGameData = new GameData(0, "white", "black", "gameName", defaultChessGame);
+        defaultGameData = new GameData(1234, "white", "black", "gameName", defaultChessGame);
     }
 
     @AfterEach

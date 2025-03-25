@@ -60,7 +60,6 @@ public class SqlGameDAO implements GameDAO{
     public GameData createGame(GameData game) throws DataAccessException {
         try (var conn = DatabaseManager.getConnection()) {
             try (var statement = conn.prepareStatement("INSERT INTO game (white_username, black_username, game_name, chess_game) VALUES(?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS)) {
-                //statement.setInt(1, game.gameID());
                 statement.setString(1, game.whiteUsername());
                 statement.setString(2, game.blackUsername());
                 statement.setString(3, game.gameName());
@@ -68,6 +67,7 @@ public class SqlGameDAO implements GameDAO{
 
                 statement.executeUpdate();
 
+                //generate game_id
                 try (var resultSet = statement.getGeneratedKeys()) {
                     if (resultSet.next()) {
                         int generatedID = resultSet.getInt(1);
@@ -76,10 +76,12 @@ public class SqlGameDAO implements GameDAO{
                         throw new DataAccessException("Failed to retrieve generated game ID.");
                     }
                 }
+
             }
         } catch (SQLException e) {
             throw new DataAccessException("Error creating game: " + e.getMessage());
         }
+
     }
 
 
