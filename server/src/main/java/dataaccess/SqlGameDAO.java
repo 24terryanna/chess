@@ -51,7 +51,7 @@ public class SqlGameDAO implements GameDAO{
                 }
             }
         } catch (DataAccessException | SQLException e) {
-            return null;
+            throw new DataAccessException("Error retrieving games: " + e.getMessage());
         }
         return games;
     }
@@ -59,7 +59,7 @@ public class SqlGameDAO implements GameDAO{
     @Override
     public GameData createGame(GameData game) throws DataAccessException {
         try (var conn = DatabaseManager.getConnection()) {
-            try (var statement = conn.prepareStatement("INSERT INTO game (white_username, black_username, game_name, chess_game) VALUES(?, ?, ?, ?, ?), Statement.RETURN_GENERATED_KEYS")) {
+            try (var statement = conn.prepareStatement("INSERT INTO game (white_username, black_username, game_name, chess_game) VALUES(?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS)) {
                 //statement.setInt(1, game.gameID());
                 statement.setString(1, game.whiteUsername());
                 statement.setString(2, game.blackUsername());
@@ -131,6 +131,7 @@ public class SqlGameDAO implements GameDAO{
                 throw new RuntimeException(e);
             }
         } catch (SQLException | DataAccessException e) {
+            throw new DataAccessException("Error clearing game table: " + e.getMessage());
         }
     }
 
