@@ -7,7 +7,7 @@ import java.sql.*;
 
 public class SqlUserDAO implements UserDAO {
 
-    public SqlUserDAO() throws DataAccessException {
+    public SqlUserDAO() {
         try {DatabaseManager.createDatabase(); } catch (DataAccessException ex) {
             throw new RuntimeException(ex);
         }

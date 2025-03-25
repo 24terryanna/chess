@@ -19,7 +19,7 @@ public class SqlGameDAO implements GameDAO{
         try (var conn = DatabaseManager.getConnection()) {
             var createTestTable = """            
                     CREATE TABLE if NOT EXISTS game (
-                        game_id INT NOT NULL,
+                        game_id INT NOT NULL AUTO_INCREMENT,
                         white_username VARCHAR(255),
                         black_username VARCHAR(255),
                         game_name VARCHAR(255),
@@ -59,19 +59,27 @@ public class SqlGameDAO implements GameDAO{
     @Override
     public GameData createGame(GameData game) throws DataAccessException {
         try (var conn = DatabaseManager.getConnection()) {
-            try (var statement = conn.prepareStatement("INSERT INTO game (game_id, white_username, black_username, game_name, chess_game) VALUES(?, ?, ?, ?, ?)")) {
-                statement.setInt(1, game.gameID());
-                statement.setString(2, game.whiteUsername());
-                statement.setString(3, game.blackUsername());
-                statement.setString(4, game.gameName());
-                statement.setString(5, serializeChessGame(game.game()));
+            try (var statement = conn.prepareStatement("INSERT INTO game (white_username, black_username, game_name, chess_game) VALUES(?, ?, ?, ?, ?), Statement.RETURN_GENERATED_KEYS")) {
+                //statement.setInt(1, game.gameID());
+                statement.setString(1, game.whiteUsername());
+                statement.setString(2, game.blackUsername());
+                statement.setString(3, game.gameName());
+                statement.setString(4, serializeChessGame(game.game()));
+
                 statement.executeUpdate();
+
+                try (var resultSet = statement.getGeneratedKeys()) {
+                    if (resultSet.next()) {
+                        int generatedID = resultSet.getInt(1);
+                        return new GameData(generatedID, game.whiteUsername(), game.blackUsername(), game.gameName(), game.game());
+                    } else {
+                        throw new DataAccessException("Failed to retrieve generated game ID.");
+                    }
+                }
             }
         } catch (SQLException e) {
             throw new DataAccessException("Error creating game: " + e.getMessage());
         }
-        //throw new DataAccessException("Failed to create game");
-        return game;
     }
 
 

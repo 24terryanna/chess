@@ -14,9 +14,9 @@ public class Server {
 
         // Register your endpoints and handle exceptions here.
         //initialize DAOs
-        UserDAO userDAO = new MemoryUserDAO();
-        AuthDAO authDAO = new MemoryAuthDAO();
-        GameDAO gameDAO = new MemoryGameDAO();
+        UserDAO userDAO = new SqlUserDAO();
+        AuthDAO authDAO = new SqlAuthDAO();
+        GameDAO gameDAO = new SqlGameDAO();
 
         //initialize services
         UserService userService = new UserService(userDAO, authDAO);
