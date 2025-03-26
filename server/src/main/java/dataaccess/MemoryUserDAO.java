@@ -29,7 +29,7 @@ public class MemoryUserDAO implements UserDAO{
     @Override
     public boolean verifyUser(String username, String password) throws DataAccessException {
         boolean existingUser = false;
-        for (UserData user : userDB) {
+        for (UserData user : userDB.values()) {
             if (user.username().equals(username)) {
                 existingUser = true;
             }
@@ -37,6 +37,10 @@ public class MemoryUserDAO implements UserDAO{
                 return true;
             }
         }
-        if (existingUser)
+        if (existingUser) {
+            return false;
+        } else {
+            throw new DataAccessException("User does not exist: " + username);
+        }
     }
 }
