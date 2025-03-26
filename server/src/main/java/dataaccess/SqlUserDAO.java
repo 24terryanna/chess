@@ -96,4 +96,11 @@ public class SqlUserDAO implements UserDAO {
         return BCrypt.hashpw(password, BCrypt.gensalt());
     }
 
+    @Override
+    public boolean verifyUser(String username, String providedClearTextPassword) {
+        // read the previously hashed password from the database
+        var hashedPassword = hashPassword(username);
+
+        return BCrypt.checkpw(providedClearTextPassword, hashedPassword);
+    }
 }

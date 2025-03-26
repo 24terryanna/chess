@@ -53,7 +53,7 @@ public class UserService {
 
             UserData userData = userDAO.getUser(request.username());
 
-            if (userData == null || !userData.password().equals(request.password())) {
+            if (userData == null || userDAO.verifyUser(request.username(), request.password())) {
                 return new LoginResult("Error: unauthorized", 401);
             }
 
