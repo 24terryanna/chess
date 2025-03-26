@@ -95,11 +95,11 @@ public class SqlUserDAO implements UserDAO {
 
     @Override
     public boolean verifyUser(String username, String password) throws DataAccessException {
-        UserData user = getUser(username);
-        if (user == null) {
+        UserData userData = getUser(username);
+        if (userData == null) {
             throw new DataAccessException("User does not exist: " + username);
         }
-        return passwordMatches(password, user.password());
+        return passwordMatches(password, userData.password());
     }
 
     private String hashPassword(String password) {
