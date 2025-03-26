@@ -3,6 +3,7 @@ package dataaccess;
 import model.UserData;
 import org.mindrot.jbcrypt.BCrypt;
 
+
 import java.sql.*;
 
 public class SqlUserDAO implements UserDAO {
@@ -92,15 +93,21 @@ public class SqlUserDAO implements UserDAO {
         }
     }
 
+    @Override
+    public boolean verifyUser(String username, String password) throws DataAccessException {
+        UserData user = getUser(username);
+        if (user == null) {
+            throw new DataAccessException("User does not exist: " + username);
+        }
+        return passwordMatches(password, user.password());
+    }
+
     private String hashPassword(String password) {
         return BCrypt.hashpw(password, BCrypt.gensalt());
     }
 
-    @Override
-    public boolean verifyUser(String username, String providedClearTextPassword) throws DataAccessException {
-        // read the previously hashed password from the database
-        var hashedPassword = hashPassword(username);
-
-        return BCrypt.checkpw(providedClearTextPassword, hashedPassword);
+    private boolean passwordMatches(String clearTextPassword, String hashedPassword) {
+        return BCrypt.checkpw(clearTextPassword, hashedPassword);
     }
+
 }
