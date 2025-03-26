@@ -27,5 +27,16 @@ public class MemoryUserDAO implements UserDAO{
     }
 
     @Override
-    public boolean verifyUser
+    public boolean verifyUser(String username, String password) throws DataAccessException {
+        boolean existingUser = false;
+        for (UserData user : userDB) {
+            if (user.username().equals(username)) {
+                existingUser = true;
+            }
+            if (user.username().equals(username) && user.password().equals(password)) {
+                return true;
+            }
+        }
+        if (existingUser)
+    }
 }
