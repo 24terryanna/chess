@@ -59,7 +59,7 @@ public class SqlUserDAOTests {
 
 
     @Test
-    void testCreateUser_Success() throws DataAccessException {
+    void testCreateUserSuccess() throws DataAccessException {
         assertDoesNotThrow(() -> userDAO.createUser(defaultUser));
         UserData retrievedUser = userDAO.getUser(defaultUser.username());
         assertNotNull(retrievedUser);
@@ -67,14 +67,14 @@ public class SqlUserDAOTests {
     }
 
     @Test
-    void testCreateUser_Duplicate() throws DataAccessException {
+    void testCreateUserDuplicate() throws DataAccessException {
         userDAO.createUser(defaultUser);
         DataAccessException thrown = assertThrows(DataAccessException.class, () -> userDAO.createUser(defaultUser));
         assertTrue(thrown.getMessage().contains("User already exists"));
     }
 
     @Test
-    void testGetUser_Exists() throws DataAccessException {
+    void testGetUserExists() throws DataAccessException {
         userDAO.createUser(defaultUser);
         UserData retrievedUser = userDAO.getUser(defaultUser.username());
         assertNotNull(retrievedUser);
@@ -82,7 +82,7 @@ public class SqlUserDAOTests {
     }
 
     @Test
-    void testGetUser_NotExists() throws DataAccessException {
+    void testGetUserNotExists() throws DataAccessException {
         UserData retrievedUser = userDAO.getUser("nonexistentUser");
         assertNull(retrievedUser);
     }

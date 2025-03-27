@@ -66,7 +66,7 @@ public class SqlGameDAOTests {
 
 
     @Test
-    void testGetGame_NotFound() {
+    void testGetGameNotFound() {
         assertThrows(DataAccessException.class, () -> gameDAO.getGame(9999)); // Random non-existent ID
     }
 
