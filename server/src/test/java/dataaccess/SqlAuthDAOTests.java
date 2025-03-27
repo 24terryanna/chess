@@ -36,15 +36,6 @@ public class SqlAuthDAOTests {
     }
 
     @Test
-    void createAuthPositive() throws DataAccessException {
-        authDAO.createAuth(defaultAuth);
-        AuthData retrievedAuth = authDAO.getAuth(defaultAuth.authToken());
-        assertNotNull(retrievedAuth);
-        assertEquals(defaultAuth.authToken(), retrievedAuth.authToken());
-        assertEquals(defaultAuth.username(), retrievedAuth.username());
-    }
-
-    @Test
     void createAuthNegDuplicateAuthToken() {
         assertThrows(DataAccessException.class, () -> {
             authDAO.createAuth(defaultAuth);
@@ -53,7 +44,16 @@ public class SqlAuthDAOTests {
     }
 
     @Test
+    void createAuthPositive() throws DataAccessException {
+        verifyAuthCreateRetrieve();
+    }
+
+    @Test
     void getAuthPositive() throws DataAccessException {
+        verifyAuthCreateRetrieve();
+    }
+
+    private void verifyAuthCreateRetrieve() throws DataAccessException {
         authDAO.createAuth(defaultAuth);
         AuthData retrievedAuth = authDAO.getAuth(defaultAuth.authToken());
         assertNotNull(retrievedAuth);
