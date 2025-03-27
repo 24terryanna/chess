@@ -37,7 +37,6 @@ public class SqlAuthDAOTests {
 
     @Test
     void createAuthPositive() throws DataAccessException {
-        // Positive test: Creating a valid auth record
         authDAO.createAuth(defaultAuth);
         AuthData retrievedAuth = authDAO.getAuth(defaultAuth.authToken());
         assertNotNull(retrievedAuth);
@@ -47,16 +46,14 @@ public class SqlAuthDAOTests {
 
     @Test
     void createAuthNegDuplicateAuthToken() {
-        // Negative test: Attempting to create a record with a duplicate auth token
         assertThrows(DataAccessException.class, () -> {
             authDAO.createAuth(defaultAuth);
-            authDAO.createAuth(defaultAuth); // Duplicate auth token
+            authDAO.createAuth(defaultAuth);
         });
     }
 
     @Test
     void getAuthPositive() throws DataAccessException {
-        // Positive test: Retrieving an existing auth record
         authDAO.createAuth(defaultAuth);
         AuthData retrievedAuth = authDAO.getAuth(defaultAuth.authToken());
         assertNotNull(retrievedAuth);
@@ -66,33 +63,29 @@ public class SqlAuthDAOTests {
 
     @Test
     void getAuthNegNotAuthToken() throws DataAccessException {
-        // Negative test: Attempting to retrieve a nonexistent auth token
         AuthData retrievedAuth = authDAO.getAuth("nonexistent_token");
         assertNull(retrievedAuth);
     }
 
     @Test
     void deleteAuthPositive() throws DataAccessException {
-        // Positive test: Deleting an existing auth record
         authDAO.createAuth(defaultAuth);
         authDAO.deleteAuth(defaultAuth.authToken());
         AuthData retrievedAuth = authDAO.getAuth(defaultAuth.authToken());
-        assertNull(retrievedAuth); // Auth record should no longer exist
+        assertNull(retrievedAuth);
     }
 
     @Test
     void deleteAuthNegNoMatchAuthToken() {
-        // Negative test: Attempting to delete a nonexistent auth token
         assertDoesNotThrow(() -> authDAO.deleteAuth("nonexistent_token"));
     }
 
     @Test
     void clearPositive() throws DataAccessException {
-        // Positive test: Clearing the auth table
         authDAO.createAuth(defaultAuth);
         authDAO.clear();
         AuthData retrievedAuth = authDAO.getAuth(defaultAuth.authToken());
-        assertNull(retrievedAuth); // Table should be empty
+        assertNull(retrievedAuth);
     }
 
 }

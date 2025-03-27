@@ -106,7 +106,7 @@ public class SqlGameDAOTests {
     @Test
     void testClear() throws DataAccessException {
         GameData createdGame = gameDAO.createGame(defaultGameData);
-        int gameID = createdGame.gameID(); // 🔹 Store the real game ID
+        int gameID = createdGame.gameID();
         gameDAO.clear();
 
         assertThrows(DataAccessException.class, () -> gameDAO.getGame(gameID));
@@ -117,11 +117,9 @@ public class SqlGameDAOTests {
         gameDAO.createGame(defaultGameData);
         gameDAO.clear();
 
-        // Verify the table is empty
         List<GameData> games = gameDAO.listGames("white");
         assertTrue(games.isEmpty(), "Expected no games after clear");
 
-        // Verify a new game can be created after clearing
         GameData createdGame = gameDAO.createGame(defaultGameData);
         GameData retrievedGame = gameDAO.getGame(createdGame.gameID());
 
