@@ -10,34 +10,21 @@ public class SqlUserDAOTests {
     UserDAO userDAO;
     UserData defaultUser;
 
-//
     @BeforeEach
-    void setUp() throws DataAccessException, SQLException {
+    void setUp() throws DataAccessException {
         DatabaseManager.createDatabase();
         userDAO = new SqlUserDAO();
-        try (var conn = DatabaseManager.getConnection()) {
-            try (var psDisableFK = conn.prepareStatement("SET FOREIGN_KEY_CHECKS = 0")) {
-                psDisableFK.executeUpdate();
-            }
-            try (var psDeleteAuth = conn.prepareStatement("DELETE FROM auth")) {
-                psDeleteAuth.executeUpdate();
-            }
-            try (var psDeleteGame = conn.prepareStatement("DELETE FROM game")) {
-                psDeleteGame.executeUpdate();
-            }
-            try (var psDeleteUser = conn.prepareStatement("DELETE FROM user")) {
-                psDeleteUser.executeUpdate();
-            }
-            try (var psEnableFK = conn.prepareStatement("SET FOREIGN_KEY_CHECKS = 1")) {
-                psEnableFK.executeUpdate();
-            }
-        }
+        clearDatabase();
         defaultUser = new UserData("username", "password", "email");
     }
 
 
     @AfterEach
-    void tearDown() throws SQLException, DataAccessException {
+    void tearDown() throws DataAccessException {
+        clearDatabase();
+    }
+
+    private void clearDatabase() throws DataAccessException{
         try (var conn = DatabaseManager.getConnection()) {
             try (var psDisableFK = conn.prepareStatement("SET FOREIGN_KEY_CHECKS = 0")) {
                 psDisableFK.executeUpdate();
@@ -54,6 +41,8 @@ public class SqlUserDAOTests {
             try (var psEnableFK = conn.prepareStatement("SET FOREIGN_KEY_CHECKS = 1")) {
                 psEnableFK.executeUpdate();
             }
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to clear database", e);
         }
     }
 
