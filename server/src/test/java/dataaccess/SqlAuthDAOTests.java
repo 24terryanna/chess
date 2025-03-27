@@ -17,17 +17,16 @@ public class SqlAuthDAOTests {
     void setUp() throws DataAccessException, SQLException {
         DatabaseManager.createDatabase();
         authDAO = new SqlAuthDAO();
-        try (var conn = DatabaseManager.getConnection()) {
-            try (var statement = conn.prepareStatement("TRUNCATE auth")) {
-                statement.executeUpdate();
-            }
-        }
-        authDAO.clear();
+        clearDatabase();
         defaultAuth = new AuthData("token", "username");
     }
 
     @AfterEach
     void tearDown() throws SQLException, DataAccessException {
+        clearDatabase();
+    }
+
+    private void clearDatabase() throws DataAccessException, SQLException {
         try (var conn = DatabaseManager.getConnection()) {
             try (var statement = conn.prepareStatement("TRUNCATE auth")) {
                 statement.executeUpdate();
@@ -35,6 +34,7 @@ public class SqlAuthDAOTests {
         }
         authDAO.clear();
     }
+
     @Test
     void createAuthPositive() throws DataAccessException {
         // Positive test: Creating a valid auth record
