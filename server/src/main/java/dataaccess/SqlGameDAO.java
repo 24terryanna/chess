@@ -59,7 +59,8 @@ public class SqlGameDAO implements GameDAO{
     @Override
     public GameData createGame(GameData game) throws DataAccessException {
         try (var conn = DatabaseManager.getConnection()) {
-            try (var statement = conn.prepareStatement("INSERT INTO game (white_username, black_username, game_name, chess_game) VALUES(?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS)) {
+            try (var statement = conn.prepareStatement(
+                    "INSERT INTO game (white_username, black_username, game_name, chess_game) VALUES(?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS)) {
                 statement.setString(1, game.whiteUsername());
                 statement.setString(2, game.blackUsername());
                 statement.setString(3, game.gameName());
@@ -88,7 +89,8 @@ public class SqlGameDAO implements GameDAO{
     @Override
     public GameData getGame(int gameID) throws DataAccessException {
         try (var conn = DatabaseManager.getConnection()) {
-            try (var statement = conn.prepareStatement("SELECT white_username, black_username, game_name, chess_game FROM game WHERE game_id=?")){
+            try (var statement = conn.prepareStatement(
+                    "SELECT white_username, black_username, game_name, chess_game FROM game WHERE game_id=?")){
                 statement.setInt(1, gameID);
                 try (var result = statement.executeQuery()) {
                     result.next();
@@ -107,7 +109,8 @@ public class SqlGameDAO implements GameDAO{
     @Override
     public void updateGame(GameData updatedGame) throws DataAccessException {
         try (var conn = DatabaseManager.getConnection()) {
-            try (var statement = conn.prepareStatement("UPDATE game SET white_username=?, black_username=?, game_name=?, chess_game=? WHERE game_id=?")) {
+            try (var statement = conn.prepareStatement(
+                    "UPDATE game SET white_username=?, black_username=?, game_name=?, chess_game=? WHERE game_id=?")) {
                 statement.setString(1, updatedGame.whiteUsername());
                 statement.setString(2, updatedGame.blackUsername());
                 statement.setString(3, updatedGame.gameName());
