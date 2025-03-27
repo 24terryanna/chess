@@ -7,6 +7,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import javax.xml.crypto.Data;
 import java.util.List;
 
 import java.sql.SQLException;
@@ -22,15 +23,7 @@ public class SqlGameDAOTests {
     void setUp() throws DataAccessException, SQLException {
         DatabaseManager.createDatabase();
         gameDAO = new SqlGameDAO();
-        try (var conn = DatabaseManager.getConnection()) {
-            try (var statement = conn.prepareStatement("DELETE FROM game")) {
-                statement.executeUpdate();
-            }
-            try (var resetAutoIncrement = conn.prepareStatement("ALTER TABLE game AUTO_INCREMENT = 1")) {
-                resetAutoIncrement.executeUpdate();
-            }
-
-        }
+        clearDatabase();
 
         ChessGame defaultChessGame = new ChessGame();
         ChessBoard board = new ChessBoard();
@@ -41,6 +34,10 @@ public class SqlGameDAOTests {
 
     @AfterEach
     void tearDown() throws SQLException, DataAccessException {
+        clearDatabase();
+    }
+
+    private void clearDatabase() throws SQLException, DataAccessException {
         try (var conn = DatabaseManager.getConnection()) {
             try (var statement = conn.prepareStatement("DELETE FROM game")) {
                 statement.executeUpdate();
@@ -48,7 +45,6 @@ public class SqlGameDAOTests {
             try (var resetAutoIncrement = conn.prepareStatement("ALTER TABLE game AUTO_INCREMENT = 1")) {
                 resetAutoIncrement.executeUpdate();
             }
-
         }
     }
 
