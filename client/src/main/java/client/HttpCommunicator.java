@@ -5,6 +5,13 @@ import model.GameData;
 import model.GamesList;
 import server.ServerFacade;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -91,12 +98,66 @@ public class HttpCommunicator {
         return !response.containsKey("Error");
     }
 
-    private Map request(String method, String endpoint) {
-        return request(method, endpoint);
+    private String requestString(String method, String endpoint) {
+        return requestString(method, endpoint, null);
     }
 
-    private Map request(String method, String endpoint, String body) {
+    private String requestString(String method, String endpoint, String body) {
+        try {
+            HttpURLConnection connection = makeConnection(method, endpoint, body);
+
+            if (connection.getResponseCode() == HttpURLConnection.HTTP_UNAUTHORIZED) {
+                return "Error: 401 Unauthorized";
+            }
+
+            try (InputStream inputStream = connection.getInputStream();
+                 InputStreamReader reader = new InputStreamReader(inputStream)) {
+                return readerToString(reader);
+            }
+        } catch (IOException | URISyntaxException e) {
+            return "Error: " + e.getMessage();
+        }
+    }
+
+    private HttpURLConnection makeConnection(String method, String endpoint, String body)
+            throws URISyntaxException, IOException {
+
+        URI uri = new URI(baseURL + endpoint);
+        HttpURLConnection connection = (HttpURLConnection) uri.toURL().openConnection();
+
+        connection.setRequestMethod(method);
+
+        String token = serverFacade.getAuthToken();
+        if (token != null) {
+            connection.setRequestProperty("Authorization", token);
+        }
+
+        if (body != null) {
+            connection.setDoOutput(true);
+            connection.setRequestProperty("Content-Type", "application/json");
+            try (OutputStream os = connection.getOutputStream()) {
+                os.write(body.getBytes());
+            }
+        }
+
+        connection.connect();
+
+        return connection;
+    }
+
+    private String readerToString(InputStreamReader reader) {
+        StringBuilder sb = new StringBuilder();
+        try {
+            for (int ch; (ch = reader.read()) != -1; ) {
+                sb.append((char) ch);
+            }
+            return sb.toString();
+        } catch (IOException e) {
+            return "";
+        }
 
     }
+
+
 
 }
