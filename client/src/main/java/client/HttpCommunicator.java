@@ -21,19 +21,37 @@ public class HttpCommunicator {
         var body = Map.of("username", username, "password", password, "email", email);
         var jsonBody = new Gson().toJson(body);
         Map response = request("POST", "/user", jsonBody);
+
         if (response.containsKey("Error")) {
             return false;
         }
+
         serverFacade.setAuthToken((String) response.get("authToken"));
         return true;
     }
 
     public boolean login(String username, String password){
+        var body = Map.of("username", username, "password", password);
+        var jsonBody = new Gson().toJson(body);
+        Map response = request("POST", "/session", jsonBody);
 
+        if (response.containsKey("Error")) {
+            return false;
+        }
+
+        serverFacade.setAuthToken((String) response.get("authToken"));
+        return true;
     }
 
     public boolean logout() {
+        Map response = request("DELETE", "/session");
+        if (response.containsKey("Error")) {
+            return false;
+        }
 
+        serverFacade.setAuthToken(null);
+        return true;
+        }
     }
 
     public int createGame(String gameName) {
