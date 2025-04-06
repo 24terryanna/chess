@@ -2,8 +2,10 @@ package client;
 
 import com.google.gson.Gson;
 import model.GameData;
+import model.GamesList;
 import server.ServerFacade;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -69,11 +71,24 @@ public class HttpCommunicator {
     }
 
     public List<GameData> listGames() {
-
+        String response = requestString("GET", "/game");
+        if(response.contains("Error")) {
+            return new ArrayList<>();
+        }
+        GamesList games = new Gson().fromJson(response, GamesList.class);
+        return new ArrayList<>(games.games());
     }
 
     public boolean joinGame(int gameID, String playerColor) {
-
+        Map body;
+        if (playerColor != null) {
+            body = Map.of("gameID", gameID, "playerColor", playerColor);
+        } else {
+            body = Map.of("gameID", gameID);
+        }
+        var jsonBody = new Gson().toJson(body);
+        Map response = request("PUT", "/game", jsonBody);
+        return !response.containsKey("Error");
     }
 
     private Map request(String method, String endpoint) {
