@@ -121,6 +121,16 @@ public class HttpCommunicator {
         return !response.containsKey("Error");
     }
 
+    public void showBoard(int gameID) {
+        String response = requestString("GET", STR."/game/\{gameID}/board");
+
+        if (response.contains("Error")) {
+            System.out.println("Failed to get board.");
+        } else {
+            System.out.println(response);
+        }
+    }
+
     private String requestString(String method, String endpoint) {
         return requestString(method, endpoint, null);
     }
