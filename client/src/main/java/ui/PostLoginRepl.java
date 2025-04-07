@@ -44,4 +44,29 @@ public class PostLoginRepl {
         }
     }
 
+    private void handleCreate(String[] tokens) {
+        if (tokens.length != 2) {
+            System.out.println("Input: create <gameName>");
+            return;
+        }
+        boolean success = server.createGame(tokens[1]);
+        System.out.println(success ? "Game created." : "Failed to create game.");
+    }
+
+    private void handleList() {
+        List<GameData> games = server.listGames();
+        if (games.isEmpty()) {
+            System.out.println("No games found.");
+        } else {
+            System.out.println("Games:");
+            for (GameData game : games) {
+                System.out.printf(" ID: %d | Name: %s | White: %s | Black: %s%n",
+                        game.gameID(),
+                        game.gameName(),
+                        game.whiteUsername(),
+                        game.blackUsername());
+            }
+        }
+    }
+
 }
