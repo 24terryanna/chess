@@ -94,4 +94,24 @@ public class PostLoginRepl {
         }
     }
 
+    private void handleObserve(String[] tokens) {
+        if (tokens.length != 2) {
+            System.out.println("Input: observe <gameID>");
+            return;
+        }
+
+        try {
+            int gameID = Integer.parseInt(tokens[1]);
+            boolean success = server.joinGame(gameID, null);
+            if (success) {
+                System.out.println(STR."Observing game \{gameID}...");
+                new GamePlayRepl(server, gameID).run();
+            } else {
+                System.out.println("Could not observe game.");
+            }
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid game ID.");
+        }
+    }
+
 }
