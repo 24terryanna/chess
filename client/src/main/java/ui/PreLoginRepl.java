@@ -21,7 +21,7 @@ public class PreLoginRepl {
             String command = tokens[0].toLowerCase();
 
             switch(command) {
-                case "register" -> handleResiter(tokens);
+                case "register" -> handleRegister(tokens);
                 case "login" -> handleLogin(tokens);
                 case "help" -> printHelp();
                 case "quit" -> {
@@ -30,6 +30,29 @@ public class PreLoginRepl {
                 }
                 default -> System.out.println("Unknown command. Type 'help' for options.");
             }
+        }
+    }
+
+    private void handleRegister(String[] tokens) {
+        if (tokens.length != 4) {
+            System.out.println("Input: register <username> <password> <email>");
+            return;
+        }
+        boolean success = server.register(tokens[1], tokens[2], tokens[3]);
+        System.out.println(success ? "Successfully registered!" : "Registration failed.");
+    }
+
+    private void handleLogin(String[] tokens) {
+        if (tokens.length != 3) {
+            System.out.println("Input: login <username> <password>");
+            return;
+        }
+        boolean success = server.login(tokens[1], tokens[2]);
+        if (success){
+            System.out.println("Logged in!");
+            new PostLoginRepl(server).run();
+        } else {
+            System.out.println("Login failed.");
         }
     }
 
