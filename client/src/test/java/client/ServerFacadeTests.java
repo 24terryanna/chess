@@ -1,8 +1,11 @@
 package client;
 
+import model.GameData;
 import org.junit.jupiter.api.*;
 
 import server.Server;
+
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -63,5 +66,25 @@ public class ServerFacadeTests {
         facade.register("user6", "pass123", "user6@email.com");
         facade.login("user6", "pass123");
         assertTrue(facade.createGame("Game 1"));
+    }
 
+    @Test
+    void listGamesIncludesCreatedGame() {
+        facade.register("user7", "pass123", "user7@email.com");
+        facade.login("user7", "pass123");
+        facade.createGame("Test Game");
+        List<GameData> games = facade.listGames();
+        assertTrue(games.stream().anyMatch(game -> game.gameName().equals("Test Game")));
+    }
+
+    @Test
+    void joinGameSuccess() {
+        facade.register("user8", "pass123", "user8@email.com");
+        facade.login("user8", "pass123");
+        facade.createGame("Join Game Test");
+        List<GameData> games = facade.listGames();
+        assertFalse(games.isEmpty());
+        int gameId = games.get(0).gameID();
+        assertTrue(facade.joinGame(gameId, "WHITE"));
+    }
 }
