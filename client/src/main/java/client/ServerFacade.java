@@ -62,8 +62,8 @@ public class ServerFacade {
         return http.resignGame(gameID);
     }
 
-    public leaveGame(int gameID) {
-
+    public boolean leaveGame(int gameID) {
+        return http.leaveGame(gameID);
     }
 
     public showBoard(int gameID) {
