@@ -3,7 +3,6 @@ import client.ServerFacade;
 import java.util.Scanner;
 
 public class PreLoginRepl {
-    //register, login, quit
 
     private final Scanner scanner = new Scanner(System.in);
     private final ServerFacade server;

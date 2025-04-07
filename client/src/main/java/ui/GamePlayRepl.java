@@ -4,12 +4,9 @@ import client.ServerFacade;
 import chess.ChessMove;
 import chess.ChessPosition;
 
-import javax.sound.midi.SysexMessage;
-import javax.swing.text.ChangedCharSetException;
 import java.util.Scanner;
 
 public class GamePlayRepl {
-    //makeMove, resign, leave, observe
 
     private final Scanner scanner;
     private final ServerFacade server;

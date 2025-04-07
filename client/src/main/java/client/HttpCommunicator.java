@@ -1,7 +1,6 @@
 package client;
 
 import chess.ChessMove;
-import chess.ChessPiece;
 import com.google.gson.Gson;
 import model.GameData;
 import model.GamesList;
@@ -23,7 +22,7 @@ public class HttpCommunicator {
     ServerFacade serverFacade;
 
     public HttpCommunicator(ServerFacade serverFacade, String serverDomain) {
-        url = STR."http://\{serverDomain}";
+        url = "http://" + serverDomain;
         this.serverFacade = serverFacade;
     }
 
@@ -202,5 +201,4 @@ public class HttpCommunicator {
         }
 
     }
-
 }

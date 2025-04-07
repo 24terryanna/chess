@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Scanner;
 
 public class PostLoginRepl {
-    //createGame, listGames, joinGame, logout
 
     private final Scanner scanner = new Scanner(System.in);
     private final ServerFacade server;

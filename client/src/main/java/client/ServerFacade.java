@@ -2,7 +2,6 @@ package client;
 
 
 import model.GameData;
-import chess.ChessGame;
 import chess.ChessMove;
 
 import java.util.List;
