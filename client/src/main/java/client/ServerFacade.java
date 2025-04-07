@@ -1,6 +1,9 @@
 package client;
 
 
+import model.GameData;
+
+import java.util.List;
 
 public class ServerFacade {
 
@@ -41,5 +44,11 @@ public class ServerFacade {
         return http.createGame(gameName);
     }
 
+    public List<GameData> listGames() {
+        return http.listGames();
+    }
 
+    public boolean joinGame(int gameID, String playerColor) {
+        return http.joinGame(gameID, playerColor);
+    }
 }
