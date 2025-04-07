@@ -53,4 +53,20 @@ public class ServerFacade {
     public boolean joinGame(int gameID, String playerColor) {
         return http.joinGame(gameID, playerColor);
     }
+
+    public boolean makeMove(int gameID, ChessMove move) {
+        return http.makeMove(gameID, move);
+    }
+
+    public resignGame(int gameID) {
+
+    }
+
+    public leaveGame(int gameID) {
+
+    }
+
+    public showBoard(int gameID) {
+
+    }
 }

@@ -1,5 +1,7 @@
 package client;
 
+import chess.ChessMove;
+import chess.ChessPiece;
 import com.google.gson.Gson;
 import model.GameData;
 import model.GamesList;
@@ -95,6 +97,13 @@ public class HttpCommunicator {
         }
         var jsonBody = new Gson().toJson(body);
         Map response = request("PUT", "/game", jsonBody);
+        return !response.containsKey("Error");
+    }
+
+    public boolean makeMove(int gameID, ChessMove move) {
+        var body = Map.of("gameID", gameID, "move", move);
+        var jsonBody = new Gson().toJson(body);
+        Map response = request("POST", "/game/move", jsonBody);
         return !response.containsKey("Error");
     }
 
