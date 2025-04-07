@@ -64,4 +64,23 @@ public class GamePlayRepl {
             }
         }
     }
+
+    private void showHelp() {
+        System.out.println("""
+                Commands:
+                - move <start> <end>   Make a move (e.g. move e2 e4)
+                - resign              Resign the game
+                - leave               Leave the game
+                - show                Show current board
+                - help                Show this help menu
+                """);
+    }
+
+    private ChessPosition parsePosition(String position) {
+        if (position.length() != 2) return null;
+        char col = position.charAt(0);
+        int row = Character.getNumericValue(position.charAt(1));
+        return new ChessPosition(row, col - 'a' + 1);
+    }
+
 }
