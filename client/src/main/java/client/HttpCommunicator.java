@@ -3,7 +3,6 @@ package client;
 import com.google.gson.Gson;
 import model.GameData;
 import model.GamesList;
-import server.ServerFacade;
 
 import java.io.IOException;
 import java.io.InputStream;
