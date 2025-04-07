@@ -4,6 +4,7 @@ import org.junit.jupiter.api.*;
 
 import server.Server;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
@@ -16,8 +17,8 @@ public class ServerFacadeTests {
     public static void init() throws Exception {
         server = new Server();
         var port = server.run(0);
-        System.out.println("Started test HTTP server on " + port);
-        facade = new ServerFacade(port);
+        System.out.println(STR."Started test HTTP server on \{port}");
+        facade = new ServerFacade(STR."localhost:\{port}");
 
     }
 
@@ -28,14 +29,14 @@ public class ServerFacadeTests {
 
 
     @Test
-    public void sampleTest() {
-        assertTrue(true);
+    void registerSuccess() {
+        assertTrue(facade.register("user1", "pass123", "user1@email.com"));
     }
 
-//    @Test
-//    void register() throws Exception {
-//        var authData = facade.register("player1", "password", "p1@email.com");
-//        assertTrue(authData.authToken().length() > 10);
-//    }
+    @Test
+    void registerDuplicateFails() {
+        facade.register("user2", "pass123", "user2@email.com");
+        assertFalse(facade.register("user2", "pass123", "user2@email.com"));
+    }
 
 }
