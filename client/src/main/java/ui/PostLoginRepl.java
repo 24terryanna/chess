@@ -69,4 +69,29 @@ public class PostLoginRepl {
         }
     }
 
+    private void handleJoin(String[] tokens) {
+        if (tokens.length != 3) {
+            System.out.println("Input: join <gameID> <white|black>");
+            return;
+        }
+
+        try {
+            int gameID = Integer.parseInt(tokens[1]);
+            String color = tokens[2].toLowerCase();
+            if (!color.equals("white") && !color.equals("black")) {
+                System.out.println("Invalid color. Choose 'white' or 'black'.");
+                return;
+            }
+            boolean success = server.joinGame(gameID, color);
+            if (success) {
+                System.out.println(STR."Joined game as: \{color}!");
+                return;
+            } else {
+                System.out.println("Could not join game.");
+            }
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid game ID.");
+        }
+    }
+
 }
