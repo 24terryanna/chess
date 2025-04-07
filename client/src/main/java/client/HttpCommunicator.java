@@ -23,7 +23,7 @@ public class HttpCommunicator {
     ServerFacade serverFacade;
 
     public HttpCommunicator(ServerFacade serverFacade, String serverDomain) {
-        url = "http://" + serverDomain;
+        url = STR."http://\{serverDomain}";
         this.serverFacade = serverFacade;
     }
 
@@ -63,7 +63,6 @@ public class HttpCommunicator {
         return true;
 
     }
-
 
     public int createGame(String gameName) {
         var body = Map.of("gameName", gameName);
@@ -148,14 +147,27 @@ public class HttpCommunicator {
                 return readerToString(reader);
             }
         } catch (IOException | URISyntaxException e) {
-            return "Error: " + e.getMessage();
+            return STR."Error: \{e.getMessage()}";
         }
     }
+
+    private Map<String, Object> request(String method, String endpoint) {
+        return request(method, endpoint, null);
+    }
+
+    private Map<String, Object> request(String method, String endpoint, String body) {
+        String response = requestString(method, endpoint, body);
+        if (response.startsWith("Error")) {
+            return Map.of("Error", response);
+        }
+        return new Gson().fromJson(response, Map.class);
+    }
+
 
     private HttpURLConnection makeConnection(String method, String endpoint, String body)
             throws URISyntaxException, IOException {
 
-        URI uri = new URI(baseURL + endpoint);
+        URI uri = new URI(url + endpoint);
         HttpURLConnection connection = (HttpURLConnection) uri.toURL().openConnection();
 
         connection.setRequestMethod(method);
