@@ -1,5 +1,7 @@
 package client;
 
+import chess.ChessMove;
+import chess.ChessPosition;
 import model.GameData;
 import org.junit.jupiter.api.*;
 
@@ -87,4 +89,33 @@ public class ServerFacadeTests {
         int gameId = games.get(0).gameID();
         assertTrue(facade.joinGame(gameId, "WHITE"));
     }
+
+    @Test
+    void makeMoveSuccess() {
+        // Setup
+        facade.register("user9", "pass123", "user9@email.com");
+        facade.login("user9", "pass123");
+        facade.createGame("Move Test");
+        int gameId = facade.listGames().get(0).gameID();
+        facade.joinGame(gameId, "WHITE");
+
+        // Move: e2 to e4
+        ChessMove move = new ChessMove(new ChessPosition(2, 5), new ChessPosition(4, 5), null); // e2 -> e4
+        boolean success = facade.makeMove(gameId, move);
+
+        assertTrue(success, "Move should be accepted");
+    }
+
+    @Test
+    void resignGameSuccess() {
+        facade.register("user10", "pass123", "user10@email.com");
+        facade.login("user10", "pass123");
+        facade.createGame("Resign Test");
+        int gameId = facade.listGames().get(0).gameID();
+        facade.joinGame(gameId, "BLACK");
+
+        boolean success = facade.resignGame(gameId);
+        assertTrue(success, "Should be able to resign from a game");
+    }
+
 }
