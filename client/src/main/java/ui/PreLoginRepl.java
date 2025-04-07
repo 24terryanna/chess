@@ -56,4 +56,11 @@ public class PreLoginRepl {
         }
     }
 
+    private void printHelp() {
+        System.out.println("Available commands:");
+        System.out.println(" register <username> <password> <email>");
+        System.out.println(" login <username> <password>");
+        System.out.println(" quit");
+    }
+
 }
