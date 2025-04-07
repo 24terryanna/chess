@@ -39,4 +39,16 @@ public class ServerFacadeTests {
         assertFalse(facade.register("user2", "pass123", "user2@email.com"));
     }
 
+    @Test
+    void loginSuccess() {
+        facade.register("user3", "pass123", "user3@email.com");
+        assertTrue(facade.login("user3", "pass123"));
+    }
+
+    @Test
+    void loginFailsWrongPassword() {
+        facade.register("user4", "pass123", "user4@email.com");
+        assertFalse(facade.login("user4", "wrongpass"));
+    }
+
 }
