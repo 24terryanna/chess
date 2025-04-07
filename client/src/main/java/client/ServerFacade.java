@@ -58,8 +58,8 @@ public class ServerFacade {
         return http.makeMove(gameID, move);
     }
 
-    public resignGame(int gameID) {
-
+    public boolean resignGame(int gameID) {
+        return http.resignGame(gameID);
     }
 
     public leaveGame(int gameID) {

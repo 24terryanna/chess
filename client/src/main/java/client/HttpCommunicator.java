@@ -107,6 +107,13 @@ public class HttpCommunicator {
         return !response.containsKey("Error");
     }
 
+    public boolean resignGame(int gameID) {
+        var body = Map.of("gameID", gameID);
+        var jsonBody = new Gson().toJson(body);
+        Map response = request("POST", "/game/resign", jsonBody);
+        return !response.containsKey("Error");
+    }
+
     private String requestString(String method, String endpoint) {
         return requestString(method, endpoint, null);
     }
