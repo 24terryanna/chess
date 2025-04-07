@@ -59,8 +59,9 @@ public class HttpCommunicator {
 
         serverFacade.setAuthToken(null);
         return true;
-        }
+
     }
+
 
     public int createGame(String gameName) {
         var body = Map.of("gameName", gameName);
