@@ -48,8 +48,12 @@ public class PostLoginRepl {
             System.out.println("Input: create <gameName>");
             return;
         }
-        boolean success = server.createGame(tokens[1]);
-        System.out.println(success ? "Game created." : "Failed to create game.");
+        int gameID = server.createGame(tokens[1]);
+        if (gameID == -1) {
+            System.out.println("Failed to create game.");
+        } else {
+            System.out.print(STR."Game created with ID: \{gameID}");
+        }
     }
 
     private void handleList() {

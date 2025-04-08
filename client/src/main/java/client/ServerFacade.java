@@ -41,7 +41,7 @@ public class ServerFacade {
         return http.logout();
     }
 
-    public boolean createGame(String gameName) {
+    public int createGame(String gameName) {
         return http.createGame(gameName);
     }
 
