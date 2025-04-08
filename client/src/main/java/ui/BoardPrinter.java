@@ -58,6 +58,26 @@ public class BoardPrinter {
             }
             System.out.println();
         }
+
+        System.out.print("  ");
+        for (char col : files) {
+            System.out.print(" " + col + " ");
+        }
+        System.out.println();
+    }
+
+    private String getSymbol(ChessPiece piece) {
+        ChessGame.TeamColor color = piece.getTeamColor();
+        ChessPiece.PieceType type = piece.getPieceType();
+
+        if (color == ChessGame.TeamColor.WHITE) {
+            if (type == ChessPiece.PieceType.KING) return WHITE_KING;
+            if (type == ChessPiece.PieceType.QUEEN) return WHITE_QUEEN;
+            if (type == ChessPiece.PieceType.BISHOP) return WHITE_BISHOP;
+            if (type == ChessPiece.PieceType.KNIGHT) return WHITE_KNIGHT;
+            if (type == ChessPiece.PieceType.ROOK) return WHITE_ROOK;
+            if (type == ChessPiece.PieceType.PAWN) return WHITE_PAWN;
+        }
     }
 
 
