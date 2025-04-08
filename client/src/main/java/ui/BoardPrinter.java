@@ -33,7 +33,7 @@ public class BoardPrinter {
         }
 
         for (int row = startRow; row != endRow; row += step) {
-            System.out.print(" " + row + " ");
+            System.out.print(STR." \{row} ");
             for (char col : files) {
                 int colNum = col - 'a' + 1;
                 ChessPosition position = new ChessPosition(row, colNum);
@@ -61,7 +61,7 @@ public class BoardPrinter {
 
         System.out.print("  ");
         for (char col : files) {
-            System.out.print(" " + col + " ");
+            System.out.print(STR." \{col} ");
         }
         System.out.println();
     }
