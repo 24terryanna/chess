@@ -67,7 +67,10 @@ public class ServerFacadeTests {
     void createGameSuccess() {
         facade.register("user6", "pass123", "user6@email.com");
         facade.login("user6", "pass123");
-        assertTrue(facade.createGame("Game 1"));
+
+        int gameID = facade.createGame("Game 1");
+
+        assertTrue(gameID != -1, "Expected valid game ID, but got -1 (failure).");
     }
 
     @Test
