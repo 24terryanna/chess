@@ -8,7 +8,15 @@ import chess.ChessPosition;
 import static ui.EscapeSequences.*;
 
 public class BoardPrinter {
-    public void printBoard(ChessBoard board, ChessGame.TeamColor perspective) {
+    private final ChessGame game;
+
+    public BoardPrinter(ChessGame game) {
+        this.game = game;
+    }
+    public void printBoard() {
+        ChessBoard board = game.getBoard();
+        ChessGame.TeamColor perspective = game.getTeamTurn();
+
         System.out.println(ERASE_SCREEN);
 
         int startRow;
@@ -80,21 +88,6 @@ public class BoardPrinter {
                 case PAWN -> piece.getTeamColor() == ChessGame.TeamColor.WHITE ? WHITE_PAWN : BLACK_PAWN;
             };
         }
-//            if (type == ChessPiece.PieceType.KING) return WHITE_KING;
-//            if (type == ChessPiece.PieceType.QUEEN) return WHITE_QUEEN;
-//            if (type == ChessPiece.PieceType.BISHOP) return WHITE_BISHOP;
-//            if (type == ChessPiece.PieceType.KNIGHT) return WHITE_KNIGHT;
-//            if (type == ChessPiece.PieceType.ROOK) return WHITE_ROOK;
-//            if (type == ChessPiece.PieceType.PAWN) return WHITE_PAWN;
-//        } else {
-//            if (type == ChessPiece.PieceType.KING) return BLACK_KING;
-//            if (type == ChessPiece.PieceType.QUEEN) return BLACK_QUEEN;
-//            if (type == ChessPiece.PieceType.BISHOP) return BLACK_BISHOP;
-//            if (type == ChessPiece.PieceType.KNIGHT) return BLACK_KNIGHT;
-//            if (type == ChessPiece.PieceType.ROOK) return BLACK_ROOK;
-//            if (type == ChessPiece.PieceType.PAWN) return BLACK_PAWN;
-//        }
-//
         return EMPTY;
     }
 

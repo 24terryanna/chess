@@ -1,8 +1,10 @@
 package ui;
 
+import chess.ChessGame;
 import client.ServerFacade;
 import chess.ChessMove;
 import chess.ChessPosition;
+import model.GameData;
 
 import java.util.Scanner;
 
@@ -11,11 +13,16 @@ public class GamePlayRepl {
     private final Scanner scanner;
     private final ServerFacade server;
     private final int gameID;
+    public static BoardPrinter boardPrinter;
+    ChessGame game;
 
-    public GamePlayRepl(ServerFacade server, int gameID) {
+    public GamePlayRepl(ServerFacade server, int gameID, GameData gameData) {
         this.server = server;
         this.gameID = gameID;
         this.scanner = new Scanner(System.in);
+        this.game = gameData.game();
+
+        boardPrinter = new BoardPrinter(game);
     }
 
     public void run() {
