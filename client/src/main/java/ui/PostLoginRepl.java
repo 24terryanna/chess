@@ -86,12 +86,30 @@ public class PostLoginRepl {
                 return;
             }
             boolean success = server.joinGame(gameID, color);
-            if (success) {
+            if (!success) {
                 System.out.println(STR."Joined game as: \{color}!");
                 return;
-            } else {
-                System.out.println("Could not join game.");
+//            } else {
+//                System.out.println("Could not join game.");
             }
+
+            List<GameData> games = server.listGames();
+            GameData targetGame = null;
+            for (GameData game : games) {
+                if (game.gameID() == gameID) {
+                    targetGame = game;
+                    break;
+                }
+            }
+
+            if (targetGame == null) {
+                System.out.println("Game not found.");
+                return;
+            }
+
+            System.out.println((STR."Joined game as: \{color}!"));
+            new GamePlayRepl(server, gameID, targetGame).run();
+
         } catch (NumberFormatException e) {
             System.out.println("Invalid game ID.");
         }
