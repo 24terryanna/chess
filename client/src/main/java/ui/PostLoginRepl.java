@@ -89,8 +89,6 @@ public class PostLoginRepl {
             if (!success) {
                 System.out.println(STR."Joined game as: \{color}!");
                 return;
-//            } else {
-//                System.out.println("Could not join game.");
             }
 
             List<GameData> games = server.listGames();
@@ -124,12 +122,28 @@ public class PostLoginRepl {
         try {
             int gameID = Integer.parseInt(tokens[1]);
             boolean success = server.joinGame(gameID, null);
-            if (success) {
+            if (!success) {
                 System.out.println(STR."Observing game \{gameID}...");
-                new GamePlayRepl(server, gameID).run();
-            } else {
-                System.out.println("Could not observe game.");
+                return;
             }
+
+            List<GameData> games = server.listGames();
+            GameData targetGame = null;
+            for (GameData game : games) {
+                if (game.gameID() == gameID) {
+                    targetGame = game;
+                    break;
+                }
+            }
+
+            if (targetGame == null) {
+                System.out.println("Game not found.");
+                return;
+            }
+
+            System.out.println((STR."Joined game as observer!"));
+            new GamePlayRepl(server, gameID, targetGame).run();
+
         } catch (NumberFormatException e) {
             System.out.println("Invalid game ID.");
         }
