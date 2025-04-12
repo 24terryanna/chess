@@ -62,7 +62,7 @@ public class GamePlayRepl {
                 }
 
                 case "show" -> {
-                    boardPrinter.printBoard();
+                    server.showBoard(gameID);
                 }
 
                 case "help" -> showHelp();
