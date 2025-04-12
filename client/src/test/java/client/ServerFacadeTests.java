@@ -32,6 +32,11 @@ public class ServerFacadeTests {
         server.stop();
     }
 
+    @AfterEach
+    public void clear() {
+        facade.setAuthToken(null);
+    }
+
 
     @Test
     void registerSuccess() {
