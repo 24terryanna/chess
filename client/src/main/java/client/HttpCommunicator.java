@@ -27,7 +27,7 @@ public class HttpCommunicator {
     }
 
     public boolean clearDatabase() {
-        Map<String, Object> response = request("POST", "/db", null);
+        Map<String, Object> response = request("DELETE", "/db", null);
         return !response.containsKey("Error");
     }
 
