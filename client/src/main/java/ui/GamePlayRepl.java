@@ -13,12 +13,14 @@ public class GamePlayRepl {
     private final Scanner scanner;
     private final ServerFacade server;
     private final int gameID;
+    private final ChessGame.TeamColor perspective;
+    private final ChessGame game;
     public static BoardPrinter boardPrinter;
-    ChessGame game;
 
-    public GamePlayRepl(ServerFacade server, int gameID, GameData gameData) {
+    public GamePlayRepl(ServerFacade server, int gameID, GameData gameData, ChessGame.TeamColor perspective) {
         this.server = server;
         this.gameID = gameID;
+        this.perspective = perspective;
         this.scanner = new Scanner(System.in);
         this.game = gameData.game();
 

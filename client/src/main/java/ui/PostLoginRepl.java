@@ -106,7 +106,7 @@ public class PostLoginRepl {
             }
 
             System.out.println((STR."Joined game as: \{color}!"));
-            new GamePlayRepl(server, gameID, targetGame).run();
+            new GamePlayRepl(server, gameID, targetGame, ).run();
 
         } catch (NumberFormatException e) {
             System.out.println("Invalid game ID.");
@@ -142,7 +142,7 @@ public class PostLoginRepl {
             }
 
             System.out.println((STR."Joined game as observer!"));
-            new GamePlayRepl(server, gameID, targetGame).run();
+            new GamePlayRepl(server, gameID, targetGame, ).run();
 
         } catch (NumberFormatException e) {
             System.out.println("Invalid game ID.");
