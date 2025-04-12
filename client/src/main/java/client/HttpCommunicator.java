@@ -26,6 +26,11 @@ public class HttpCommunicator {
         this.serverFacade = serverFacade;
     }
 
+    public boolean clearDatabase() {
+        Map<String, Object> response = request("POST", "/db", null);
+        return !response.containsKey("Error");
+    }
+
     public boolean register(String username, String password, String email) {
         var body = Map.of("username", username, "password", password, "email", email);
         var jsonBody = new Gson().toJson(body);
