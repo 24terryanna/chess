@@ -17,26 +17,14 @@ public class ServerFacadeTests {
 
     private static Server server;
     static ServerFacade facade;
-    static int port;
 
     @BeforeAll
     public static void init() throws Exception {
         server = new Server();
-        port = server.run(0);
+        var port = server.run(0);
         System.out.println(STR."Started test HTTP server on \{port}");
-//        facade = new ServerFacade(STR."localhost:\{port}");
+        facade = new ServerFacade(STR."localhost:\{port}");
 
-    }
-
-    @BeforeEach
-    void setup() throws Exception {
-        server.clearDB();
-        facade = new ServerFacade("http://localhost:" + port);
-    }
-
-    @AfterEach
-    void cleanup() {
-        server.clearDB();
     }
 
     @AfterAll
@@ -44,93 +32,135 @@ public class ServerFacadeTests {
         server.stop();
     }
 
+    @AfterEach
+    public void clear() {
+        facade.setAuthToken(null);
+        facade.http.clearDatabase();
+    }
 
-    @Test
-    void registerSuccess() {
-        assertTrue(facade.register("user1", "pass123", "user1@email.com"));
+    private void registerAndLogin() {
+        assertTrue(facade.register("testuser", "pass", "test@email.com"));
+        assertTrue(facade.login("testuser", "pass"));
     }
 
     @Test
-    void registerDuplicateFails() {
-        facade.register("user2", "pass123", "user2@email.com");
-        assertFalse(facade.register("user2", "pass123", "user2@email.com"));
+    public void testRegisterSuccess() {
+        boolean success = facade.register("user1", "pass", "email@test.com");
+        assertTrue(success);
     }
 
     @Test
-    void loginSuccess() {
-        facade.register("user3", "pass123", "user3@email.com");
-        assertTrue(facade.login("user3", "pass123"));
+    public void testRegisterFailure_Duplicate() {
+        facade.register("user2", "pass", "email2@test.com");
+        boolean result = facade.register("user2", "pass", "email2@test.com");
+        assertFalse(result);
     }
 
     @Test
-    void loginFailsWrongPassword() {
-        facade.register("user4", "pass123", "user4@email.com");
+    public void testLoginSuccess() {
+        facade.register("user3", "pass", "email3@test.com");
+        assertTrue(facade.login("user3", "pass"));
+    }
+
+    @Test
+    public void testLoginFailure_WrongPassword() {
+        facade.register("user4", "pass", "email4@test.com");
         assertFalse(facade.login("user4", "wrongpass"));
     }
 
     @Test
-    void logoutSuccess() {
-        facade.register("user5", "pass123", "user5@email.com");
-        facade.login("user5", "pass123");
+    public void testLogoutSuccess() {
+        registerAndLogin();
         assertTrue(facade.logout());
     }
 
     @Test
-    void createGameSuccess() {
-        facade.register("user6", "pass123", "user6@email.com");
-        facade.login("user6", "pass123");
-
-        int gameID = facade.createGame("Game 1");
-
-        assertTrue(gameID != -1, "Expected valid game ID, but got -1 (failure).");
+    public void testLogoutFailure_NotLoggedIn() {
+        assertFalse(facade.logout());
     }
 
     @Test
-    void listGamesIncludesCreatedGame() {
-        facade.register("user7", "pass123", "user7@email.com");
-        facade.login("user7", "pass123");
+    public void testCreateGameSuccess() {
+        registerAndLogin();
+        int id = facade.createGame("Test Game");
+        assertTrue(id > 0);
+    }
+
+    @Test
+    public void testCreateGameFailure_NoAuth() {
+        int id = facade.createGame("Test Game");
+        assertEquals(-1, id);
+    }
+
+    @Test
+    public void testListGamesSuccess() {
+        registerAndLogin();
         facade.createGame("Test Game");
         List<GameData> games = facade.listGames();
-        assertTrue(games.stream().anyMatch(game -> game.gameName().equals("Test Game")));
-    }
-
-    @Test
-    void joinGameSuccess() {
-        facade.register("user8", "pass123", "user8@email.com");
-        facade.login("user8", "pass123");
-        facade.createGame("Join Game Test");
-        List<GameData> games = facade.listGames();
         assertFalse(games.isEmpty());
-        int gameId = games.get(0).gameID();
-        assertTrue(facade.joinGame(gameId, "WHITE"));
     }
 
     @Test
-    void makeMoveSuccess() {
-        // Setup
-        facade.register("user9", "pass123", "user9@email.com");
-        facade.login("user9", "pass123");
-        facade.createGame("Move Test");
-        int gameId = facade.listGames().get(0).gameID();
-        facade.joinGame(gameId, "WHITE");
-
-        // Move: e2 to e4
-        ChessMove move = new ChessMove(new ChessPosition(2, 5), new ChessPosition(4, 5), null); // e2 -> e4
-        boolean success = facade.makeMove(gameId, move);
-
-        assertTrue(success, "Move should be accepted");
+    public void testListGamesFailure_NotLoggedIn() {
+        List<GameData> games = facade.listGames();
+        assertTrue(games.isEmpty());
     }
 
     @Test
-    void resignGameSuccess() {
-        facade.register("user10", "pass123", "user10@email.com");
-        facade.login("user10", "pass123");
-        facade.createGame("Resign Test");
-        int gameId = facade.listGames().get(0).gameID();
-        facade.joinGame(gameId, "BLACK");
-
-        boolean success = facade.resignGame(gameId);
-        assertTrue(success, "Should be able to resign from a game");
+    public void testJoinGameSuccess() {
+        registerAndLogin();
+        int id = facade.createGame("Test Game");
+        assertTrue(facade.joinGame(id, "white"));
     }
 
+    @Test
+    public void testJoinGameFailure_InvalidID() {
+        registerAndLogin();
+        assertFalse(facade.joinGame(-1, "white"));
+    }
+
+    @Test
+    public void testMakeMoveSuccess() {
+        registerAndLogin();
+        int id = facade.createGame("Game");
+        facade.joinGame(id, "white");
+
+        ChessMove move = new ChessMove(new ChessPosition(2, 1), new ChessPosition(3, 1), null); // a2 to a3
+        assertTrue(facade.makeMove(id, move));
+    }
+
+    @Test
+    public void testMakeMoveFailure_InvalidGame() {
+        registerAndLogin();
+        ChessMove move = new ChessMove(new ChessPosition(2, 1), new ChessPosition(3, 1), null);
+        assertFalse(facade.makeMove(-1, move));
+    }
+
+    @Test
+    public void testResignGameSuccess() {
+        registerAndLogin();
+        int id = facade.createGame("Game");
+        facade.joinGame(id, "white");
+        assertTrue(facade.resignGame(id));
+    }
+
+    @Test
+    public void testResignGameFailure_InvalidGame() {
+        registerAndLogin();
+        assertFalse(facade.resignGame(-1));
+    }
+
+    @Test
+    public void testLeaveGameSuccess() {
+        registerAndLogin();
+        int id = facade.createGame("Game");
+        facade.joinGame(id, "white");
+        assertTrue(facade.leaveGame(id));
+    }
+
+    @Test
+    public void testLeaveGameFailure_InvalidGame() {
+        registerAndLogin();
+        assertFalse(facade.leaveGame(-1));
+    }
 }
