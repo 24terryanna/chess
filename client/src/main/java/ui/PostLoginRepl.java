@@ -1,5 +1,6 @@
 package ui;
 
+import chess.ChessGame;
 import client.ServerFacade;
 import model.GameData;
 
@@ -106,7 +107,8 @@ public class PostLoginRepl {
             }
 
             System.out.println((STR."Joined game as: \{color}!"));
-            new GamePlayRepl(server, gameID, targetGame, ).run();
+            new GamePlayRepl(server, gameID, targetGame,
+                    color.equals("white") ? ChessGame.TeamColor.WHITE : ChessGame.TeamColor.BLACK).run();
 
         } catch (NumberFormatException e) {
             System.out.println("Invalid game ID.");
@@ -142,8 +144,7 @@ public class PostLoginRepl {
             }
 
             System.out.println((STR."Joined game as observer!"));
-            new GamePlayRepl(server, gameID, targetGame, ).run();
-
+            new GamePlayRepl(server, gameID, targetGame, ChessGame.TeamColor.WHITE).run();
         } catch (NumberFormatException e) {
             System.out.println("Invalid game ID.");
         }
