@@ -106,21 +106,21 @@ public class HttpCommunicator {
     public boolean makeMove(int gameID, ChessMove move) {
         var body = Map.of("gameID", gameID, "move", move);
         var jsonBody = new Gson().toJson(body);
-        Map response = request("PUT", "/game/" + gameID, jsonBody);
+        Map response = request("PUT", STR."/game/\{gameID}", jsonBody);
         return !response.containsKey("Error");
     }
 
     public boolean resignGame(int gameID) {
         var body = Map.of("gameID", gameID);
         var jsonBody = new Gson().toJson(body);
-        Map response = request("PUT", "/game/" + gameID, jsonBody);
+        Map response = request("PUT", STR."/game/\{gameID}", jsonBody);
         return !response.containsKey("Error");
     }
 
     public boolean leaveGame(int gameID) {
         var body = Map.of("gameID", gameID);
         var jsonBody = new Gson().toJson(body);
-        Map response = request("PUT", "/game/" + gameID, jsonBody);
+        Map response = request("PUT", STR."/game/\{gameID}", jsonBody);
         return !response.containsKey("Error");
     }
 
@@ -145,10 +145,8 @@ public class HttpCommunicator {
 
             InputStream inputStream;
             if (statusCode >= 200 && statusCode < 300) {
-                //success 2xx
                 inputStream  = connection.getInputStream();
             } else {
-                //error response 4xx or 5xx
                 inputStream = connection.getErrorStream();
             }
 
@@ -162,22 +160,6 @@ public class HttpCommunicator {
         } catch (IOException | URISyntaxException e) {
             return STR."Error: \{e.getMessage()}";
         }
-
-//
-//        try {
-//            HttpURLConnection connection = makeConnection(method, endpoint, body);
-//
-//            if (connection.getResponseCode() == HttpURLConnection.HTTP_UNAUTHORIZED) {
-//                return "Error: 401 Unauthorized";
-//            }
-//
-//            try (InputStream inputStream = connection.getInputStream();
-//                 InputStreamReader reader = new InputStreamReader(inputStream)) {
-//                return readerToString(reader);
-//            }
-//        } catch (IOException | URISyntaxException e) {
-//            return STR."Error: \{e.getMessage()}";
-//        }
     }
 
     private Map<String, Object> request(String method, String endpoint) {
@@ -187,15 +169,21 @@ public class HttpCommunicator {
     private Map<String, Object> request(String method, String endpoint, String body) {
         String response = requestString(method, endpoint, body);
 
-        Map<String, Object> responseMap = new Gson().fromJson(response, Map.class);
-        if (responseMap.containsKey("message") && ((String) responseMap.get("message")).startsWith("Error")) {
-            return Map.of("Error", responseMap.get("message"));
+        if (response == null || !response.trim().startsWith("{")) {
+            return Map.of("Error", response);
         }
-        return responseMap;
-//        if (response.startsWith("Error")) {
-//            return Map.of("Error", response);
+
+        try {
+            return new Gson().fromJson(response, Map.class);
+        } catch (Exception e) {
+            return Map.of("Error", "Failed to parse response: " + e.getMessage());
+        }
+//
+//        Map<String, Object> responseMap = new Gson().fromJson(response, Map.class);
+//        if (responseMap.containsKey("message") && ((String) responseMap.get("message")).startsWith("Error")) {
+//            return Map.of("Error", responseMap.get("message"));
 //        }
-//        return new Gson().fromJson(response, Map.class);
+//        return responseMap;
     }
 
 
