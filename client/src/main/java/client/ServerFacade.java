@@ -12,11 +12,11 @@ public class ServerFacade {
     private String authToken;
     HttpCommunicator http;
 
-    public ServerFacade() {
+    public ServerFacade() throws Exception{
         this("localhost:8080");
     }
 
-    public ServerFacade(String url) {
+    public ServerFacade(String url) throws Exception {
         this.domain = url;
         http = new HttpCommunicator(this, domain);
     }
