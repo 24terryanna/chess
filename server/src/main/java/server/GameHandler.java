@@ -10,6 +10,8 @@ import spark.Request;
 import spark.Response;
 import spark.Route;
 
+import java.util.Map;
+
 public class GameHandler {
     private GameService gameService;
     private final Gson gson = new Gson();

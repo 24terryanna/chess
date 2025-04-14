@@ -106,21 +106,21 @@ public class HttpCommunicator {
     public boolean makeMove(int gameID, ChessMove move) {
         var body = Map.of("gameID", gameID, "move", move);
         var jsonBody = new Gson().toJson(body);
-        Map response = request("POST", "/game/move", jsonBody);
+        Map response = request("PUT", "/game/" + gameID, jsonBody);
         return !response.containsKey("Error");
     }
 
     public boolean resignGame(int gameID) {
         var body = Map.of("gameID", gameID);
         var jsonBody = new Gson().toJson(body);
-        Map response = request("POST", "/game/resign", jsonBody);
+        Map response = request("PUT", "/game/" + gameID, jsonBody);
         return !response.containsKey("Error");
     }
 
     public boolean leaveGame(int gameID) {
         var body = Map.of("gameID", gameID);
         var jsonBody = new Gson().toJson(body);
-        Map response = request("DELETE", "/game", jsonBody);
+        Map response = request("PUT", "/game/" + gameID, jsonBody);
         return !response.containsKey("Error");
     }
 
