@@ -69,7 +69,7 @@ public class ServerFacade {
         http.showBoard(gameID);
     }
 
-    public boolean clearDatabase() {
-        return http.clearDatabase();
-    }
+//    public boolean clearDatabase() {
+//        return http.clearDatabase();
+//    }
 }

@@ -49,7 +49,7 @@ public class ServerFacadeTests {
     }
 
     @Test
-    public void testRegisterFailure_Duplicate() {
+    public void testRegisterFailureDuplicate() {
         facade.register("user2", "pass", "email2@test.com");
         boolean result = facade.register("user2", "pass", "email2@test.com");
         assertFalse(result);
@@ -62,7 +62,7 @@ public class ServerFacadeTests {
     }
 
     @Test
-    public void testLoginFailure_WrongPassword() {
+    public void testLoginFailureWrongPassword() {
         facade.register("user4", "pass", "email4@test.com");
         assertFalse(facade.login("user4", "wrongpass"));
     }
@@ -74,7 +74,7 @@ public class ServerFacadeTests {
     }
 
     @Test
-    public void testLogoutFailure_NotLoggedIn() {
+    public void testLogoutFailureNotLoggedIn() {
         assertFalse(facade.logout());
     }
 
@@ -86,7 +86,7 @@ public class ServerFacadeTests {
     }
 
     @Test
-    public void testCreateGameFailure_NoAuth() {
+    public void testCreateGameFailureNoAuth() {
         int id = facade.createGame("Test Game");
         assertEquals(-1, id);
     }
@@ -100,7 +100,7 @@ public class ServerFacadeTests {
     }
 
     @Test
-    public void testListGamesFailure_NotLoggedIn() {
+    public void testListGamesFailureNotLoggedIn() {
         List<GameData> games = facade.listGames();
         assertTrue(games.isEmpty());
     }
@@ -113,7 +113,7 @@ public class ServerFacadeTests {
     }
 
     @Test
-    public void testJoinGameFailure_InvalidID() {
+    public void testJoinGameFailureInvalidID() {
         registerAndLogin();
         assertFalse(facade.joinGame(-1, "white"));
     }
@@ -129,7 +129,7 @@ public class ServerFacadeTests {
     }
 
     @Test
-    public void testMakeMoveFailure_InvalidGame() {
+    public void testMakeMoveFailureInvalidGame() {
         registerAndLogin();
         ChessMove move = new ChessMove(new ChessPosition(2, 1), new ChessPosition(3, 1), null);
         assertFalse(facade.makeMove(-1, move));
@@ -144,7 +144,7 @@ public class ServerFacadeTests {
     }
 
     @Test
-    public void testResignGameFailure_InvalidGame() {
+    public void testResignGameFailureInvalidGame() {
         registerAndLogin();
         assertFalse(facade.resignGame(-1));
     }
@@ -158,7 +158,7 @@ public class ServerFacadeTests {
     }
 
     @Test
-    public void testLeaveGameFailure_InvalidGame() {
+    public void testLeaveGameFailureInvalidGame() {
         registerAndLogin();
         assertFalse(facade.leaveGame(-1));
     }
