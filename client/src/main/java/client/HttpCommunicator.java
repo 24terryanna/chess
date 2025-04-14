@@ -92,12 +92,10 @@ public class HttpCommunicator {
     }
 
     public boolean joinGame(int gameID, String playerColor) {
-        Map body;
-        if (playerColor != null) {
-            body = Map.of("gameID", gameID, "playerColor", playerColor);
-        } else {
-            body = Map.of("gameID", gameID);
-        }
+        Map<String, Object> body = playerColor != null ?
+                Map.of("gameID", gameID, "playerColor", playerColor) :
+                Map.of("gameID", gameID);
+
         var jsonBody = new Gson().toJson(body);
         Map response = request("PUT", "/game", jsonBody);
         return !response.containsKey("Error");
@@ -155,7 +153,12 @@ public class HttpCommunicator {
             }
 
             try (InputStreamReader reader = new InputStreamReader(inputStream)) {
-                return readerToString(reader);
+                String response = readerToString(reader);
+                if (statusCode >= 200 && statusCode < 300) {
+                    return response;
+                } else {
+                    return STR."Error: \{response}";
+                }
             }
         } catch (IOException | URISyntaxException e) {
             return STR."Error: \{e.getMessage()}";
@@ -167,23 +170,26 @@ public class HttpCommunicator {
     }
 
     private Map<String, Object> request(String method, String endpoint, String body) {
-        String response = requestString(method, endpoint, body);
-
-        if (response == null || !response.trim().startsWith("{")) {
-            return Map.of("Error", response);
-        }
-
         try {
-            return new Gson().fromJson(response, Map.class);
+            String response = requestString(method, endpoint, body);
+
+            if (response == null || !response.trim().startsWith("{")) {
+                return Map.of("Error", response);
+            }
+
+            Map<String, Object> responseMap = new Gson().fromJson(response, Map.class);
+            //return new Gson().fromJson(response, Map.class);
+
+            if (responseMap.containsKey("message") && ((String) responseMap.get("message")).startsWith("Error")) {
+                return Map.of("Error", responseMap.get("message"));
+            }
+
+            return responseMap;
+
         } catch (Exception e) {
-            return Map.of("Error", "Failed to parse response: " + e.getMessage());
+            return Map.of("Error", STR."Failed to parse response: \{e.getMessage()}");
         }
-//
-//        Map<String, Object> responseMap = new Gson().fromJson(response, Map.class);
-//        if (responseMap.containsKey("message") && ((String) responseMap.get("message")).startsWith("Error")) {
-//            return Map.of("Error", responseMap.get("message"));
-//        }
-//        return responseMap;
+
     }
 
 

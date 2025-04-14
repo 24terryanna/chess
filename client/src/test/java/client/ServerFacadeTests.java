@@ -114,6 +114,8 @@ public class ServerFacadeTests {
 
     @Test
     public void testJoinGameFailureInvalidID() {
+//        boolean result = facade.joinGame(-1, "WHITE");
+//        System.out.println(result);
         registerAndLogin();
         assertFalse(facade.joinGame(-1, "white"));
     }
