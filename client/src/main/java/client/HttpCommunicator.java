@@ -141,18 +141,43 @@ public class HttpCommunicator {
     private String requestString(String method, String endpoint, String body) {
         try {
             HttpURLConnection connection = makeConnection(method, endpoint, body);
+            int statusCode = connection.getResponseCode();
 
-            if (connection.getResponseCode() == HttpURLConnection.HTTP_UNAUTHORIZED) {
-                return "Error: 401 Unauthorized";
+            InputStream inputStream;
+            if (statusCode >= 200 && statusCode < 300) {
+                //success 2xx
+                inputStream  = connection.getInputStream();
+            } else {
+                //error response 4xx or 5xx
+                inputStream = connection.getErrorStream();
             }
 
-            try (InputStream inputStream = connection.getInputStream();
-                 InputStreamReader reader = new InputStreamReader(inputStream)) {
+            if (inputStream == null) {
+                return STR."Error: Empty response body (HTTP status \{statusCode})";
+            }
+
+            try (InputStreamReader reader = new InputStreamReader(inputStream)) {
                 return readerToString(reader);
             }
         } catch (IOException | URISyntaxException e) {
             return STR."Error: \{e.getMessage()}";
         }
+
+//
+//        try {
+//            HttpURLConnection connection = makeConnection(method, endpoint, body);
+//
+//            if (connection.getResponseCode() == HttpURLConnection.HTTP_UNAUTHORIZED) {
+//                return "Error: 401 Unauthorized";
+//            }
+//
+//            try (InputStream inputStream = connection.getInputStream();
+//                 InputStreamReader reader = new InputStreamReader(inputStream)) {
+//                return readerToString(reader);
+//            }
+//        } catch (IOException | URISyntaxException e) {
+//            return STR."Error: \{e.getMessage()}";
+//        }
     }
 
     private Map<String, Object> request(String method, String endpoint) {
@@ -161,10 +186,16 @@ public class HttpCommunicator {
 
     private Map<String, Object> request(String method, String endpoint, String body) {
         String response = requestString(method, endpoint, body);
-        if (response.startsWith("Error")) {
-            return Map.of("Error", response);
+
+        Map<String, Object> responseMap = new Gson().fromJson(response, Map.class);
+        if (responseMap.containsKey("message") && ((String) responseMap.get("message")).startsWith("Error")) {
+            return Map.of("Error", responseMap.get("message"));
         }
-        return new Gson().fromJson(response, Map.class);
+        return responseMap;
+//        if (response.startsWith("Error")) {
+//            return Map.of("Error", response);
+//        }
+//        return new Gson().fromJson(response, Map.class);
     }
 
 
