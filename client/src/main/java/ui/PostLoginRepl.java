@@ -152,12 +152,12 @@ public class PostLoginRepl {
 
     private void printHelp() {
         System.out.println("Available commands:");
-        System.out.println(" create <gameName>      Create a new game");
-        System.out.println(" list      List all games");
+        System.out.println(" create <gameName>              Create a new game");
+        System.out.println(" list games                     List all games");
         System.out.println(" join <gameID> <white|black>    Join a game as a player");
-        System.out.println(" observe <gameID>      Observe a game");
-        System.out.println(" logout     Log out");
-        System.out.println(" quit       Quit the application");
+        System.out.println(" observe <gameID>               Observe a game");
+        System.out.println(" logout                         Log out");
+        System.out.println(" quit                           Quit the application");
     }
 
 }
