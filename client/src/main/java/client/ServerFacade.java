@@ -1,6 +1,7 @@
 package client;
 
 
+import chess.ChessGame;
 import model.GameData;
 import chess.ChessMove;
 
@@ -65,8 +66,8 @@ public class ServerFacade {
         return http.leaveGame(gameID);
     }
 
-    public void showBoard(int gameID) {
-        http.showBoard(gameID);
+    public void showBoard(int gameID, ChessGame.TeamColor perspective) {
+        http.showBoard(gameID, perspective);
     }
 
 }

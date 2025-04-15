@@ -13,9 +13,9 @@ public class BoardPrinter {
     public BoardPrinter(ChessGame game) {
         this.game = game;
     }
-    public void printBoard() {
+    public void printBoard(ChessGame.TeamColor perspective) {
         ChessBoard board = game.getBoard();
-        ChessGame.TeamColor perspective = game.getTeamTurn();
+//        ChessGame.TeamColor perspective = game.getTeamTurn();
 
         System.out.println(ERASE_SCREEN);
 

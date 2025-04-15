@@ -62,7 +62,7 @@ public class GamePlayRepl {
                 }
 
                 case "show" -> {
-                    server.showBoard(gameID);
+                    server.showBoard(gameID, perspective);
                 }
 
                 case "help" -> showHelp();

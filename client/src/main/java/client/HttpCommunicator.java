@@ -1,9 +1,11 @@
 package client;
 
+import chess.ChessGame;
 import chess.ChessMove;
 import com.google.gson.Gson;
 import model.GameData;
 import model.GamesList;
+import ui.BoardPrinter;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -122,14 +124,27 @@ public class HttpCommunicator {
         return !response.containsKey("Error");
     }
 
-    public void showBoard(int gameID) {
-        String response = requestString("GET", STR."/game/\{gameID}/board");
+    public void showBoard(int gameID, ChessGame.TeamColor perspective) {
+        String response = requestString("GET", "/game");
 
         if (response.contains("Error")) {
             System.out.println("Failed to get board.");
-        } else {
-            System.out.println(response);
+            return;
         }
+
+        Map<String, Object> result = new Gson().fromJson(response, Map.class);
+        List<Map<String, Object>> games = (List<Map<String, Object>>) result.get("games");
+
+        for (Map<String, Object> gameData : games) {
+            Double id = (Double) gameData.get("gameID");
+            if (id.intValue() == gameID) {
+                ChessGame game = new Gson().fromJson(new Gson().toJson(gameData.get("game")), ChessGame.class);
+                new BoardPrinter(game).printBoard(perspective);
+                return;
+            }
+        }
+
+        System.out.println("Game not found.");
     }
 
     private String requestString(String method, String endpoint) {
