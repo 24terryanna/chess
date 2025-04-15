@@ -69,7 +69,7 @@ public class BoardPrinter {
 
         System.out.print("  ");
         for (char col : files) {
-            System.out.print(STR." \{col} ");
+            System.out.print(STR."  \{col}  ");
         }
         System.out.println();
     }

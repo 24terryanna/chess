@@ -4,6 +4,7 @@ package client;
 import chess.ChessGame;
 import model.GameData;
 import chess.ChessMove;
+import ui.BoardPrinter;
 
 import java.util.List;
 
@@ -66,8 +67,13 @@ public class ServerFacade {
         return http.leaveGame(gameID);
     }
 
-    public void showBoard(int gameID, ChessGame.TeamColor perspective) {
-        http.showBoard(gameID, perspective);
+//    public void showBoard(int gameID, ChessGame.TeamColor perspective) {
+//        http.showBoard(gameID, perspective);
+//    }
+
+    public void showBoard(ChessGame game, ChessGame.TeamColor perspective) {
+        http.showBoard(game, perspective);
     }
+
 
 }
