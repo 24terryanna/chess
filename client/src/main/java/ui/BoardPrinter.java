@@ -67,28 +67,27 @@ public class BoardPrinter {
             System.out.println();
         }
 
-        System.out.print("  ");
+        System.out.print(SET_TEXT_COLOR_LIGHT_GREY + "  ");
         for (char col : files) {
             System.out.print(STR."  \{col}  ");
         }
-        System.out.println();
+        System.out.print(RESET_TEXT_COLOR);
     }
 
     private String getSymbol(ChessPiece piece) {
+        if (piece == null) return EMPTY;
+
         ChessGame.TeamColor color = piece.getTeamColor();
         ChessPiece.PieceType type = piece.getPieceType();
 
-        if (color == ChessGame.TeamColor.WHITE) {
-            return switch (piece.getPieceType()) {
-                case KING -> piece.getTeamColor() == ChessGame.TeamColor.WHITE ? WHITE_KING : BLACK_KING;
-                case QUEEN -> piece.getTeamColor() == ChessGame.TeamColor.WHITE ? WHITE_QUEEN : BLACK_QUEEN;
-                case ROOK -> piece.getTeamColor() == ChessGame.TeamColor.WHITE ? WHITE_ROOK : BLACK_ROOK;
-                case BISHOP -> piece.getTeamColor() == ChessGame.TeamColor.WHITE ? WHITE_BISHOP : BLACK_BISHOP;
-                case KNIGHT -> piece.getTeamColor() == ChessGame.TeamColor.WHITE ? WHITE_KNIGHT : BLACK_KNIGHT;
-                case PAWN -> piece.getTeamColor() == ChessGame.TeamColor.WHITE ? WHITE_PAWN : BLACK_PAWN;
-            };
-        }
-        return EMPTY;
+        return switch (type) {
+            case KING -> color == ChessGame.TeamColor.WHITE ? WHITE_KING : BLACK_KING;
+            case QUEEN -> color == ChessGame.TeamColor.WHITE ? WHITE_QUEEN : BLACK_QUEEN;
+            case ROOK -> color == ChessGame.TeamColor.WHITE ? WHITE_ROOK : BLACK_ROOK;
+            case BISHOP -> color == ChessGame.TeamColor.WHITE ? WHITE_BISHOP : BLACK_BISHOP;
+            case KNIGHT -> color == ChessGame.TeamColor.WHITE ? WHITE_KNIGHT : BLACK_KNIGHT;
+            case PAWN -> color == ChessGame.TeamColor.WHITE ? WHITE_PAWN : BLACK_PAWN;
+        };
     }
 
 
