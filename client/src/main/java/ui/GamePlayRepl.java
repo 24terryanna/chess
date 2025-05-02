@@ -62,7 +62,9 @@ public class GamePlayRepl {
                 }
 
                 case "show" -> {
-                    server.showBoard(game, perspective);
+                    ChessGame updatedGame = updateGame(gameID);
+                    BoardPrinter currentPrinter = new BoardPrinter(updatedGame);
+                    currentPrinter.printBoard(perspective);
                 }
 
                 case "help" -> showHelp();
@@ -70,6 +72,7 @@ public class GamePlayRepl {
             }
         }
     }
+
 
     private void showHelp() {
         System.out.println("""

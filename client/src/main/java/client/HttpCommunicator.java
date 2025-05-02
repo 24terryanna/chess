@@ -124,9 +124,9 @@ public class HttpCommunicator {
         return !response.containsKey("Error");
     }
 
-    public void showBoard(ChessGame game, ChessGame.TeamColor perspective) {
-        new BoardPrinter(game).printBoard(perspective);
-    }
+//    public void showBoard(ChessGame game, ChessGame.TeamColor perspective) {
+//        new BoardPrinter(game).printBoard(perspective);
+//    }
 
 //
 //    public void showBoard(int gameID, ChessGame.TeamColor perspective) {

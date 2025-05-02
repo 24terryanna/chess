@@ -8,11 +8,12 @@ import chess.ChessPosition;
 import static ui.EscapeSequences.*;
 
 public class BoardPrinter {
-    private final ChessGame game;
+    ChessGame game;
 
     public BoardPrinter(ChessGame game) {
         this.game = game;
     }
+
     public void printBoard(ChessGame.TeamColor perspective) {
         ChessBoard board = game.getBoard();
 //        ChessGame.TeamColor perspective = game.getTeamTurn();
