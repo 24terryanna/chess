@@ -106,21 +106,21 @@ public class HttpCommunicator {
     public boolean makeMove(int gameID, ChessMove move) {
         var body = Map.of("gameID", gameID, "move", move);
         var jsonBody = new Gson().toJson(body);
-        Map response = request("PUT", STR."/game/\{gameID}", jsonBody);
+        Map response = request("PUT", "/game/" +gameID, jsonBody);
         return !response.containsKey("Error");
     }
 
     public boolean resignGame(int gameID) {
         var body = Map.of("gameID", gameID);
         var jsonBody = new Gson().toJson(body);
-        Map response = request("PUT", STR."/game/\{gameID}", jsonBody);
+        Map response = request("PUT", "/game/" + gameID, jsonBody);
         return !response.containsKey("Error");
     }
 
     public boolean leaveGame(int gameID) {
         var body = Map.of("gameID", gameID);
         var jsonBody = new Gson().toJson(body);
-        Map response = request("PUT", STR."/game/\{gameID}", jsonBody);
+        Map response = request("PUT", "/game/" + gameID, jsonBody);
         return !response.containsKey("Error");
     }
 
@@ -169,7 +169,7 @@ public class HttpCommunicator {
             }
 
             if (inputStream == null) {
-                return STR."Error: Empty response body (HTTP status \{statusCode})";
+                return "Error: Empty response body (HTTP status " + statusCode;
             }
 
             try (InputStreamReader reader = new InputStreamReader(inputStream)) {
@@ -177,11 +177,11 @@ public class HttpCommunicator {
                 if (statusCode >= 200 && statusCode < 300) {
                     return response;
                 } else {
-                    return STR."Error: \{response}";
+                    return "Error: " + response;
                 }
             }
         } catch (IOException | URISyntaxException e) {
-            return STR."Error: \{e.getMessage()}";
+            return "Error: " + e.getMessage();
         }
     }
 
@@ -207,7 +207,7 @@ public class HttpCommunicator {
             return responseMap;
 
         } catch (Exception e) {
-            return Map.of("Error", STR."Failed to parse response: \{e.getMessage()}");
+            return Map.of("Error", "Failed to parse response: " + e.getMessage());
         }
 
     }
