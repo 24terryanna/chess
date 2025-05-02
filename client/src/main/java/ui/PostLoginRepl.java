@@ -53,7 +53,7 @@ public class PostLoginRepl {
         if (gameID == -1) {
             System.out.println("Failed to create game.");
         } else {
-            System.out.print(STR."Game created with ID: \{gameID}");
+            System.out.print("Game created with ID: " + gameID);
         }
     }
 
@@ -88,7 +88,7 @@ public class PostLoginRepl {
             }
             boolean success = server.joinGame(gameID, color);
             if (!success) {
-                System.out.println(STR."Joined game as: \{color}!");
+                System.out.println("Joined game as: " + color + "!");
                 return;
             }
 
@@ -106,7 +106,7 @@ public class PostLoginRepl {
                 return;
             }
 
-            System.out.println((STR."Joined game as: \{color}!"));
+            System.out.println(("Joined game as: " + color + "!"));
             new GamePlayRepl(server, gameID, targetGame,
                     color.equals("white") ? ChessGame.TeamColor.WHITE : ChessGame.TeamColor.BLACK).run();
 
@@ -125,7 +125,7 @@ public class PostLoginRepl {
             int gameID = Integer.parseInt(tokens[1]);
             boolean success = server.joinGame(gameID, null);
             if (!success) {
-                System.out.println(STR."Observing game \{gameID}...");
+                System.out.println("Observing game " + gameID + "...");
                 return;
             }
 
@@ -143,7 +143,7 @@ public class PostLoginRepl {
                 return;
             }
 
-            System.out.println((STR."Joined game as observer!"));
+            System.out.println(("Joined game as observer!"));
             new GamePlayRepl(server, gameID, targetGame, ChessGame.TeamColor.WHITE).run();
         } catch (NumberFormatException e) {
             System.out.println("Invalid game ID.");
