@@ -60,12 +60,12 @@ public class GamePlayRepl {
                     server.leaveGame(gameID);
                     inGame = false;
                 }
-
-                case "show" -> {
-                    ChessGame updatedGame = updateGame(gameID);
-                    BoardPrinter currentPrinter = new BoardPrinter(updatedGame);
-                    currentPrinter.printBoard(perspective);
-                }
+//
+//                case "show" -> {
+//                    ChessGame updatedGame = updateGame(gameID);
+//                    BoardPrinter currentPrinter = new BoardPrinter(updatedGame);
+//                    currentPrinter.printBoard(perspective);
+//                }
 
                 case "help" -> showHelp();
                 default -> System.out.println("Unknown command. Type 'help'.");
