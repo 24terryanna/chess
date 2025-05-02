@@ -42,7 +42,7 @@ public class BoardPrinter {
         }
 
         for (int row = startRow; row != endRow; row += step) {
-            System.out.print(STR." \{row} ");
+            System.out.print(row);
             for (char col : files) {
                 int colNum = col - 'a' + 1;
                 ChessPosition position = new ChessPosition(row, colNum);
@@ -70,7 +70,7 @@ public class BoardPrinter {
 
         System.out.print(SET_TEXT_COLOR_LIGHT_GREY + "  ");
         for (char col : files) {
-            System.out.print(STR."  \{col}  ");
+            System.out.print(col);
         }
         System.out.print(RESET_TEXT_COLOR);
     }
