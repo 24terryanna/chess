@@ -21,8 +21,8 @@ public class ServerFacadeTests {
     public static void init() throws Exception {
         server = new Server();
         var port = server.run(0);
-        System.out.println(STR."Started test HTTP server on \{port}");
-        facade = new ServerFacade(STR."localhost:\{port}");
+        System.out.println("Started test HTTP server on " + port);
+        facade = new ServerFacade("localhost:" + port);
 
     }
 
