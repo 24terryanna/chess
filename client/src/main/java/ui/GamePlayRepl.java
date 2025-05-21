@@ -86,7 +86,7 @@ public class GamePlayRepl {
     }
 
     private ChessPosition parsePosition(String position) {
-        if (position.length() != 2) return null;
+        if (position.length() != 2) { return null; }
         char col = position.charAt(0);
         int row = Character.getNumericValue(position.charAt(1));
         return new ChessPosition(row, col - 'a' + 1);
