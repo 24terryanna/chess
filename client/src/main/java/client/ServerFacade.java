@@ -59,15 +59,8 @@ public class ServerFacade {
         return http.makeMove(gameID, move);
     }
 
-    public boolean resignGame(int gameID) {
-        return http.resignGame(gameID);
-    }
-
     public boolean leaveGame(int gameID) {
         return http.leaveGame(gameID);
     }
-
-//
-
 
 }
