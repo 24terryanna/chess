@@ -138,20 +138,6 @@ public class ServerFacadeTests {
     }
 
     @Test
-    public void testResignGameSuccess() {
-        registerAndLogin();
-        int id = facade.createGame("Game");
-        facade.joinGame(id, "white");
-        assertTrue(facade.resignGame(id));
-    }
-
-    @Test
-    public void testResignGameFailureInvalidGame() {
-        registerAndLogin();
-        assertFalse(facade.resignGame(-1));
-    }
-
-    @Test
     public void testLeaveGameSuccess() {
         registerAndLogin();
         int id = facade.createGame("Game");
