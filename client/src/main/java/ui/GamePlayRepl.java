@@ -51,11 +51,6 @@ public class GamePlayRepl {
                     }
                 }
 
-                case "resign" -> {
-                    server.resignGame(gameID);
-                    inGame = false;
-                }
-
                 case "leave" -> {
                     server.leaveGame(gameID);
                     inGame = false;

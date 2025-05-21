@@ -1,7 +1,6 @@
 package client;
 
 
-import chess.ChessGame;
 import model.GameData;
 import chess.ChessMove;
 import ui.BoardPrinter;
