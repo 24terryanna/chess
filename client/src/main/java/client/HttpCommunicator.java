@@ -115,7 +115,6 @@ public class HttpCommunicator {
         var jsonBody = new Gson().toJson(body);
         Map response = request("PUT", "/game/" + gameID, jsonBody);
         return !response.containsKey("Error");
-    }
 
     public boolean leaveGame(int gameID) {
         var body = Map.of("gameID", gameID);
