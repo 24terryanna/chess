@@ -124,34 +124,6 @@ public class HttpCommunicator {
         return !response.containsKey("Error");
     }
 
-//    public void showBoard(ChessGame game, ChessGame.TeamColor perspective) {
-//        new BoardPrinter(game).printBoard(perspective);
-//    }
-
-//
-//    public void showBoard(int gameID, ChessGame.TeamColor perspective) {
-//        String response = requestString("GET", "/game");
-//
-//        if (response.contains("Error")) {
-//            System.out.println("Failed to get board.");
-//            return;
-//        }
-//
-//        Map<String, Object> result = new Gson().fromJson(response, Map.class);
-//        List<Map<String, Object>> games = (List<Map<String, Object>>) result.get("games");
-//
-//        for (Map<String, Object> gameData : games) {
-//            Double id = (Double) gameData.get("gameID");
-//            if (id.intValue() == gameID) {
-//                ChessGame game = new Gson().fromJson(new Gson().toJson(gameData.get("game")), ChessGame.class);
-//                new BoardPrinter(game).printBoard(perspective);
-//                return;
-//            }
-//        }
-//
-//        System.out.println("Game not found.");
-//    }
-
     private String requestString(String method, String endpoint) {
         return requestString(method, endpoint, null);
     }
