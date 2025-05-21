@@ -61,7 +61,7 @@ public class GamePlayRepl {
                 }
 
                 case "help" -> showHelp();
-                default -> System.out.println("Unknown command. Type 'help'.");
+                default -> System.out.println("Unknown command. Please try again or type 'help'.");
             }
         }
     }
