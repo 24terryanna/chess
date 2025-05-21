@@ -40,15 +40,18 @@ public class GamePlayRepl {
                 case "move" -> {
                     if (parts.length != 3) {
                         System.out.println("Input: move <start> <end>");
-                    } else {
-                        ChessPosition from = parsePosition(parts[1]);
-                        ChessPosition to = parsePosition(parts[2]);
-                        if (from != null && to != null) {
-                            server.makeMove(gameID, new ChessMove(from, to , null));
-                        } else {
-                            System.out.println("Invalid position format.");
-                        }
+                        break;
                     }
+
+                    ChessPosition from = parsePosition(parts[1]);
+                    ChessPosition to = parsePosition(parts[2]);
+
+                    if (from == null && to == null) {
+                        System.out.println("Invalid position format.");
+                        break;
+                    }
+                    server.makeMove(gameID, new ChessMove(from, to , null));
+
                 }
 
                 case "leave" -> {
