@@ -76,7 +76,7 @@ public class BoardPrinter {
     }
 
     private String getSymbol(ChessPiece piece) {
-        if (piece == null) return EMPTY;
+        if (piece == null) { return EMPTY; }
 
         ChessGame.TeamColor color = piece.getTeamColor();
         ChessPiece.PieceType type = piece.getPieceType();
