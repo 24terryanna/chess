@@ -113,7 +113,6 @@ public class HttpCommunicator {
     public boolean resignGame(int gameID) {
         var body = Map.of("gameID", gameID);
         var jsonBody = new Gson().toJson(body);
-        Map response = request("PUT", "/game/" + gam
 
     public boolean leaveGame(int gameID) {
         var body = Map.of("gameID", gameID);
