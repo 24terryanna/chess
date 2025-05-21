@@ -64,6 +64,9 @@ public class GamePlayRepl {
                 default -> System.out.println("Unknown command. Please try again or type 'help'.");
             }
         }
+
+        PostLoginRepl postLoginRepl = new PostLoginRepl(server);
+        postLoginRepl.run();
     }
 
 
