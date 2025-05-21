@@ -57,9 +57,7 @@ public class GamePlayRepl {
                 }
 
                 case "show" -> {
-                    ChessGame updatedGame = updateGame(gameID);
-                    BoardPrinter currentPrinter = new BoardPrinter(updatedGame);
-                    currentPrinter.printBoard(perspective);
+                    boardPrinter.printBoard(perspective);
                 }
 
                 case "help" -> showHelp();
