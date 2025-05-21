@@ -110,9 +110,6 @@ public class HttpCommunicator {
         return !response.containsKey("Error");
     }
 
-    public boolean resignGame(int gameID) {
-
-
     public boolean leaveGame(int gameID) {
         var body = Map.of("gameID", gameID);
         var jsonBody = new Gson().toJson(body);
