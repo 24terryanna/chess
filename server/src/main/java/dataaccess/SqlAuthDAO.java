@@ -21,7 +21,7 @@ public class SqlAuthDAO implements AuthDAO {
                 createTableStatement.executeUpdate();
             }
         } catch (SQLException | DataAccessException e) {
-            throw new RuntimeException();
+            throw new RuntimeException("Error creating auth table", e);
         }
     }
 
