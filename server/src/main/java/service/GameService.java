@@ -34,6 +34,9 @@ public class GameService {
         if (authData == null) {
             throw new DataAccessException("Error: unauthorized");
         }
+        if (gameName != null && !gameName.isBlank()) {
+            throw new DataAccessException("Error: bad request");
+        }
 
         GameData newGame = new GameData(0, null, null, gameName, new ChessGame());
         GameData createdGame = gameDAO.createGame(newGame);
