@@ -24,7 +24,7 @@ public class SqlUserDAO implements UserDAO {
                 createTableStatement.executeUpdate();
             }
         } catch (SQLException | DataAccessException e) {
-            throw new RuntimeException();
+            throw new RuntimeException("Error initializing user table", e);
         }
     }
 
