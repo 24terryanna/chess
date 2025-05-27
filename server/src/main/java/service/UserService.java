@@ -18,7 +18,6 @@ public class UserService {
     }
 
     public RegisterResult register(RegisterRequest request) throws DataAccessException {
-        try {
             //check if request exists, if not bad request error
             if (request == null || request.username() == null || request.password() == null || request.email() == null) {
                 return new RegisterResult("Error: bad request", 400);
@@ -39,9 +38,6 @@ public class UserService {
             userDAO.createUser(newUser);
             return new RegisterResult(request.username(), authData.authToken(), 200, "Successful registration!");
 
-        } catch (Exception e) {
-            return new RegisterResult("Error: internal server error", 500);
-        }
 
     }
 
