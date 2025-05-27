@@ -35,8 +35,8 @@ public class SqlAuthDAO implements AuthDAO {
             preparedStatement.setString(2, authData.authToken());
             preparedStatement.executeUpdate();
 
-        } catch (SQLException | DataAccessException e) {
-            throw new DataAccessException("Error creating authToken: " + e.getMessage());
+        } catch (SQLException e) {
+            throw new DataAccessException("Error creating auth", e);
         }
     }
 
