@@ -34,8 +34,6 @@ public class UserService {
             UserData newUser = new UserData(request.username(), request.password(), request.email());
             userDAO.createUser(newUser);
             return new RegisterResult(request.username(), authData.authToken(), 200, "Successful registration!");
-
-
     }
 
     public LoginResult login(LoginRequest request) throws DataAccessException {

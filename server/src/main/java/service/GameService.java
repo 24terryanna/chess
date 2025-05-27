@@ -21,7 +21,7 @@ public class GameService {
     public GamesList listGames(String authToken) throws DataAccessException {
         AuthData authData = authDAO.getAuth(authToken);
         if (authData == null || authToken.isBlank() || authDAO.getAuth(authToken) == null) {
-            return new GamesList("Error: unauthorized", 401);
+            throw new DataAccessException("Error: unauthorized");
         }
 
         String username = authData.username();
