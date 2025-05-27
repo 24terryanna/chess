@@ -21,7 +21,7 @@ public class GameService {
     public GamesList listGames(String authToken) throws DataAccessException {
         AuthData authData = authDAO.getAuth(authToken);
         if (authData == null || authToken.isBlank() || authDAO.getAuth(authToken) == null) {
-            throw new DataAccessException("Error: unauthorized");
+            return new GamesList("Error: unauthorized", 401);
         }
 
         String username = authData.username();
@@ -33,9 +33,6 @@ public class GameService {
         AuthData authData = authDAO.getAuth(authToken);
         if (authData == null) {
             throw new DataAccessException("Error: unauthorized");
-        }
-        if (gameName != null && !gameName.isBlank()) {
-            throw new DataAccessException("Error: bad request");
         }
 
         GameData newGame = new GameData(0, null, null, gameName, new ChessGame());
