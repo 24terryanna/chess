@@ -4,6 +4,7 @@ import model.UserData;
 import org.mindrot.jbcrypt.BCrypt;
 
 
+import javax.xml.crypto.Data;
 import java.sql.*;
 
 public class SqlUserDAO implements UserDAO {
@@ -83,13 +84,13 @@ public class SqlUserDAO implements UserDAO {
     }
 
     @Override
-    public void clear() {
+    public void clear() throws DataAccessException {
         var statement = "DELETE FROM user";
         try (var conn = DatabaseManager.getConnection();
              var ps = conn.prepareStatement(statement)) {
             ps.executeUpdate();
-        } catch (SQLException | DataAccessException e) {
-            throw new RuntimeException("Error clearing user table: " + e.getMessage(), e);
+        } catch (SQLException e) {
+            throw new RuntimeException("Error clearing user table", e);
         }
     }
 
