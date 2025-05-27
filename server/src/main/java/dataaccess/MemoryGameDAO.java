@@ -40,7 +40,6 @@ public class MemoryGameDAO implements GameDAO{
             }
         }
         throw new DataAccessException("Game not found with ID: " + gameID);
-        //return gamesDB.get(gameID);
     }
 
     @Override
