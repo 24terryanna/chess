@@ -49,5 +49,14 @@ public class MemoryUserDAO implements UserDAO{
         } else {
             throw new DataAccessException("User does not exist: " + username);
         }
+
+        if (username == null || password == null) {
+            throw new DataAccessException("Username or password is null");
+        }
+
+        UserData user = userDB.get(username);
+        if (user == null) {
+            throw new DataAccessException("User doe snot exist: " + username);
+        }
     }
 }
