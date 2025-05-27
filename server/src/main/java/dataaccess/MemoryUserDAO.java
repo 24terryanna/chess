@@ -9,6 +9,9 @@ public class MemoryUserDAO implements UserDAO{
 
     @Override
     public UserData getUser(String username) throws DataAccessException {
+        if (username == null || username.isBlank()) {
+            throw new DataAccessException("Username cannot be null or blank");
+        }
         return userDB.get(username);
     }
 
