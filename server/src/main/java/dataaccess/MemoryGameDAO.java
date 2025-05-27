@@ -21,8 +21,9 @@ public class MemoryGameDAO implements GameDAO{
 
     @Override
     public GameData createGame(GameData game) throws DataAccessException {
-        if (game == null || game.game() == null) {
-            throw new DataAccessException("Game cannot be null");
+        if (game == null || game.game() == null ||
+        game.gameName() == null || game.gameName().isBlank()) {
+            throw new DataAccessException("Invalid game data");
         }
 
         GameData newGame = new GameData(nextID++, game.whiteUsername(), game.blackUsername(), game.gameName(), game.game());
