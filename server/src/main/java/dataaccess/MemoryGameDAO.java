@@ -44,8 +44,8 @@ public class MemoryGameDAO implements GameDAO{
 
     @Override
     public void updateGame(GameData updatedGame) throws DataAccessException {
-        if (updatedGame == null) {
-            throw new DataAccessException("Game data can't be null");
+        if (updatedGame == null || updatedGame.game() == null) {
+            throw new DataAccessException("Invalid updated game data");
         }
 
         for (int i =0; i <gamesDB.size(); i++) {
