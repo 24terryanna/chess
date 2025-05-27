@@ -59,7 +59,7 @@ public class SqlGameDAO implements GameDAO{
     @Override
     public GameData createGame(GameData game) throws DataAccessException {
         if (game == null || game.gameName() == null || game.game() == null) {
-
+            throw new DataAccessException("Invalid game data");
         }
 
         try (var conn = DatabaseManager.getConnection()) {
