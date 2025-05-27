@@ -18,22 +18,19 @@ public class UserService {
     }
 
     public RegisterResult register(RegisterRequest request) throws DataAccessException {
-            //check if request exists, if not bad request error
             if (request == null || request.username() == null || request.password() == null || request.email() == null) {
                 return new RegisterResult("Error: bad request", 400);
             }
 
-            //check existing user
             UserData existingUser = userDAO.getUser(request.username());
             if (existingUser != null) {
                 return new RegisterResult("Error: already taken", 403);
             }
-            //create authToken for new user
+
             String authToken = UUID.randomUUID().toString();
             AuthData authData = new AuthData(authToken, request.username());
             authDAO.createAuth(authData);
 
-            //create the new user
             UserData newUser = new UserData(request.username(), request.password(), request.email());
             userDAO.createUser(newUser);
             return new RegisterResult(request.username(), authData.authToken(), 200, "Successful registration!");
@@ -42,7 +39,6 @@ public class UserService {
     }
 
     public LoginResult login(LoginRequest request) throws DataAccessException {
-        try {
             if (request == null || request.username() == null || request.password() == null) {
                 return new LoginResult("Error: bad request", 400);
             }
@@ -56,10 +52,6 @@ public class UserService {
             String authToken = UUID.randomUUID().toString();
             authDAO.createAuth(new AuthData(authToken, request.username()));
             return new LoginResult(request.username(), authToken, 200, "Successful login!");
-
-        } catch (Exception e) {
-            return new LoginResult("Error: internal server error", 500);
-        }
     }
 
     public LogoutResult logout(String authToken) throws DataAccessException {
