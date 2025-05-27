@@ -97,12 +97,15 @@ public class SqlGameDAO implements GameDAO{
                     "SELECT white_username, black_username, game_name, chess_game FROM game WHERE game_id=?")){
                 statement.setInt(1, gameID);
                 try (var result = statement.executeQuery()) {
-                    result.next();
-                    var whiteUsername = result.getString("white_username");
-                    var blackUsername = result.getString("black_username");
-                    var gameName = result.getString("game_name");
-                    var chessGame = deserializeChessGame(result.getString("chess_game"));
-                    return new GameData(gameID, whiteUsername, blackUsername, gameName, chessGame);
+                    if (result.next()) {
+                        var whiteUsername = result.getString("white_username");
+                        var blackUsername = result.getString("black_username");
+                        var gameName = result.getString("game_name");
+                        var chessGame = deserializeChessGame(result.getString("chess_game"));
+                        return new GameData(gameID, whiteUsername, blackUsername, gameName, chessGame);
+                    } else {
+                        throw new DataAccessException("Game nout found with id: " + gameID);
+                    }
                 }
             }
         } catch (SQLException e) {
