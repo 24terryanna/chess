@@ -1,6 +1,8 @@
 package dataaccess;
 
 import model.AuthData;
+
+import javax.xml.crypto.Data;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -12,7 +14,10 @@ public class MemoryAuthDAO implements AuthDAO{
     }
 
     @Override
-    public void createAuth(AuthData authData) {
+    public void createAuth(AuthData authData) throws DataAccessException {
+        if (authData == null || authData.authToken() == null || authData.username() == null) {
+            throw new DataAccessException("Invalid auth data");
+        }
         db.put(authData.authToken(), authData);
     }
 
