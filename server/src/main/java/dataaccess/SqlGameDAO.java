@@ -58,6 +58,10 @@ public class SqlGameDAO implements GameDAO{
 
     @Override
     public GameData createGame(GameData game) throws DataAccessException {
+        if (game == null || game.gameName() == null || game.game() == null) {
+
+        }
+
         try (var conn = DatabaseManager.getConnection()) {
             try (var statement = conn.prepareStatement(
                     "INSERT INTO game (white_username, black_username, game_name, chess_game) VALUES(?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS)) {
