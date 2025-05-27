@@ -83,7 +83,7 @@ public class SqlAuthDAO implements AuthDAO {
         try (var conn = DatabaseManager.getConnection();
              var preparedStatement = conn.prepareStatement(statement)) {
             preparedStatement.executeUpdate();
-        } catch (SQLException | DataAccessException e) {
+        } catch (SQLException e) {
             throw new DataAccessException("Error clearing auth table", e);
         }
     }
