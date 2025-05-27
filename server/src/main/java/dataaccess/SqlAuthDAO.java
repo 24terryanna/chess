@@ -30,7 +30,7 @@ public class SqlAuthDAO implements AuthDAO {
         var statement = "INSERT INTO auth (username, auth_token) VALUES (?, ?)";
 
         if(authData == null || authData.authToken() == null || authData.username() == null) {
-
+            throw new DataAccessException("Invalid auth data");
         }
 
         try (var conn = DatabaseManager.getConnection();
