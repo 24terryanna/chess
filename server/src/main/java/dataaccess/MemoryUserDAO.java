@@ -17,6 +17,10 @@ public class MemoryUserDAO implements UserDAO{
 
     @Override
     public void createUser(UserData userData) throws DataAccessException {
+        if (userData == null || userData.username() == null ||
+                userData.password() == null || userData.email() == null){
+            throw new DataAccessException("Invalid user data");
+        }
         if (userDB.containsKey(userData.username())) {
             throw new DataAccessException("User already exists!");
         }
