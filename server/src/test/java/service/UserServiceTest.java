@@ -119,7 +119,7 @@ class UserServiceTest {
     }
 
     @Test
-    void testCreateUserNegative() {
+    void testCreateUserNegative() throws DataAccessException {
         UserData user = new UserData("duplicateUser", "password", "email@domain.com");
         userDAO.createUser(user);
         assertThrows(RuntimeException.class, () -> userDAO.createUser(user));
