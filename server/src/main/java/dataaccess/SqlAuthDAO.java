@@ -78,13 +78,13 @@ public class SqlAuthDAO implements AuthDAO {
     }
 
     @Override
-    public void clear() {
+    public void clear() throws DataAccessException{
         var statement = "DELETE FROM auth";
         try (var conn = DatabaseManager.getConnection();
              var preparedStatement = conn.prepareStatement(statement)) {
             preparedStatement.executeUpdate();
         } catch (SQLException | DataAccessException e) {
-            throw new RuntimeException("Error clearing auth table", e);
+            throw new DataAccessException("Error clearing auth table", e);
         }
     }
 }
