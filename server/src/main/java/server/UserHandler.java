@@ -51,7 +51,7 @@ public class UserHandler {
 
         } catch(DataAccessException e) {
             res.status(500);
-            return gson.toJson(new LoginResult("Error: " + e.getMessage(), 500));
+            return gson.toJson(new LoginResult("Error: database failure", 500));
         }
     };
 
