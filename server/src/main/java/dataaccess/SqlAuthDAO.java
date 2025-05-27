@@ -73,7 +73,7 @@ public class SqlAuthDAO implements AuthDAO {
             preparedStatement.executeUpdate();
 
         } catch (SQLException e) {
-            throw new DataAccessException("Error deleting authToken: " + e.getMessage());
+            throw new DataAccessException("Error deleting authToken", e);
         }
     }
 
