@@ -55,7 +55,6 @@ public class UserService {
     }
 
     public LogoutResult logout(String authToken) throws DataAccessException {
-        try {
             if (authToken == null || authToken.isEmpty()) {
                 return new LogoutResult("Error: unauthorized", 401);
             }
@@ -67,9 +66,6 @@ public class UserService {
 
             authDAO.deleteAuth(authToken);
             return new LogoutResult("Successful logout", 200);
-        } catch (Exception e) {
-            return new LogoutResult("Error: internal server error", 500);
-        }
     }
 
 }
