@@ -144,7 +144,7 @@ public class SqlGameDAO implements GameDAO{
             try (var statement = conn.prepareStatement("DELETE FROM game")) {
                 statement.executeUpdate();
             } catch (SQLException e) {
-                throw new RuntimeException(e);
+                throw new DataAccessException("Error clearing game table", e);
             }
         } catch (SQLException | DataAccessException e) {
             throw new DataAccessException("Error clearing game table: " + e.getMessage());
