@@ -52,6 +52,11 @@ public class SqlUserDAO implements UserDAO {
 
     @Override
     public void createUser(UserData userData) throws DataAccessException {
+        if (userData == null || userData.username() == null ||
+                userData.password() == null || userData.email() == null) {
+            throw new DataAccessException("Invalid user data");
+        }
+
         System.out.println("Creating user: " + userData.username());
 
         var checkUserStatement = "SELECT COUNT(*) FROM user WHERE username=?";
