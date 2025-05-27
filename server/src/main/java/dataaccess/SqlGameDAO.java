@@ -113,7 +113,7 @@ public class SqlGameDAO implements GameDAO{
     @Override
     public void updateGame(GameData updatedGame) throws DataAccessException {
         if (updatedGame == null || updatedGame.gameName() == null || updatedGame.game() == null) {
-
+            throw new DataAccessException("Invalid game data for update");
         }
 
         try (var conn = DatabaseManager.getConnection()) {
