@@ -12,6 +12,9 @@ public class MemoryGameDAO implements GameDAO{
 
     @Override
     public List<GameData> listGames(String username) throws DataAccessException {
+        if (username == null || username.isBlank()) {
+            throw new DataAccessException("Username cannot be null or blank");
+        }
         return new ArrayList<>(gamesDB);
 
     }
