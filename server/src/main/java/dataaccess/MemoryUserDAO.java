@@ -35,20 +35,20 @@ public class MemoryUserDAO implements UserDAO{
 
     @Override
     public boolean verifyUser(String username, String password) throws DataAccessException {
-        boolean existingUser = false;
-        for (UserData user : userDB.values()) {
-            if (user.username().equals(username)) {
-                existingUser = true;
-            }
-            if (user.username().equals(username) && user.password().equals(password)) {
-                return true;
-            }
-        }
-        if (existingUser) {
-            return false;
-        } else {
-            throw new DataAccessException("User does not exist: " + username);
-        }
+//        boolean existingUser = false;
+//        for (UserData user : userDB.values()) {
+//            if (user.username().equals(username)) {
+//                existingUser = true;
+//            }
+//            if (user.username().equals(username) && user.password().equals(password)) {
+//                return true;
+//            }
+//        }
+//        if (existingUser) {
+//            return false;
+//        } else {
+//            throw new DataAccessException("User does not exist: " + username);
+//        }
 
         if (username == null || password == null) {
             throw new DataAccessException("Username or password is null");
@@ -58,5 +58,7 @@ public class MemoryUserDAO implements UserDAO{
         if (user == null) {
             throw new DataAccessException("User doe snot exist: " + username);
         }
+
+        return user.password().equals(password);
     }
 }
