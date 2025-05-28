@@ -9,6 +9,11 @@ import spark.*;
 public class Server {
 
     public int run(int desiredPort) {
+        if (desiredPort < 1024 || desiredPort > 65535) {
+            System.err.println("Error: port must be between 1024 and 65535");
+            return -1;
+        }
+
         Spark.port(desiredPort);
         Spark.staticFiles.location("web");
 
