@@ -19,11 +19,17 @@ public class DatabaseHandler {
     }
 
     public Route clearDatabase = (Request request, Response response) -> {
-        userDAO.clear();
-        authDAO.clear();
-        gameDAO.clear();
+        try {
+            userDAO.clear();
+            authDAO.clear();
+            gameDAO.clear();
 
-        response.status(200);
-        return "{ \"message\": \"Database cleared\" }";
+            response.status(200);
+            return "{ \"message\": \"Database cleared\" }";
+        } catch (Exception e) {
+            response.status(500);
+            return "{ \"message\": \"Internal Server Error: " + e.getMessage() + "\" }";
+        }
+
     };
 }
