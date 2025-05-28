@@ -69,7 +69,7 @@ public class UserHandler {
             return gson.toJson(result);
         } catch (DataAccessException e) {
             res.status(500);
-            return gson.toJson(new LogoutResult("Error: database error", 500));
+            return gson.toJson(new LogoutResult("Error: " + e.getMessage(), 500));
         }
     };
 }

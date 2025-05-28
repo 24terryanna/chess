@@ -22,23 +22,18 @@ public class UserService {
             return new RegisterResult("Error: bad request", 400);
         }
 
-        try {
-            UserData existingUser = userDAO.getUser(request.username());
-            if (existingUser != null) {
-                return new RegisterResult("Error: already taken", 403);
-            }
-
-            String authToken = UUID.randomUUID().toString();
-            AuthData authData = new AuthData(authToken, request.username());
-            authDAO.createAuth(authData);
-
-            UserData newUser = new UserData(request.username(), request.password(), request.email());
-            userDAO.createUser(newUser);
-            return new RegisterResult(request.username(), authData.authToken(), 200, "Successful registration!");
-
-        } catch (DataAccessException e) {
-            throw new RuntimeException("Registration failed due to internal error", e);
+        UserData existingUser = userDAO.getUser(request.username());
+        if (existingUser != null) {
+            return new RegisterResult("Error: already taken", 403);
         }
+
+        String authToken = UUID.randomUUID().toString();
+        AuthData authData = new AuthData(authToken, request.username());
+        authDAO.createAuth(authData);
+
+        UserData newUser = new UserData(request.username(), request.password(), request.email());
+        userDAO.createUser(newUser);
+        return new RegisterResult(request.username(), authData.authToken(), 200, "Successful registration!");
     }
 
     public LoginResult login(LoginRequest request) throws DataAccessException {
@@ -55,7 +50,7 @@ public class UserService {
         String authToken = UUID.randomUUID().toString();
         authDAO.createAuth(new AuthData(authToken, request.username()));
         return new LoginResult(request.username(), authToken, 200, "Successful login!");
-    }
+}
 
     public LogoutResult logout(String authToken) throws DataAccessException {
         if (authToken == null || authToken.isEmpty()) {
