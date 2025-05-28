@@ -21,7 +21,7 @@ public class GameService {
     public GamesList listGames(String authToken) throws DataAccessException {
         try {
             AuthData authData = authDAO.getAuth(authToken);
-            if (authData == null || authToken.isBlank() || authDAO.getAuth(authToken) == null) {
+            if (authData == null || authToken.isBlank()) {
                 return new GamesList("Error: unauthorized", 401);
             }
 
@@ -29,7 +29,7 @@ public class GameService {
             List<GameData> games = gameDAO.listGames(username);
             return new GamesList(games, 200);
         } catch (DataAccessException e) {
-            return new GamesList("Error: unauthorized", 401);
+            return new GamesList("Error: failed to access database", 500);
         }
 
     }

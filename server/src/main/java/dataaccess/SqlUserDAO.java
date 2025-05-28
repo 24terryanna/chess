@@ -86,7 +86,7 @@ public class SqlUserDAO implements UserDAO {
 
             } catch (SQLException e) {
                 e.printStackTrace();
-                throw new DataAccessException("Error inserting user " + userData.username() + ": " + e.getMessage(), e);
+                throw new DataAccessException("Database connection failure", e);
             }
         } finally {
             if (conn != null) {
