@@ -130,7 +130,7 @@ public class GameHandler {
             } else if (e.getMessage().contains("bad request")){
                 res.status(400);
             }
-            return gson.toJson(new JoinGameResult("Error: " + e.getMessage(), 500));
+            return gson.toJson(new JoinGameResult("Error: " + e.getMessage(), res.status()));
         }
     };
 }
