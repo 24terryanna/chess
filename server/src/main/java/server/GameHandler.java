@@ -66,12 +66,13 @@ public class GameHandler {
 
             return gson.toJson(new CreateGameResult(gameID));
         } catch (DataAccessException e) {
+            int status = 500;
             if (e.getMessage().contains("unauthorized")) {
-                res.status(401);
-            } else {
-                res.status(500);
+                status = 401;
             }
-            return gson.toJson(new CreateGameError("Error: " + e.getMessage(), res.status()));
+            res.status(status);
+            return gson.toJson(new CreateGameError("Error: " + e.getMessage(), status));
+
         } catch (Exception e) {
             res.status(500);
             return gson.toJson(new CreateGameError("Error: internal server error", 500));
@@ -106,7 +107,7 @@ public class GameHandler {
 
         } catch (DataAccessException e) {
             res.status(500);
-            return gson.toJson(new CreateGameError("Error: " + e.getMessage(), res.status()));
+            return gson.toJson(new CreateGameError("Error: " + e.getMessage(), 500));
         } catch (Exception e) {
             res.status(500);
             return gson.toJson(new CreateGameError("Error: internal server error", 500));
@@ -141,7 +142,7 @@ public class GameHandler {
             } else {
                 res.status(500);
             }
-            return gson.toJson(new JoinGameResult("Error: " + e.getMessage(), res.status()));
+            return gson.toJson(new JoinGameResult("Error: " + e.getMessage(), 500));
         } catch (Exception e) {
             res.status(500);
             return gson.toJson(new JoinGameResult("Error: internal server error", 500));
