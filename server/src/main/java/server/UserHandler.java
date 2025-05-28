@@ -55,6 +55,9 @@ public class UserHandler {
         } catch(DataAccessException e) {
             res.status(500);
             return gson.toJson(new LoginResult("Error: database failure", 500));
+        } catch (Exception e) {
+            res.status(500);
+            return gson.toJson(new LoginResult("Error: internal server error", 500));
         }
     };
 
@@ -73,6 +76,9 @@ public class UserHandler {
         } catch (DataAccessException e) {
             res.status(500);
             return gson.toJson(new LogoutResult("Error: " + e.getMessage(), 500));
+        } catch (Exception e) {
+            res.status(500);
+            return gson.toJson(new LogoutResult("Error: internal server error", 500));
         }
     };
 }
