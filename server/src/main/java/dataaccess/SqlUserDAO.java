@@ -62,29 +62,43 @@ public class SqlUserDAO implements UserDAO {
         var checkUserStatement = "SELECT COUNT(*) FROM user WHERE username=?";
         var insertStatement = "INSERT INTO user (username, password_hash, email) VALUES (?, ?, ?)";
 
+        Connection conn = null;
 
-        try (var conn = DatabaseManager.getConnection();
-             var checkStmt = conn.prepareStatement(checkUserStatement);
-             var insertStmt = conn.prepareStatement(insertStatement)) {
+        try {
+            conn = DatabaseManager.getConnection();
 
-            // Check if the username already exists
-            checkStmt.setString(1, userData.username());
-            try (var result = checkStmt.executeQuery()) {
-                if (result.next() && result.getInt(1) > 0) {
-                    throw new DataAccessException("User already exists: " + userData.username());
+            try (var checkStmt = conn.prepareStatement(checkUserStatement);
+                 var insertStmt = conn.prepareStatement(insertStatement)) {
+
+                // Check if the username already exists
+                checkStmt.setString(1, userData.username());
+                try (var result = checkStmt.executeQuery()) {
+                    if (result.next() && result.getInt(1) > 0) {
+                        throw new DataAccessException("User already exists: " + userData.username());
+                    }
+                }
+
+                // Insert the new user
+                insertStmt.setString(1, userData.username());
+                insertStmt.setString(2, hashPassword(userData.password()));
+                insertStmt.setString(3, userData.email());
+                insertStmt.executeUpdate();
+
+            } catch (SQLException e) {
+                e.printStackTrace();
+                throw new DataAccessException("Error inserting user " + userData.username() + ": " + e.getMessage(), e);
+            }
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    System.err.println("Failed to close connection: " + e.getMessage());
                 }
             }
-
-            // Insert the new user
-            insertStmt.setString(1, userData.username());
-            insertStmt.setString(2, hashPassword(userData.password()));
-            insertStmt.setString(3, userData.email());
-            insertStmt.executeUpdate();
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-            throw new DataAccessException("Error inserting user " + userData.username() + ": " + e.getMessage(), e);
         }
+
+
     }
 
     @Override
