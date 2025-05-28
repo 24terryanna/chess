@@ -18,7 +18,6 @@ public class UserService {
     }
 
     public RegisterResult register(RegisterRequest request) throws DataAccessException {
-        try {
             if (request == null || request.username() == null || request.password() == null || request.email() == null) {
                 return new RegisterResult("Error: bad request", 400);
             }
@@ -35,14 +34,9 @@ public class UserService {
             UserData newUser = new UserData(request.username(), request.password(), request.email());
             userDAO.createUser(newUser);
             return new RegisterResult(request.username(), authData.authToken(), 200, "Successful registration!");
-
-        } catch (DataAccessException e) {
-            return new RegisterResult("Error: unauthorized", 401);
-        }
     }
 
     public LoginResult login(LoginRequest request) throws DataAccessException {
-        try {
             if (request == null || request.username() == null || request.password() == null) {
                 return new LoginResult("Error: bad request", 400);
             }
@@ -56,31 +50,22 @@ public class UserService {
             String authToken = UUID.randomUUID().toString();
             authDAO.createAuth(new AuthData(authToken, request.username()));
             return new LoginResult(request.username(), authToken, 200, "Successful login!");
-        } catch (DataAccessException e) {
-            return new LoginResult("Error: unauthorized", 401);
-        }
     }
 
-
     public LogoutResult logout(String authToken) throws DataAccessException {
-        try {
-            if (authToken == null || authToken.isEmpty()) {
-                return new LogoutResult("Error: unauthorized", 401);
-            }
-
-            AuthData authData = authDAO.getAuth(authToken);
-            if (authData == null) {
-                return new LogoutResult("Error: unauthorized", 401);
-            }
-
-            authDAO.deleteAuth(authToken);
-            return new LogoutResult("Successful logout", 200);
-
-        } catch (DataAccessException e) {
+        if (authToken == null || authToken.isEmpty()) {
             return new LogoutResult("Error: unauthorized", 401);
         }
 
+        AuthData authData = authDAO.getAuth(authToken);
+        if (authData == null) {
+            return new LogoutResult("Error: unauthorized", 401);
+        }
+
+        authDAO.deleteAuth(authToken);
+        return new LogoutResult("Successful logout", 200);
     }
+
 }
 
 
