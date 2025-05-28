@@ -19,14 +19,19 @@ public class GameService {
     }
 
     public GamesList listGames(String authToken) throws DataAccessException {
-        AuthData authData = authDAO.getAuth(authToken);
-        if (authData == null || authToken.isBlank() || authDAO.getAuth(authToken) == null) {
+        try {
+            AuthData authData = authDAO.getAuth(authToken);
+            if (authData == null || authToken.isBlank() || authDAO.getAuth(authToken) == null) {
+                return new GamesList("Error: unauthorized", 401);
+            }
+
+            String username = authData.username();
+            List<GameData> games = gameDAO.listGames(username);
+            return new GamesList(games, 200);
+        } catch (DataAccessException e) {
             return new GamesList("Error: unauthorized", 401);
         }
 
-        String username = authData.username();
-        List<GameData> games = gameDAO.listGames(username);
-        return new GamesList(games, 200);
     }
 
     public int createGame(String authToken, String gameName) throws DataAccessException {
