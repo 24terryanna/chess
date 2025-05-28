@@ -6,7 +6,7 @@ import service.UserService;
 import spark.*;
 
 
-public class ServerHandler {
+public class Server {
 
     public int run(int desiredPort) {
         if ((desiredPort != 0) && desiredPort < 1024 || desiredPort > 65535) {
