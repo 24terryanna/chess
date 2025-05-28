@@ -18,10 +18,11 @@ public class UserService {
     }
 
     public RegisterResult register(RegisterRequest request) throws DataAccessException {
-            if (request == null || request.username() == null || request.password() == null || request.email() == null) {
-                return new RegisterResult("Error: bad request", 400);
-            }
+        if (request == null || request.username() == null || request.password() == null || request.email() == null) {
+            return new RegisterResult("Error: bad request", 400);
+        }
 
+        try {
             UserData existingUser = userDAO.getUser(request.username());
             if (existingUser != null) {
                 return new RegisterResult("Error: already taken", 403);
@@ -34,22 +35,26 @@ public class UserService {
             UserData newUser = new UserData(request.username(), request.password(), request.email());
             userDAO.createUser(newUser);
             return new RegisterResult(request.username(), authData.authToken(), 200, "Successful registration!");
+
+        } catch (DataAccessException e) {
+            throw new RuntimeException("Registration failed due to internal error", e);
+        }
     }
 
     public LoginResult login(LoginRequest request) throws DataAccessException {
-            if (request == null || request.username() == null || request.password() == null) {
-                return new LoginResult("Error: bad request", 400);
-            }
+        if (request == null || request.username() == null || request.password() == null) {
+            return new LoginResult("Error: bad request", 400);
+        }
 
-            UserData userData = userDAO.getUser(request.username());
+        UserData userData = userDAO.getUser(request.username());
 
-            if (userData == null || !userDAO.verifyUser(request.username(), request.password())) {
-                return new LoginResult("Error: unauthorized", 401);
-            }
+        if (userData == null || !userDAO.verifyUser(request.username(), request.password())) {
+            return new LoginResult("Error: unauthorized", 401);
+        }
 
-            String authToken = UUID.randomUUID().toString();
-            authDAO.createAuth(new AuthData(authToken, request.username()));
-            return new LoginResult(request.username(), authToken, 200, "Successful login!");
+        String authToken = UUID.randomUUID().toString();
+        authDAO.createAuth(new AuthData(authToken, request.username()));
+        return new LoginResult(request.username(), authToken, 200, "Successful login!");
     }
 
     public LogoutResult logout(String authToken) throws DataAccessException {
