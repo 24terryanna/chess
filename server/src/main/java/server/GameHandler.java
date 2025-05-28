@@ -35,7 +35,7 @@ public class GameHandler {
 
         } catch (DataAccessException e) {
             res.status(500);
-            return gson.toJson(new GamesList("Error: " + e.getMessage(), 500));
+            return gson.toJson(new GamesList("Error: " + e.getMessage(), res.status()));
         }
     };
 
@@ -68,7 +68,7 @@ public class GameHandler {
             } else {
                 res.status(500);
             }
-            return gson.toJson(new CreateGameError("Error: " + e.getMessage(), 500));
+            return gson.toJson(new CreateGameError("Error: " + e.getMessage(), res.status()));
         }
     };
 
@@ -100,7 +100,7 @@ public class GameHandler {
 
         } catch (DataAccessException e) {
             res.status(500);
-            return gson.toJson(new CreateGameError("Error: " + e.getMessage(), 500));
+            return gson.toJson(new CreateGameError("Error: " + e.getMessage(), res.status()));
         }
     };
 
@@ -129,6 +129,8 @@ public class GameHandler {
                 res.status(403);
             } else if (e.getMessage().contains("bad request")){
                 res.status(400);
+            } else {
+                res.status(500);
             }
             return gson.toJson(new JoinGameResult("Error: " + e.getMessage(), res.status()));
         }
