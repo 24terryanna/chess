@@ -34,11 +34,7 @@ public class MemoryAuthDAO implements AuthDAO{
         if (authToken == null || authToken.isBlank()) {
             throw new DataAccessException("Auth token is null or blank");
         }
-        AuthData auth = db.get(authToken);
-        if (auth == null) {
-            throw new DataAccessException("Auth token not found: " + authToken);
-        }
-        return auth;
+        return db.get(authToken);
     }
 
     @Override
