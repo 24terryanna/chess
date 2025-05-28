@@ -5,7 +5,7 @@ import chess.ChessPosition;
 import model.GameData;
 import org.junit.jupiter.api.*;
 
-import server.Server;
+import server.ServerHandler;
 
 import java.util.List;
 
@@ -14,12 +14,12 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class ServerFacadeTests {
 
-    private static Server server;
+    private static ServerHandler server;
     static ServerFacade facade;
 
     @BeforeAll
     public static void init() throws Exception {
-        server = new Server();
+        server = new ServerHandler();
         var port = server.run(0);
         System.out.println("Started test HTTP server on " + port);
         facade = new ServerFacade("localhost:" + port);
