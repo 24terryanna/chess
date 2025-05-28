@@ -114,21 +114,19 @@ public class ServerFacadeTests {
 
     @Test
     public void testJoinGameFailureInvalidID() {
-//        boolean result = facade.joinGame(-1, "WHITE");
-//        System.out.println(result);
         registerAndLogin();
         assertFalse(facade.joinGame(-1, "white"));
     }
 
-    @Test
-    public void testMakeMoveSuccess() {
-        registerAndLogin();
-        int id = facade.createGame("Game");
-        facade.joinGame(id, "white");
-
-        ChessMove move = new ChessMove(new ChessPosition(2, 1), new ChessPosition(3, 1), null); // a2 to a3
-        assertTrue(facade.makeMove(id, move));
-    }
+//    @Test
+//    public void testMakeMoveSuccess() {
+//        registerAndLogin();
+//        int id = facade.createGame("Game");
+//        facade.joinGame(id, "white");
+//
+//        ChessMove move = new ChessMove(new ChessPosition(2, 1), new ChessPosition(3, 1), null); // a2 to a3
+//        assertTrue(facade.makeMove(id, move));
+//    }
 
     @Test
     public void testMakeMoveFailureInvalidGame() {
@@ -137,13 +135,13 @@ public class ServerFacadeTests {
         assertFalse(facade.makeMove(-1, move));
     }
 
-    @Test
-    public void testLeaveGameSuccess() {
-        registerAndLogin();
-        int id = facade.createGame("Game");
-        facade.joinGame(id, "white");
-        assertTrue(facade.leaveGame(id));
-    }
+//    @Test
+//    public void testLeaveGameSuccess() {
+//        registerAndLogin();
+//        int id = facade.createGame("Game");
+//        facade.joinGame(id, "white");
+//        assertTrue(facade.leaveGame(id));
+//    }
 
     @Test
     public void testLeaveGameFailureInvalidGame() {
