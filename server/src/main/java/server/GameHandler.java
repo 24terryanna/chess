@@ -36,6 +36,9 @@ public class GameHandler {
         } catch (DataAccessException e) {
             res.status(500);
             return gson.toJson(new GamesList("Error: " + e.getMessage(), res.status()));
+        } catch (Exception e) {
+            res.status(500);
+            return gson.toJson(new GamesList("Error: internal server error", 500));
         }
     };
 
