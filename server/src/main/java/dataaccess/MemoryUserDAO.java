@@ -16,13 +16,13 @@ public class MemoryUserDAO implements UserDAO{
     }
 
     @Override
-    public void createUser(UserData userData) throws DataAccessException {
+    public void createUser(UserData userData) throws RuntimeException {
         if (userData == null || userData.username() == null ||
                 userData.password() == null || userData.email() == null){
-            throw new DataAccessException("Invalid user data");
+            throw new RuntimeException("Invalid user data");
         }
         if (userDB.containsKey(userData.username())) {
-            throw new DataAccessException("User already exists!");
+            throw new RuntimeException("User already exists!");
         }
         userDB.put(userData.username(), userData);
     }
