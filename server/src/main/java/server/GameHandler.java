@@ -69,6 +69,9 @@ public class GameHandler {
                 res.status(500);
             }
             return gson.toJson(new CreateGameError("Error: " + e.getMessage(), res.status()));
+        } catch (Exception e) {
+            res.status(500);
+            return gson.toJson(new CreateGameError("Error: internal server error", 500));
         }
     };
 
@@ -136,6 +139,9 @@ public class GameHandler {
                 res.status(500);
             }
             return gson.toJson(new JoinGameResult("Error: " + e.getMessage(), res.status()));
+        } catch (Exception e) {
+            res.status(500);
+            return gson.toJson(new JoinGameResult("Error: internal server error", 500));
         }
     };
 }
