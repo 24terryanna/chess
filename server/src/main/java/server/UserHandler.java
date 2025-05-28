@@ -33,6 +33,9 @@ public class UserHandler {
         } catch (DataAccessException e) {
             res.status(500);
             return gson.toJson(new RegisterResult("Error: " + e.getMessage(), 500));
+        } catch (Exception e) {
+            res.status(500);
+            return gson.toJson(new RegisterResult("Error: internal server error", 500));
         }
     };
 
