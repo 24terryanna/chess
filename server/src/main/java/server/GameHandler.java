@@ -101,6 +101,9 @@ public class GameHandler {
         } catch (DataAccessException e) {
             res.status(500);
             return gson.toJson(new CreateGameError("Error: " + e.getMessage(), res.status()));
+        } catch (Exception e) {
+            res.status(500);
+            return gson.toJson(new CreateGameError("Error: internal server error", 500));
         }
     };
 
