@@ -37,8 +37,25 @@ public class PreLoginRepl {
             System.out.println("Input: register <username> <password> <email>");
             return;
         }
-        boolean success = server.register(tokens[1], tokens[2], tokens[3]);
-        System.out.println(success ? "Successfully registered!" : "Registration failed.");
+        String username = tokens[1];
+        String password = tokens[2];
+        String email = tokens[3];
+
+        boolean registered = server.register(username, password, email);
+        if (!registered) {
+            System.out.println("Registration failed.");
+            return;
+        }
+
+        System.out.println("Successful registration!");
+
+        boolean loggenIn = server.login(username, password);
+        if (loggenIn) {
+            System.out.println("Logged in!");
+            new PostLoginRepl(server).run();
+        } else {
+            System.out.println("Login failed after registration.");
+        }
     }
 
     private void handleLogin(String[] tokens) {
