@@ -68,9 +68,9 @@ public class BoardPrinter {
             System.out.println();
         }
 
-        System.out.print(SET_TEXT_COLOR_LIGHT_GREY + "  ");
+        System.out.print(SET_TEXT_COLOR_LIGHT_GREY + " ");
         for (char col : files) {
-            System.out.print("   " + col + "   ");
+            System.out.print(" " + col + "\u2003");
         }
         System.out.print(RESET_TEXT_COLOR);
     }
