@@ -74,20 +74,6 @@ public class PostLoginRepl {
                         game.blackUsername() == null ? "-" : game.blackUsername());
             }
         }
-
-        List<GameData> games = server.listGames();
-        if (games.isEmpty()) {
-            System.out.println("No games found.");
-        } else {
-            System.out.println("Games:");
-            for (GameData game : games) {
-                System.out.printf(" ID: %d | Name: %s | White: %s | Black: %s%n",
-                        game.gameID(),
-                        game.gameName(),
-                        game.whiteUsername(),
-                        game.blackUsername());
-            }
-        }
     }
 
     private void handleJoin(String[] tokens) {
@@ -100,7 +86,7 @@ public class PostLoginRepl {
             //int gameID = Integer.parseInt(tokens[1]);
             int index = Integer.parseInt(tokens[1]) -1;
             if (cachedGames == null || index < 0 || index >= cachedGames.size()) {
-                System.out.println("Invalid fame number. Use 'list' first.");
+                System.out.println("Invalid game number. Use 'list' first.");
                 return;
             }
 
