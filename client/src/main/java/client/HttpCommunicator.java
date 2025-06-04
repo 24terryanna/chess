@@ -100,6 +100,7 @@ public class HttpCommunicator {
 
         var jsonBody = new Gson().toJson(body);
         Map response = request("PUT", "/game", jsonBody);
+
         return !response.containsKey("Error");
     }
 

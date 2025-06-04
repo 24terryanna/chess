@@ -3,7 +3,6 @@ package client;
 
 import model.GameData;
 import chess.ChessMove;
-import ui.BoardPrinter;
 
 import java.util.List;
 

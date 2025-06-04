@@ -69,21 +69,23 @@ public class GameService {
             throw new DataAccessException("Error: unauthorized");
         }
 
-        if (playerColor == null || gameID == 0 ||
-                !playerColor.equalsIgnoreCase("WHITE") && !playerColor.equalsIgnoreCase("BLACK")) {
-            throw new DataAccessException("Error: bad request");
-        }
-
         AuthData authData = authDAO.getAuth(authToken);
         if (authData == null) {
-            throw new DataAccessException("error: unauthorized");
+            throw new DataAccessException("Error: unauthorized");
         }
-        String username = authData.username();
-        System.out.println("AuthData username: " + authData.username());
 
         GameData gameData = gameDAO.getGame(gameID);
         if (gameData == null) {
             throw new DataAccessException("Error: bad request");
+        }
+
+        String username = authData.username();
+        System.out.println("JoinGame: username = " + username + ", playerColor = " + playerColor);
+
+        if (playerColor == null || playerColor.equalsIgnoreCase("observer"))  {
+            // observer does not claim a player slot, no update needed
+            return;
+//            throw new DataAccessException("Error: bad request");
         }
 
         if (playerColor.equalsIgnoreCase("WHITE")) {
@@ -92,12 +94,14 @@ public class GameService {
             }
             gameData = new GameData(gameData.gameID(), username, gameData.blackUsername(), gameData.gameName(), gameData.game());
 
-        } else {
+        } else if (playerColor.equalsIgnoreCase("BLACK")){
             if (gameData.blackUsername() != null) {
                 throw new DataAccessException("Error: already taken");
             }
             gameData = new GameData(gameData.gameID(), gameData.whiteUsername(), username, gameData.gameName(), gameData.game());
 
+        } else {
+            throw new DataAccessException("Error: bad request");
         }
         gameDAO.updateGame(gameData);
     }

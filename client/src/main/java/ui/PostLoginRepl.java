@@ -141,10 +141,10 @@ public class PostLoginRepl {
             boolean success = server.joinGame(gameID, "observer");
             if (success) {
                 System.out.println(("Joined game as observer!"));
-                new GamePlayRepl(server, gameID, targetGame, null).run();
+                new BoardPrinter(targetGame.game()).printBoard(ChessGame.TeamColor.WHITE);
 
             } else {
-                System.out.println("Failed to observe game");
+                System.out.println("Failed to observe game.");
             }
 
         } catch (NumberFormatException e) {
