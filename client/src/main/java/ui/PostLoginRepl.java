@@ -123,11 +123,6 @@ public class PostLoginRepl {
 
         try {
             int gameID = Integer.parseInt(tokens[1]);
-            boolean success = server.joinGame(gameID, null);
-            if (!success) {
-                System.out.println("Observing game " + gameID + "...");
-                return;
-            }
 
             List<GameData> games = server.listGames();
             GameData targetGame = null;
@@ -140,6 +135,12 @@ public class PostLoginRepl {
 
             if (targetGame == null) {
                 System.out.println("Game not found.");
+                return;
+            }
+
+            boolean success = server.joinGame(gameID, null);
+            if (!success) {
+                System.out.println("Failed to observe game");
                 return;
             }
 
