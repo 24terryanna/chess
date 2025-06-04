@@ -48,7 +48,7 @@ public class BoardPrinter {
                 ChessPosition position = new ChessPosition(row, colNum);
                 ChessPiece piece = board.getPiece(position);
 
-                boolean isLightSquare = (row + colNum) % 2 == 0;
+                boolean isLightSquare = (row + colNum) % 2 != 0;
                 String bgColor;
                 if (isLightSquare) {
                     bgColor = SET_BG_COLOR_LIGHT_GREY;
