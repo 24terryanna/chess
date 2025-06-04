@@ -97,38 +97,34 @@ public class PostLoginRepl {
         }
 
         try {
-            int gameID = Integer.parseInt(tokens[1]);
+            //int gameID = Integer.parseInt(tokens[1]);
+            int index = Integer.parseInt(tokens[1]) -1;
+            if (cachedGames == null || index < 0 || index >= cachedGames.size()) {
+                System.out.println("Invalid fame number. Use 'list' first.");
+                return;
+            }
+
+
             String color = tokens[2].toLowerCase();
             if (!color.equals("white") && !color.equals("black")) {
                 System.out.println("Invalid color. Choose 'white' or 'black'.");
                 return;
             }
-            boolean success = server.joinGame(gameID, color);
+
+            GameData selectedGame = cachedGames.get(index);
+            boolean success = server.joinGame(selectedGame.gameID(), color);
+
             if (!success) {
                 System.out.println("Failed to join game. That color may already be taken.");
                 return;
             }
 
-            List<GameData> games = server.listGames();
-            GameData targetGame = null;
-            for (GameData game : games) {
-                if (game.gameID() == gameID) {
-                    targetGame = game;
-                    break;
-                }
-            }
-
-            if (targetGame == null) {
-                System.out.println("Game not found.");
-                return;
-            }
-
             System.out.println(("Joined game as: " + color + "!"));
-            new GamePlayRepl(server, gameID, targetGame,
+            new GamePlayRepl(server, selectedGame.gameID(), selectedGame,
                     color.equals("white") ? ChessGame.TeamColor.WHITE : ChessGame.TeamColor.BLACK).run();
 
         } catch (NumberFormatException e) {
-            System.out.println("Invalid game ID.");
+            System.out.println("Invalid game number.");
         }
     }
 
