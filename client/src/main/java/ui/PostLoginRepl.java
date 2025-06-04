@@ -83,7 +83,6 @@ public class PostLoginRepl {
         }
 
         try {
-            //int gameID = Integer.parseInt(tokens[1]);
             int index = Integer.parseInt(tokens[1]) -1;
             if (cachedGames == null || index < 0 || index >= cachedGames.size()) {
                 System.out.println("Invalid game number. Use 'list' first.");
