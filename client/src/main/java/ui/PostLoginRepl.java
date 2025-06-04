@@ -138,7 +138,7 @@ public class PostLoginRepl {
                 return;
             }
 
-            boolean success = server.joinGame(gameID, null);
+            boolean success = server.joinGame(gameID, "observer");
             if (success) {
                 System.out.println(("Joined game as observer!"));
                 new GamePlayRepl(server, gameID, targetGame, null).run();
