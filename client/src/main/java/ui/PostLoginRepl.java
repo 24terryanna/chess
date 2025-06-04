@@ -57,7 +57,24 @@ public class PostLoginRepl {
         }
     }
 
+    private List<GameData> cachedGames = null;
+
     private void handleList() {
+        cachedGames = server.listGames();
+        if (cachedGames.isEmpty()) {
+            System.out.println("No games found.");
+        } else {
+            System.out.println("Games:");
+            int displayNumber = 1;
+            for (GameData game : cachedGames) {
+                System.out.printf(" ID: %d | Name: %s | White: %s | Black: %s%n",
+                        displayNumber++,
+                        game.gameName(),
+                        game.whiteUsername() == null ? "-" : game.whiteUsername(),
+                        game.blackUsername() == null ? "-" : game.blackUsername());
+            }
+        }
+
         List<GameData> games = server.listGames();
         if (games.isEmpty()) {
             System.out.println("No games found.");
