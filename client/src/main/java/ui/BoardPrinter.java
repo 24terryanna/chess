@@ -70,7 +70,7 @@ public class BoardPrinter {
 
         System.out.print(SET_TEXT_COLOR_LIGHT_GREY + "  ");
         for (char col : files) {
-            System.out.print(col);
+            System.out.print(" " + col + " ");
         }
         System.out.print(RESET_TEXT_COLOR);
     }
