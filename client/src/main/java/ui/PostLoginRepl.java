@@ -88,7 +88,7 @@ public class PostLoginRepl {
             }
             boolean success = server.joinGame(gameID, color);
             if (!success) {
-                System.out.println("Joined game as: " + color + "!");
+                System.out.println("Failed to join game. That color may already be taken.");
                 return;
             }
 
