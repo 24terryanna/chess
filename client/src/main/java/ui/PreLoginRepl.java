@@ -11,7 +11,7 @@ public class PreLoginRepl {
         this.server = server;
     }
 
-    public void run() {
+    public boolean run() {
         System.out.println("Welcome to Chess! Type 'help' for commands.");
         while(true) {
             System.out.print(">>> ");
@@ -20,22 +20,32 @@ public class PreLoginRepl {
             String command = tokens[0].toLowerCase();
 
             switch(command) {
-                case "register" -> handleRegister(tokens);
-                case "login" -> handleLogin(tokens);
+                case "register" -> {
+                    if (handleRegister(tokens)) {
+                        new PostLoginRepl(server).run();
+                        return true;
+                    };
+                }
+                case "login" -> {
+                    if (handleLogin(tokens)) {
+                        new PostLoginRepl(server).run();
+                        return true;
+                    }
+                }
                 case "help" -> printHelp();
                 case "quit" -> {
                     System.out.println("Quit successful");
-                    return;
+                    return false;
                 }
                 default -> System.out.println("Unknown command. Type 'help' for options.");
             }
         }
     }
 
-    private void handleRegister(String[] tokens) {
+    private boolean handleRegister(String[] tokens) {
         if (tokens.length != 4) {
             System.out.println("Input: register <username> <password> <email>");
-            return;
+            return false;
         }
         String username = tokens[1];
         String password = tokens[2];
@@ -44,24 +54,25 @@ public class PreLoginRepl {
         boolean registered = server.register(username, password, email);
         if (!registered) {
             System.out.println("Registration failed.");
-            return;
+            return false;
         }
 
         System.out.println("Successful registration!");
+        return true;
 
-        boolean loggenIn = server.login(username, password);
-        if (loggenIn) {
-            System.out.println("Logged in!");
-            new PostLoginRepl(server).run();
-        } else {
-            System.out.println("Login failed after registration.");
-        }
+//        boolean loggenIn = server.login(username, password);
+//        if (loggenIn) {
+//            System.out.println("Logged in!");
+//            new PostLoginRepl(server).run();
+//        } else {
+//            System.out.println("Login failed after registration.");
+//        }
     }
 
-    private void handleLogin(String[] tokens) {
+    private boolean handleLogin(String[] tokens) {
         if (tokens.length != 3) {
             System.out.println("Input: login <username> <password>");
-            return;
+            return false;
         }
         boolean success = server.login(tokens[1], tokens[2]);
         if (success){
@@ -69,7 +80,10 @@ public class PreLoginRepl {
             new PostLoginRepl(server).run();
         } else {
             System.out.println("Login failed.");
+            return false;
         }
+        // this might be incorrect
+        return false;
     }
 
     private void printHelp() {

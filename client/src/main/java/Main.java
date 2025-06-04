@@ -10,8 +10,13 @@ public class Main {
 
         ServerFacade server = new ServerFacade();
 
-        PreLoginRepl preLogin = new PreLoginRepl(server);
-        preLogin.run();
-        System.out.println("Exited");
+        while (true) {
+            PreLoginRepl preLogin = new PreLoginRepl(server);
+            boolean continueRunning = preLogin.run();
+            if (!continueRunning) {
+                System.out.println("Exited");
+                break;
+            }
+        }
     }
 }
