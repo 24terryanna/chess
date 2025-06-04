@@ -135,33 +135,24 @@ public class PostLoginRepl {
         }
 
         try {
-            int gameID = Integer.parseInt(tokens[1]);
-
-            List<GameData> games = server.listGames();
-            GameData targetGame = null;
-            for (GameData game : games) {
-                if (game.gameID() == gameID) {
-                    targetGame = game;
-                    break;
-                }
-            }
-
-            if (targetGame == null) {
-                System.out.println("Game not found.");
+            int index = Integer.parseInt(tokens[1]) - 1;
+            if (cachedGames == null || index < 0 || index >= cachedGames.size()) {
+                System.out.println("Invalid game number. Use 'list' first.");
                 return;
             }
 
-            boolean success = server.joinGame(gameID, "observer");
+            GameData selectedGame = cachedGames.get(index);
+            boolean success = server.joinGame(selectedGame.gameID(), "observer");
+
             if (success) {
                 System.out.println(("Joined game as observer!"));
-                new BoardPrinter(targetGame.game()).printBoard(ChessGame.TeamColor.WHITE);
-
+                new BoardPrinter(selectedGame.game()).printBoard(ChessGame.TeamColor.WHITE);
             } else {
                 System.out.println("Failed to observe game.");
             }
 
         } catch (NumberFormatException e) {
-            System.out.println("Invalid game ID.");
+            System.out.println("Invalid game number.");
         }
     }
 
